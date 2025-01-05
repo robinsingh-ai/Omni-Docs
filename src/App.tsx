@@ -1,23 +1,14 @@
-import React from "react";
-import { FaPlus } from "react-icons/fa6";
-import { Button } from "./components/ui/button";
-const App: React.FC = () => {
-  const [counter, setCounter] = React.useState<number>(0);
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
-      <div className="flex flex-col items-center">
-        You have tapped the button
-        <span className="text-4xl">{counter}</span>
-        times
-      </div>
-      <Button
-        className="mt-4"
-        onClick={() => setCounter(counter + 1)}> <div className="flex space-x-2 items-center justify-center">
-          <FaPlus />
-        </div> </Button>
+import React from 'react';
+import ChatInput from './components/ChatInput';
+import ChatWindow from './components/ChatWindow';
+
+const App: React.FC = () => (
+  <div className="h-screen flex flex-col items-center justify-center bg-gray-100">
+    <div className="w-full max-w-md bg-white rounded shadow-lg p-4">
+      <ChatWindow />
+      <ChatInput />
     </div>
-  );
-}
+  </div>
+);
 
 export default App;
-
