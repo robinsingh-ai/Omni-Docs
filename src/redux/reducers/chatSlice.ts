@@ -1,48 +1,35 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { GoogleGenerativeAI } from '@google/generative-ai';
 import Message from '../../models/Message';
+import { ResponseProviderFactory } from '../../services/ResponseProviderFactory';
+import { LLM_Provider } from '@/src/services/ResponseProvider';
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || '');
-
-export const fetchResponse = createAsyncThunk(
+export const fetchResponse = createAsyncThunk<Message, { provider_name: LLM_Provider; message: string }, { rejectValue: string }>(
     'chat/fetchResponse',
-    async (message: string, { rejectWithValue }) => {
+    async ({ provider_name, message }: { provider_name: LLM_Provider; message: string }, { rejectWithValue }) => {
         try {
-            const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-
-            // Generate content using the Gemini API
-            const result = await model.generateContent(message);
-            const response = await result.response;
-
-            // Get the text from the response
-            const text = response.text();
-
-            if (text) {
-                return new Message('bot', text);
+            const provider = ResponseProviderFactory.getProvider(provider_name);
+            const response = await provider.generateResponse(message);
+            console.log('Response:', response);
+            const responseText = response.content;
+            if (responseText) {
+                return new Message('bot', responseText);
             }
 
-            return rejectWithValue('Empty response from Gemini API.');
+            return rejectWithValue('Empty response from provider.');
         } catch (error: any) {
-            // Handle specific Gemini API errors
-            if (error.response?.error) {
-                return rejectWithValue(error.response.error.message);
-            }
-
-            // Generic error handling
-            return rejectWithValue(
-                error.message || 'Failed to fetch response from Gemini.'
-            );
+            return rejectWithValue(error.message || 'Failed to fetch response from provider.');
         }
     }
 );
 
 const initialState = {
-    messages: [] as Message[]
+    messages: [] as Message[],
+    loading: false,
 };
 
 const chatSlice = createSlice({
     name: 'chat',
-    initialState: initialState,
+    initialState,
     reducers: {
         addUserMessage: (state, action) => {
             const message = new Message('user', action.payload);
@@ -50,8 +37,18 @@ const chatSlice = createSlice({
         },
     },
     extraReducers: (builder) => {
+        builder.addCase(fetchResponse.pending, (state) => {
+            state.loading = true;
+        });
         builder.addCase(fetchResponse.fulfilled, (state, action) => {
+            state.loading = false;
+            console.log('Received response:', action.payload);
             const message = new Message('bot', action.payload.text);
+            state.messages.push(message);
+        });
+        builder.addCase(fetchResponse.rejected, (state, action) => {
+            state.loading = false;
+            const message = new Message('bot', action.payload || 'Failed to fetch response from provider.');
             state.messages.push(message);
         });
     },

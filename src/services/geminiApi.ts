@@ -1,14 +1,18 @@
-import axios from 'axios';
+import { ResponseProvider } from './ResponseProvider';
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
-const geminiApi = {
-    async getResponse(message: string): Promise<string> {
-        try {
-            const { data } = await axios.post('/api/gemini', { prompt: message });
-            return data.response;
-        } catch (error) {
-            return 'Something went wrong. Please try again later.';
-        }
-    },
-};
+export class GeminiProvider implements ResponseProvider {
+    private genAI;
 
-export default geminiApi;
+    constructor(apiKey: string) {
+        this.genAI = new GoogleGenerativeAI(apiKey);
+    }
+
+    async generateResponse(message: string): Promise<string> {
+        const model = this.genAI.getGenerativeModel({ model: 'gemini-pro' });
+        const result = await model.generateContent(message);
+        const response = await result.response;
+
+        return response.text();
+    }
+}
