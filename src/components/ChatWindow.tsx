@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import ChatBubble from './ChatBubble';
 import { RootState } from '../redux/store';
 import Message from '../models/Message';
+import Spinner from './Spinner';
 
 const ChatWindow: React.FC = () => {
     const messages = useSelector((state: RootState) => state.messages);

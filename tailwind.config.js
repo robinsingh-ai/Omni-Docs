@@ -6,6 +6,9 @@ module.exports = {
   darkMode: 'class',
   content: [
     './src/**/*.{js,jsx,ts,tsx}',
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     borderWidth: {
@@ -64,11 +67,12 @@ module.exports = {
       }
     },
     borderRadius: {
-      lg: 'var(--radius)',
-      md: 'calc(var(--radius) - 2px)',
-      sm: 'calc(var(--radius) - 4px)',
-      xs: '2px',
-      full: '9999px',
+      xxl: "var(--radius) * 4",
+      xl: "var(--radius) * 2",
+      lg: `var(--radius)`,
+      md: `calc(var(--radius) - 2px)`,
+      sm: "calc(var(--radius) - 4px)",
+      full: "9999px",
     },
     fontFamily: {
       sans: ['var(--font-sans)', ...fontFamily.sans],

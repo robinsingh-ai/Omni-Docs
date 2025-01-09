@@ -1,9 +1,16 @@
-import React from 'react';
 import '../index.css';
+import { motion } from 'framer-motion';
 export default function Spinner() {
     return (
-        <div className="flex items-center justify-center">
-            <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-indigo-500"></div>
-        </div >
+        <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="container mx-auto px-4 py-4"
+        >
+            <div className="flex items-center justify-center h-3/4">
+                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+            </div>
+        </motion.div>
     );
 }
