@@ -3,7 +3,6 @@ import { useSelector } from 'react-redux';
 import ChatBubble from './ChatBubble';
 import { RootState } from '../redux/store';
 import Message from '../models/Message';
-import Spinner from './Spinner';
 
 const ChatWindow: React.FC = () => {
     const messages = useSelector((state: RootState) => state.messages);
@@ -11,7 +10,7 @@ const ChatWindow: React.FC = () => {
         <div className="h-[80vh] overflow-y-auto border p-4">
             {messages.map((msg: Message, idx: number) => (
                 <div className='flex-col'>
-                    <ChatBubble key={idx} message={msg} />
+                    <ChatBubble key={idx} message={msg} index={idx} length={messages.length} />
                 </div>
             ))}
         </div>

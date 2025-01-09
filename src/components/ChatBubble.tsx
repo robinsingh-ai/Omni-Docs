@@ -7,9 +7,11 @@ import MDPreview from './MDPreview';
 
 interface ChatProps {
     message: Message
+    index: number
+    length: number
 }
 
-const ChatBubble: React.FC<ChatProps> = ({ message }) => {
+const ChatBubble: React.FC<ChatProps> = ({ message, index, length }) => {
     const { sender, text, timestamp } = message;
     const loading = useSelector((state: RootState) => state.loading);
     return (
@@ -19,7 +21,7 @@ const ChatBubble: React.FC<ChatProps> = ({ message }) => {
                     }`}
                 value={text} />
             <div className='flex justify-between'>
-                {loading ? <Spinner /> : <div />}
+                {loading && index === length - 1 ? <Spinner /> : <div />}
                 <div className="text-xs text-gray-500 mt-1">{timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
             </div>
         </div >

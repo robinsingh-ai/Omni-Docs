@@ -6,6 +6,7 @@ import { Send } from 'lucide-react';
 import { AppDispatch, RootState } from '../redux/store';
 import { useSelector } from 'react-redux';
 import { LLM_Provider } from '../services/ResponseProvider';
+import Spinner from './Spinner';
 const ChatInput: React.FC = () => {
     const [query, setQuery] = useState('');
     const dispatch = useDispatch<AppDispatch>();
@@ -20,7 +21,7 @@ const ChatInput: React.FC = () => {
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
         // ignore add new line
-        if (e.key === 'Enter' && e.shiftKey) {
+        if ((e.key === 'Enter' && e.shiftKey) || loading) {
             return;
         }
         if (e.key === 'Enter') {
@@ -45,7 +46,7 @@ const ChatInput: React.FC = () => {
                 whileTap={{ scale: 0.95 }}
                 onClick={sendMessage}
             >
-                {loading ? 'Loading...' : <Send size={24} />}
+                {loading ? <Spinner /> : <Send size={24} />}
             </motion.button>
         </div>
     );

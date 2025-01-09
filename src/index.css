@@ -1,3 +1,5 @@
+@import url('./markdown.css');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -32,7 +34,8 @@
         --destructive-foreground: 210 40% 98%;
 
         --ring: 215 20.2% 65.1%;
-
+        --color-code-surface: #f0f2f3;
+        --color-code-onSurface: #191b1c;
         --radius: 0.5rem;
     }
 
@@ -48,7 +51,8 @@
 
         --popover: 224 71% 4%;
         --popover-foreground: 215 20.2% 65.1%;
-
+        --color-code-surface: #222324;
+        --color-code-onSurface: #e2e8f0;
         --border: 216 34% 17%;
         --input: 216 34% 17%;
 
@@ -80,4 +84,3 @@
         font-feature-settings: rlig 1, calt 1;
     }
 }
-

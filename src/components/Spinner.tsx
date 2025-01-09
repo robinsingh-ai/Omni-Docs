@@ -1,16 +1,43 @@
 import '../index.css';
 import { motion } from 'framer-motion';
-export default function Spinner() {
+
+interface SpinnerProps {
+    className?: string;
+    size?: number;
+    color?: string;
+    borderWidth?: number;
+    loadingText?: string;
+}
+
+export default function Spinner({
+    className = '',
+    size = 40,
+    color = 'blue-500',
+    borderWidth = 4,
+    loadingText,
+}: SpinnerProps) {
+    const spinnerStyles = {
+        height: `${size}px`,
+        width: `${size}px`,
+        borderWidth: `${borderWidth}px`,
+    };
+
     return (
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="container mx-auto px-4 py-4"
+            transition={{ delay: 0.3 }}
+            className={`flex flex-col items-center justify-center ${className}`}
+            role="status"
+            aria-label="Loading..."
         >
-            <div className="flex items-center justify-center h-3/4">
-                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
-            </div>
+            <div
+                className={`animate-spin rounded-full border-t-transparent border-${color}`}
+                style={spinnerStyles}
+            />
+            {loadingText && (
+                <p className="mt-2 text-sm text-gray-600">{loadingText}</p>
+            )}
         </motion.div>
     );
 }

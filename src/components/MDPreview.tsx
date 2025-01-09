@@ -3,13 +3,14 @@ import { Tooltip } from "@nextui-org/react";
 import remarkGfm from "remark-gfm";
 import ReactMarkdown from 'react-markdown';
 import CodeBlock from "./CodeHighlight";
+
 interface MDPreviewProps {
     value?: string;
     className?: string;
 }
 
 const MDPreview = ({ value, className }: MDPreviewProps) => {
-    const customClass = `px-2 py-2 rounded-b-lg border-surface focus:ring-secondary focus:outline-none focus:ring-2 resize-y min-h-60 w-full reactMarkDown ${className}`;
+    const customClass = `px-2 py-2 rounded-b-lg border-surface focus:ring-secondary focus:outline-none focus:ring-2 resize-y w-full reactMarkDown ${className}`;
 
     function LinkRenderer(props: any) {
         return (
