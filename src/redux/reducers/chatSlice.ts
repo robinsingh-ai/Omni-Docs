@@ -3,12 +3,16 @@ import Message from '../../models/Message';
 import { ResponseProviderFactory } from '../../services/ResponseProviderFactory';
 import { LLM_Provider } from '@/src/services/ResponseProvider';
 
-export const fetchResponse = createAsyncThunk<Message, { provider_name: LLM_Provider; message: string }, { rejectValue: string }>(
+export const fetchResponse = createAsyncThunk<
+    Message,
+    { provider_name: LLM_Provider; message: string; dataSource: string },
+    { rejectValue: string }
+>(
     'chat/fetchResponse',
-    async ({ provider_name, message }: { provider_name: LLM_Provider; message: string }, { rejectWithValue }) => {
+    async ({ provider_name, message, dataSource }, { rejectWithValue }) => {
         try {
             const provider = ResponseProviderFactory.getProvider(provider_name);
-            const response = await provider.generateResponse(message);
+            const response = await provider.generateResponse(message, dataSource);
             console.log('Response:', response);
             const responseText = response.content;
             if (responseText) {

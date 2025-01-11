@@ -5,5 +5,5 @@ export enum LLM_Provider {
 }
 
 export interface ResponseProvider {
-    generateResponse(message: string): Promise<any>;
+    generateResponse(message: string, dataSource: string): Promise<any>;
 }

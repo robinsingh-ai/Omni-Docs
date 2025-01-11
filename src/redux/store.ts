@@ -1,9 +1,13 @@
 
 import { configureStore } from "@reduxjs/toolkit";
 import chatReducer from "./reducers/chatSlice";
+import dataReducer from "./reducers/dataSlice";
 
 const store = configureStore({
-  reducer: chatReducer
+  reducer: {
+    chat: chatReducer,
+    data: dataReducer,
+  }
 });
 
 export type RootState = ReturnType<typeof store.getState>;

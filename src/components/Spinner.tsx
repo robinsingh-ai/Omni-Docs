@@ -32,7 +32,8 @@ export default function Spinner({
             aria-label="Loading..."
         >
             <div
-                className={`animate-spin rounded-full border-t-transparent border-${color}`}
+                className={`animate-spin rounded-full border-t-transparent ${color ? `border-${color}` : 'border-blue-500'
+                    }`}
                 style={spinnerStyles}
             />
             {loadingText && (

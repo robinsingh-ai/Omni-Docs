@@ -10,11 +10,12 @@ import Spinner from './Spinner';
 const ChatInput: React.FC = () => {
     const [query, setQuery] = useState('');
     const dispatch = useDispatch<AppDispatch>();
-    const loading = useSelector((state: RootState) => state.loading);
+    const loading = useSelector((state: RootState) => state.chat.loading);
+    const datSource = useSelector((state: RootState) => state.data.dataSource);
     const sendMessage = async () => {
         if (query.trim()) {
             dispatch(addUserMessage(query));
-            dispatch(fetchResponse({ provider_name: LLM_Provider.local_llm, message: query }));
+            dispatch(fetchResponse({ provider_name: LLM_Provider.local_llm, message: query, dataSource: datSource }));
             setQuery('');
         }
     };

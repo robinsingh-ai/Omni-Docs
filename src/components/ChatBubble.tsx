@@ -1,8 +1,5 @@
 import React from 'react';
 import Message from '../models/Message';
-import Spinner from './Spinner';
-import { useSelector } from 'react-redux';
-import { RootState } from '../redux/store';
 import MDPreview from './MDPreview';
 
 interface ChatProps {
@@ -13,7 +10,6 @@ interface ChatProps {
 
 const ChatBubble: React.FC<ChatProps> = ({ message, index, length }) => {
     const { sender, text, timestamp } = message;
-    const loading = useSelector((state: RootState) => state.loading);
     return (
         <div className={`my-2 pt-2}`}>
             <MDPreview
@@ -21,7 +17,7 @@ const ChatBubble: React.FC<ChatProps> = ({ message, index, length }) => {
                     }`}
                 value={text} />
             <div className='flex justify-between'>
-                {loading && index === length - 1 ? <Spinner /> : <div />}
+                {/* {loading && index === length - 1 ? <Spinner /> : <div />} */}
                 <div className="text-xs text-gray-500 mt-1">{timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
             </div>
         </div >

@@ -1,4 +1,9 @@
-#### Crustdata Build Challenge: Customer Support Agent
+#### Dash AI
+
+An AI bot for API documentation and code generation. This bot currentlu supports the following APIs:
+
+- Crustdata Discovery And Enrichment API
+- NextJS API
 
 linkedin post: https://www.linkedin.com/posts/abhilash-chowdhary_were-hiring-cracked-engineers-heres-the-activity-7281490942816071680-tyvX?utm_source=share&utm_medium=member_desktop
 

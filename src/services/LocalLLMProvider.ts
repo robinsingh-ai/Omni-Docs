@@ -2,7 +2,7 @@ import { ResponseProvider } from './ResponseProvider';
 
 export class LocalLLMProvider implements ResponseProvider {
     private api = process.env.REACT_APP_BACKEND_URL
-    async generateResponse(message: string): Promise<string> {
+    async generateResponse(message: string, dataSource: string): Promise<string> {
         try {
             console.log('Sending message to backend:', this.api);
             const response = await fetch(`${this.api}/api/v1/query`, {
