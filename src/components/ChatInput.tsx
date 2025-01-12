@@ -10,19 +10,23 @@ import Spinner from './Spinner';
 
 interface ChatInputProps {
     className?: string;
+    onSend(val: string): void
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({ className }) => {
+const ChatInput: React.FC<ChatInputProps> = ({ className, onSend }) => {
     const [query, setQuery] = useState('');
     const dispatch = useDispatch<AppDispatch>();
     const loading = useSelector((state: RootState) => state.chat.loading);
     const dataSource = useSelector((state: RootState) => state.data.dataSource.valueOf());
-    
+
     const sendMessage = async () => {
         if (query.trim()) {
             dispatch(addUserMessage(query));
             dispatch(fetchResponse({ provider_name: LLM_Provider.local_llm, message: query, dataSource: dataSource }));
             setQuery('');
+        }
+        if (onSend != null) {
+            onSend(query.trim());
         }
     };
 

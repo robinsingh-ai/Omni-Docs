@@ -21,7 +21,10 @@ export default function Menu({ options, placeholder, onChange }: MenuProps) {
             <SelectContent>
                 {options.map((option) => (
                     <SelectItem key={option.value} value={option.value}>
-                        {option.label}
+                        <div className="flex items-center">
+                            <span className="mr-2">{option.label}</span>
+                            {/* <RepeatIcon size={16} /> */}
+                        </div>
                     </SelectItem>
                 ))}
             </SelectContent>

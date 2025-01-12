@@ -22,10 +22,10 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen">
-      <div className="flex-none">
+    <div className="flex flex-col h-screen bg-white">
+      <div className="flex-none sticky top-0 z-10 bg-white">
         <Navbar>
-          <div className="flex items-center justify-between px-8">
+          <div className="flex items-center justify-between px-4">
             <Menu
               onChange={handleMenuChange}
               options={Object.keys(items).map((key) => ({ value: key, label: key }))}
@@ -35,16 +35,20 @@ const App: React.FC = () => {
           </div>
         </Navbar>
       </div>
-
-      <div className="flex flex-col flex-1 overflow-hidden relative">
-        <div className="flex-1 overflow-y-auto mb-24">
-          <div className="flex justify-center h-full">
+      <div className="flex-1 relative overflow-hidden">
+        <div className="absolute inset-0 overflow-y-auto pb-16">
+          <div className="flex justify-center min-h-full">
             <ChatWindow className="px-4 w-full max-w-3xl" />
           </div>
         </div>
 
-        <div className="flex justify-center">
-          <ChatInput className='absolute bottom-2 w-full max-w-3xl' />
+        <div className="fixed bottom-0 left-0 right-0 bg-white">
+          <div className="flex justify-center px-4 py-2 max-w-3xl mx-auto">
+            <ChatInput
+              className="w-full"
+              onSend={() => { }}
+            />
+          </div>
         </div>
       </div>
     </div>
