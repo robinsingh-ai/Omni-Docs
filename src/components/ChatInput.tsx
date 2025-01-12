@@ -7,7 +7,12 @@ import { AppDispatch, RootState } from '../redux/store';
 import { useSelector } from 'react-redux';
 import { LLM_Provider } from '../services/ResponseProvider';
 import Spinner from './Spinner';
-const ChatInput: React.FC = () => {
+
+interface ChatInputProps {
+    className?: string;
+}
+
+const ChatInput: React.FC<ChatInputProps> = ({ className }) => {
     const [query, setQuery] = useState('');
     const dispatch = useDispatch<AppDispatch>();
     const loading = useSelector((state: RootState) => state.chat.loading);
@@ -32,7 +37,7 @@ const ChatInput: React.FC = () => {
     }
 
     return (
-        <div className="flex items-center bg-gradient-to-r gap-2 from-gray-100 to-gray-200 p-2 rounded-lg shadow-lg">
+        <div className={`flex items-center bg-gradient-to-r gap-2 from-gray-100 to-gray-200 p-2 rounded-lg shadow-lg ${className}`}>
             <textarea
                 className="flex-grow bg-white p-3 rounded-l-lg resize-none text-sm border-none focus:outline-none  duration-200"
                 value={query}

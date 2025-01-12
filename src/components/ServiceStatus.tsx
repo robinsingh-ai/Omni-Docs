@@ -88,7 +88,7 @@ const ServiceStatus: React.FC = () => {
     }
 
     return (
-        <div className="status-container">
+        <div>
             {loading ? (
                 <div className="animate-pulse h-4 w-4 bg-gray-300 rounded-full" />
             ) : (

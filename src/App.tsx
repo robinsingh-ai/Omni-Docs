@@ -5,14 +5,14 @@ import ServiceStatus from './components/ServiceStatus';
 import Menu from './components/Menu';
 import { useDispatch } from 'react-redux';
 import { DataSource, setDataSource } from './redux/reducers/dataSlice';
+import Navbar from './components/Navbar';
 
 const App: React.FC = () => {
-
   const items: Record<string, DataSource> = {
     'Crust-Data': { dataSource: 'crust-data' },
     'Next.js': { dataSource: 'nextjs-sitemap' },
     'Flutter': { dataSource: 'flutter-sitemap' },
-  }
+  };
 
   const dispatch = useDispatch();
 
@@ -21,24 +21,35 @@ const App: React.FC = () => {
     const selectedDataSource = items[value];
     dispatch(setDataSource(selectedDataSource));
   };
+
   return (
-    <div className="h-screen flex items-center justify-center bg-gradient-to-br relative">
-      <div className="w-full max-w-2xl p-6 flex flex-col space-y-4 ">
-        <div className='top-6 right-10 absolute'>
-          <ServiceStatus />
+    <div className="flex flex-col h-screen">
+      <div className="flex-none">
+        <Navbar>
+          <div className="flex items-center justify-between px-8">
+            <Menu
+              onChange={handleMenuChange}
+              options={Object.keys(items).map((key) => ({ value: key, label: key }))}
+              placeholder="Next.js"
+            />
+            <ServiceStatus />
+          </div>
+        </Navbar>
+      </div>
+
+      <div className="flex flex-col flex-1 overflow-hidden relative">
+        <div className="flex-1 overflow-y-auto mb-28">
+          <div className="flex justify-center h-full">
+            <ChatWindow className="px-4 w-full max-w-3xl" />
+          </div>
         </div>
-        <div className="top-0 left-10 absolute">
-          <Menu
-            onChange={handleMenuChange}
-            options={Object.keys(items).map((key) => ({ value: key, label: key }))} placeholder='Select a service' />
+
+        <div className="flex justify-center">
+          <ChatInput className='absolute bottom-2 w-full max-w-3xl' />
         </div>
-        <div className="flex-grow overflow-y-auto">
-          <ChatWindow />
-        </div>
-        <ChatInput />
       </div>
     </div>
   );
-}
+};
 
 export default App;

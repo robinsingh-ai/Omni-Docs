@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import { useTheme } from "../hooks/useTheme";
 import { Button } from "./ui/button";
+
 export function ThemeSwitcher() {
     const [mounted, setMounted] = useState(false)
     const { theme, toggleDarkMode } = useTheme();
@@ -20,7 +21,7 @@ export function ThemeSwitcher() {
     }
 
     return (
-        <div className="fixed top-5 left-2">
+        <div className="px-2">
             <Button aria-label="Light Mode" className='h-18 w-18 bg-transparent hover:bg-transparent border-none rounded-full p-4 hover:shadow-md'
                 onClick={toggleDarkMode}>
                 {darkMode ? <SunIcon className={iconClass} /> : <MoonIcon className={iconClass} />}
