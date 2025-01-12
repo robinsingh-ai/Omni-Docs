@@ -4,13 +4,12 @@ export class LocalLLMProvider implements ResponseProvider {
     private api = process.env.REACT_APP_BACKEND_URL
     async generateResponse(message: string, dataSource: string): Promise<string> {
         try {
-            console.log('Sending message to backend:', this.api);
             const response = await fetch(`${this.api}/api/v1/query`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ prompt: message }),
+                body: JSON.stringify({ prompt: message, data: dataSource }),
             });
 
             if (!response.ok) {

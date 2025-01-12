@@ -1,22 +1,26 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import Message from '../../models/Message';
 import { ResponseProviderFactory } from '../../services/ResponseProviderFactory';
 import { LLM_Provider } from '@/src/services/ResponseProvider';
 
 export const fetchResponse = createAsyncThunk<
-    Message,
+    any,
     { provider_name: LLM_Provider; message: string; dataSource: string },
     { rejectValue: string }
 >(
     'chat/fetchResponse',
     async ({ provider_name, message, dataSource }, { rejectWithValue }) => {
         try {
+            console.log('Fetching response from provider:', provider_name, message, dataSource.toString());
             const provider = ResponseProviderFactory.getProvider(provider_name);
             const response = await provider.generateResponse(message, dataSource);
             console.log('Response:', response);
             const responseText = response.content;
             if (responseText) {
-                return new Message('bot', responseText);
+                return {
+                    sender: 'bot',
+                    text: responseText,
+                    timestamp: new Date().toISOString(),
+                }
             }
 
             return rejectWithValue('Empty response from provider.');
@@ -27,7 +31,7 @@ export const fetchResponse = createAsyncThunk<
 );
 
 const initialState = {
-    messages: [] as Message[],
+    messages: [] as any[],
     loading: false,
 };
 
@@ -36,8 +40,11 @@ const chatSlice = createSlice({
     initialState,
     reducers: {
         addUserMessage: (state, action) => {
-            const message = new Message('user', action.payload);
-            state.messages.push(message);
+            state.messages.push({
+                sender: 'user',
+                text: action.payload,
+                timestamp: new Date().toISOString(),
+            });
         },
     },
     extraReducers: (builder) => {
@@ -47,13 +54,15 @@ const chatSlice = createSlice({
         builder.addCase(fetchResponse.fulfilled, (state, action) => {
             state.loading = false;
             console.log('Received response:', action.payload);
-            const message = new Message('bot', action.payload.text);
-            state.messages.push(message);
+            state.messages.push(action.payload);
         });
         builder.addCase(fetchResponse.rejected, (state, action) => {
             state.loading = false;
-            const message = new Message('bot', action.payload || 'Failed to fetch response from provider.');
-            state.messages.push(message);
+            state.messages.push({
+                sender: 'bot',
+                text: action.payload || 'Failed to fetch response from provider.',
+                timestamp: new Date().toISOString(),
+            });
         });
     },
 });

@@ -9,16 +9,15 @@ import Navbar from './components/Navbar';
 
 const App: React.FC = () => {
   const items: Record<string, DataSource> = {
-    'Crust-Data': { dataSource: 'crust-data' },
-    'Next.js': { dataSource: 'nextjs-sitemap' },
-    'Flutter': { dataSource: 'flutter-sitemap' },
+    'Crust-Data': 'crust-data',
+    'Next.js': 'nextjs-sitemap',
+    'Flutter': 'flutter-sitemap',
   };
 
   const dispatch = useDispatch();
 
   const handleMenuChange = (value: string) => {
-    console.log(value);
-    const selectedDataSource = items[value];
+    const selectedDataSource: DataSource = items[value];
     dispatch(setDataSource(selectedDataSource));
   };
 
@@ -38,7 +37,7 @@ const App: React.FC = () => {
       </div>
 
       <div className="flex flex-col flex-1 overflow-hidden relative">
-        <div className="flex-1 overflow-y-auto mb-28">
+        <div className="flex-1 overflow-y-auto mb-24">
           <div className="flex justify-center h-full">
             <ChatWindow className="px-4 w-full max-w-3xl" />
           </div>
