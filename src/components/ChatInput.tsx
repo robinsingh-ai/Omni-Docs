@@ -7,6 +7,7 @@ import { AppDispatch, RootState } from '../redux/store';
 import { useSelector } from 'react-redux';
 import { LLM_Provider } from '../services/ResponseProvider';
 import Spinner from './Spinner';
+import { items } from '../App';
 
 interface ChatInputProps {
     className?: string;
@@ -18,7 +19,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ className, onSend }) => {
     const dispatch = useDispatch<AppDispatch>();
     const loading = useSelector((state: RootState) => state.chat.loading);
     const dataSource = useSelector((state: RootState) => state.data.dataSource.valueOf());
-
+    const dataKey = Object.keys(items).find(key => items[key] === dataSource);
     const sendMessage = async () => {
         if (query.trim()) {
             dispatch(addUserMessage(query));
@@ -48,15 +49,14 @@ const ChatInput: React.FC<ChatInputProps> = ({ className, onSend }) => {
                 value={query}
                 onKeyDown={handleKeyDown}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Ask Me About NextJS..."
+                placeholder={`Ask me about ${dataKey}`}
                 rows={2}
             />
             <motion.button
                 className="flex items-center justify-center p-3 text-black font-semibold hover:scale-105 active:scale-95 focus:outline-none focus:ring focus:ring-blue-300"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={sendMessage}
-            >
+                onClick={sendMessage}>
                 {loading ? <Spinner /> : <Send size={24} />}
             </motion.button>
         </div>

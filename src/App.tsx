@@ -7,12 +7,13 @@ import { useDispatch } from 'react-redux';
 import { DataSource, setDataSource } from './redux/reducers/dataSlice';
 import Navbar from './components/Navbar';
 
+export const items: Record<string, DataSource> = {
+  'Crust-Data': 'crust-data',
+  'Next.js': 'nextjs-sitemap',
+  'Flutter': 'flutter-sitemap',
+};
+
 const App: React.FC = () => {
-  const items: Record<string, DataSource> = {
-    'Crust-Data': 'crust-data',
-    'Next.js': 'nextjs-sitemap',
-    'Flutter': 'flutter-sitemap',
-  };
 
   const dispatch = useDispatch();
 
