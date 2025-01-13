@@ -2,9 +2,9 @@
 
 Setup NodeJS Backend
 
-- [] Initialize Express/Node project
-- [] Setup environment configuration
-- [] Create basic server structure
+- [X] Initialize Express/Node project
+- [X] Setup environment configuration
+- [X] Create basic server structure
 
 Notion Integration
 
@@ -14,15 +14,15 @@ Notion Integration
 
 Vector Database Setup
 
-- [] Choose and setup vector database (e.g., Pinecone)
-- [] Setup OpenAI for embeddings
+- [X] Choose and setup vector database (e.g., Pinecone)
+- [X] Setup OpenAI for embeddings
 - [] Create embedding generation pipeline
 
 RAG Implementation
 
 - [] Create document chunking system
-- [] Setup vector storage system
-- [] Implement retrieval system
+- [X] Setup vector storage system
+- [X] Implement retrieval system
 
 Chat Integration
 
