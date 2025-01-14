@@ -1,5 +1,6 @@
 # main.py
 from fastapi import FastAPI, HTTPException, APIRouter
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 import json
 import logging
@@ -26,14 +27,22 @@ class QueryResponse(BaseModel):
 
 app = FastAPI(title="Documentation Chatbot")
 api_router = APIRouter(prefix="/api/v1")
+
+# CORS configuration
 origins = [
     'http://localhost:3000', 
     'https://getpostman.com', 
     'https://54dc-2601-18e-d082-96d0-408a-ecf8-e3d5-f538.ngrok-free.app'
-    ]
+]
 
 app.add_middleware(
-    CORSMiddleware, allow_origins=origins,allow_credentials=True, allow_methods=['*'], allow_headers=['*'])
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*']
+)
+
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -56,6 +65,22 @@ async def crawl_sitemap(request: CrawlRequest):
         logger.error(f"Error in crawl endpoint: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
+@api_router.post("/query/stream")
+async def query_docs_stream(request: QueryRequest):
+    """Streaming endpoint for querying documentation."""
+    try:
+        logger.info(f"Processing streaming query for {request.index_name}")
+        qa_agent = QAAgent(llm, faiss_manager, request.index_name)
+        
+        return StreamingResponse(
+            qa_agent.answer_query_stream(request.query),
+            media_type='text/event-stream'
+        )
+    except Exception as e:
+        logger.error(f"Error in streaming query endpoint: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+# Keep the original non-streaming endpoint for backward compatibility
 @api_router.post("/query", response_model=QueryResponse)
 async def query_docs(request: QueryRequest):
     try:
@@ -66,6 +91,5 @@ async def query_docs(request: QueryRequest):
     except Exception as e:
         logger.error(f"Error in query endpoint: {e}")
         raise HTTPException(status_code=500, detail=str(e))
-    
 
 app.include_router(api_router)
