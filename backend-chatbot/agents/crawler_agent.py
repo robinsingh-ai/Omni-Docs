@@ -1,7 +1,9 @@
+# agents/crawler_agent.py
 from crewai import Agent
-from typing import List
+from typing import List, Dict
 import logging
 from langchain.llms.base import BaseLLM
+from langchain.docstore.document import Document
 
 from utils.web_utils import WebCrawler
 from utils.faiss_utils import FAISSManager
@@ -26,19 +28,28 @@ class CrawlerAgent:
             self.logger.info(f"Crawling sitemap: {sitemap_url}")
             urls = self.web_crawler.crawl_sitemap(sitemap_url)
             
-            # Fetch content from each URL
-            texts = []
+            # Create documents with metadata
+            documents = []
             for url in urls:
                 self.logger.info(f"Fetching content from: {url}")
                 content = self.web_crawler.fetch_page_content(url)
-                texts.append(content)
+                title = self.web_crawler.get_page_title(url)
+                
+                doc = Document(
+                    page_content=content,
+                    metadata={
+                        "source": url,  # Store full URL
+                        "title": title
+                    }
+                )
+                documents.append(doc)
 
             # Create and save FAISS index
             self.logger.info(f"Creating FAISS index: {index_name}")
-            index = self.faiss_manager.create_or_load_faiss_index(texts, index_name)
+            index = self.faiss_manager.create_index_from_documents(documents, index_name)
             self.faiss_manager.save_faiss_index(index, index_name)
 
-            return f"Successfully indexed {len(texts)} pages for {index_name}"
+            return f"Successfully indexed {len(documents)} pages for {index_name}"
         except Exception as e:
             self.logger.error(f"Error in crawl_and_index: {e}")
             raise

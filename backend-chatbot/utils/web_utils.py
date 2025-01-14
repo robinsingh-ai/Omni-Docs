@@ -1,3 +1,4 @@
+# utils/web_utils.py
 import requests
 from bs4 import BeautifulSoup
 from typing import List
@@ -8,7 +9,6 @@ class WebCrawler:
         self.logger = logging.getLogger(__name__)
     
     def crawl_sitemap(self, sitemap_url: str) -> List[str]:
-        """Extract URLs from a sitemap."""
         try:
             response = requests.get(sitemap_url)
             response.raise_for_status()
@@ -20,13 +20,11 @@ class WebCrawler:
             raise
 
     def fetch_page_content(self, url: str) -> str:
-        """Fetch and extract text content from a webpage."""
         try:
             response = requests.get(url)
             response.raise_for_status()
             soup = BeautifulSoup(response.content, 'html.parser')
             
-            # Remove script and style elements
             for element in soup(['script', 'style']):
                 element.decompose()
                 
@@ -34,3 +32,14 @@ class WebCrawler:
         except Exception as e:
             self.logger.error(f"Error fetching page content: {e}")
             raise
+
+    def get_page_title(self, url: str) -> str:
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+            soup = BeautifulSoup(response.content, 'html.parser')
+            title = soup.title.string if soup.title else url
+            return title.strip()
+        except Exception as e:
+            self.logger.error(f"Error fetching page title: {e}")
+            return url

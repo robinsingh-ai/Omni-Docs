@@ -1,7 +1,8 @@
+# agents/qa_agent.py
 from crewai import Agent
 from langchain.chains import RetrievalQA
 import logging
-from typing import Any, Dict
+from typing import Any, Dict, List
 from langchain.llms.base import BaseLLM
 
 from utils.faiss_utils import FAISSManager
@@ -24,35 +25,40 @@ class QAAgent:
     def _setup_qa_chain(self):
         """Initialize the QA chain with FAISS retriever."""
         try:
-            # Load the index with safe deserialization
             index = self.faiss_manager.load_faiss_index(self.index_name)
             
-            # Create the QA chain
             self.qa_chain = RetrievalQA.from_chain_type(
                 llm=self.llm,
-                chain_type="stuff",  # Using "stuff" chain for simplicity
+                chain_type="stuff",
                 retriever=index.as_retriever(
                     search_kwargs={"k": 4}
                 ),
-                return_source_documents=True,  # Include source documents in response
+                return_source_documents=True,
                 verbose=True
             )
         except Exception as e:
             self.logger.error(f"Error setting up QA chain: {e}")
             raise
 
-    def answer_query(self, query: str) -> str:
+    def answer_query(self, query: str) -> Dict[str, Any]:
         """Answer a user query using the QA chain."""
         try:
             self.logger.info(f"Processing query: {query}")
             result = self.qa_chain({"query": query})
             
-            # Format the response with source information
-            answer = result['result']
-            sources = [doc.metadata.get('source', 'Unknown') for doc in result.get('source_documents', [])]
+            # Format source documents
+            source_documents = []
+            for doc in result.get('source_documents', []):
+                source_documents.append({
+                    "url": doc.metadata.get('source', 'Unknown'),
+                    "title": doc.metadata.get('title', 'Unknown'),
+                    "content_preview": doc.page_content[:200] + "..."  # Optional preview
+                })
             
-            response = f"{answer}\n\nSources: {', '.join(sources)}"
-            return response
+            return {
+                "answer": result['result'],
+                "source_documents": source_documents
+            }
             
         except Exception as e:
             self.logger.error(f"Error answering query: {e}")
