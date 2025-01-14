@@ -8,16 +8,15 @@ interface ChatProps {
 }
 
 const ChatBubble: React.FC<ChatProps> = ({ message, index, length }) => {
-    const { sender, text, timestamp } = message;
+    const { text, timestamp } = message;
     return (
         <div className={`my-2 pt-2}`}>
             <MDPreview
-                className={`inline-block px-4 py-2 rounded-lg ${sender === 'user' ? 'bg-blue-500 text-white' : 'bg-gray-200'
-                    }`}
+                className={`inline-block px-4 py-2 rounded-lg bg-blue-500 text-white`}
                 value={text} />
             <div className='flex justify-between'>
                 {/* {loading && index === length - 1 ? <Spinner /> : <div />} */}
-                <div className="text-xs text-gray-500 mt-1">{new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                <div className="text-xs text-gray-500 ">{new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
             </div>
         </div >
     );

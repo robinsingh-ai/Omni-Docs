@@ -4,6 +4,7 @@ from pydantic import BaseModel
 import json
 import logging
 from typing import List, Optional
+from fastapi.middleware.cors import CORSMiddleware
 
 from utils.llm_utils import get_llm, get_embeddings
 from utils.faiss_utils import FAISSManager
@@ -25,7 +26,14 @@ class QueryResponse(BaseModel):
 
 app = FastAPI(title="Documentation Chatbot")
 api_router = APIRouter(prefix="/api/v1")
+origins = [
+    'http://localhost:3000', 
+    'https://getpostman.com', 
+    'https://54dc-2601-18e-d082-96d0-408a-ecf8-e3d5-f538.ngrok-free.app'
+    ]
 
+app.add_middleware(
+    CORSMiddleware, allow_origins=origins,allow_credentials=True, allow_methods=['*'], allow_headers=['*'])
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'

@@ -8,9 +8,9 @@ import { DataSource, setDataSource } from './redux/reducers/dataSlice';
 import Navbar from './components/Navbar';
 
 export const items: Record<string, DataSource> = {
-  'Crust-Data': 'crust-data',
-  'Next.js': 'nextjs-sitemap',
-  'Flutter': 'flutter-sitemap',
+  'Crust-Data': 'crust_data',
+  'Next.js': 'nextjs',
+  'Flutter': 'flutter',
 };
 
 const App: React.FC = () => {
@@ -38,7 +38,7 @@ const App: React.FC = () => {
       </div>
       <div className="flex-1 relative overflow-hidden">
         <div className="absolute inset-0 overflow-y-auto pb-16">
-          <div className="flex justify-center min-h-full">
+          <div className="flex justify-center min-h-full pb-16">
             <ChatWindow className="px-4 w-full max-w-3xl" />
           </div>
         </div>
