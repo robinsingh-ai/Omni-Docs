@@ -1,38 +1,19 @@
 # agents/qa_agent.py
 from crewai import Agent
 from langchain.chains import RetrievalQA
-from langchain.callbacks.base import BaseCallbackHandler
 import logging
-from typing import Any, Dict, List
+from typing import Any, Dict, List, AsyncGenerator
 from langchain.llms.base import BaseLLM
-import json
 import asyncio
 
 from utils.faiss_utils import FAISSManager
 
-class StreamingCallbackHandler(BaseCallbackHandler):
-    """Custom callback handler for streaming."""
-    def __init__(self):
-        self.tokens = []
-        self.streaming_complete = False
-        self.response_queue = asyncio.Queue()
-
-    async def on_llm_new_token(self, token: str, **kwargs) -> None:
-        """Run on new LLM token."""
-        await self.response_queue.put({"type": "token", "content": token})
-
-    async def on_llm_end(self, response: Any, **kwargs) -> None:
-        """Run when LLM ends."""
-        await self.response_queue.put({"type": "end"})
-        self.streaming_complete = True
-
 class QAAgent:
     def __init__(self, llm: BaseLLM, faiss_manager: FAISSManager, index_name: str):
-        self.streaming_handler = StreamingCallbackHandler()
         self.agent = Agent(
             role='Documentation Assistant',
-            goal='Answer user queries about documentation',
-            backstory='I am an AI assistant specialized in answering queries about software documentation.',
+            goal='Answer user queries about documentation with well-formatted markdown responses',
+            backstory='I am an AI assistant specialized in providing clear, well-structured documentation answers in markdown format.',
             llm=llm,
             verbose=True
         )
@@ -43,6 +24,7 @@ class QAAgent:
         self._setup_qa_chain()
 
     def _setup_qa_chain(self):
+        """Initialize the QA chain with FAISS retriever."""
         try:
             index = self.faiss_manager.load_faiss_index(self.index_name)
             self.qa_chain = RetrievalQA.from_chain_type(
@@ -58,8 +40,22 @@ class QAAgent:
             self.logger.error(f"Error setting up QA chain: {e}")
             raise
 
-    async def answer_query_stream(self, query: str):
-        """Stream the answer to a query."""
+    def _create_markdown_prompt(self, query: str, context: str) -> str:
+        return (
+            "Provide a clear, structured answer in markdown format following these guidelines:\n"
+            "1. Start with a main header using ###\n"
+            "2. Use code blocks with language specification for any code\n"
+            "3. Use bullet points or numbered lists for steps\n"
+            "4. Make key terms bold using **\n"
+            "5. Include properly formatted links\n"
+            "6. Keep paragraphs clear and separate\n\n"
+            f"Question: {query}\n\n"
+            f"Context: {context}\n\n"
+            "Format the entire response in clean markdown. Be concise but thorough."
+        )
+
+    async def answer_query_stream(self, query: str) -> AsyncGenerator[str, None]:
+        """Stream the answer to a query in markdown format."""
         try:
             self.logger.info(f"Processing streaming query: {query}")
             
@@ -70,7 +66,7 @@ class QAAgent:
             # Format context from documents
             context = "\n\n".join([doc.page_content for doc in docs])
             
-            # Prepare source documents info
+            # Prepare source documents
             source_documents = []
             for doc in docs:
                 source_documents.append({
@@ -79,49 +75,64 @@ class QAAgent:
                     "content_preview": doc.page_content[:200] + "..."
                 })
             
-            # Stream the answer
-            prompt = f"Based on the following context, answer the question: {query}\n\nContext: {context}"
+            # Create markdown prompt
+            prompt = self._create_markdown_prompt(query, context)
             
-            # Process the stream
-            async for token in self.llm.astream(prompt):
-                yield json.dumps({
-                    "type": "token",
-                    "content": token.content if hasattr(token, 'content') else str(token)
-                }) + "\n"
+            # Buffer for collecting tokens into meaningful chunks
+            current_chunk = ""
             
-            # Send source documents at the end
-            yield json.dumps({
-                "type": "sources",
-                "content": source_documents
-            }) + "\n"
+            # Stream the response
+            async for chunk in self.llm.astream(prompt):
+                token = chunk.content if hasattr(chunk, 'content') else str(chunk)
+                current_chunk += token
+                
+                # Send chunk when we have a complete sentence or significant content
+                if any(token.endswith(p) for p in ['.', '!', '?', '\n']) and current_chunk:
+                    yield current_chunk
+                    current_chunk = ""
             
-            # Signal completion
-            yield json.dumps({"type": "end"}) + "\n"
+            # Send any remaining content
+            if current_chunk:
+                yield current_chunk
+            
+            # Add source references in markdown
+            sources_section = "\n\n### Sources\n"
+            for idx, source in enumerate(source_documents, 1):
+                sources_section += f"{idx}. [{source['title']}]({source['url']})\n"
+            
+            yield sources_section
             
         except Exception as e:
             self.logger.error(f"Error in streaming answer: {e}")
-            yield json.dumps({
-                "type": "error",
-                "content": str(e)
-            }) + "\n"
+            yield f"\n\n### Error\n{str(e)}"
             raise
 
     def answer_query(self, query: str) -> Dict[str, Any]:
-        """Answer a user query using the QA chain."""
+        """Answer a user query using the QA chain with markdown formatting."""
         try:
             self.logger.info(f"Processing query: {query}")
-            result = self.qa_chain({"query": query})
             
+            index = self.faiss_manager.load_faiss_index(self.index_name)
+            docs = index.similarity_search(query, k=4)
+            context = "\n\n".join([doc.page_content for doc in docs])
+            
+            prompt = self._create_markdown_prompt(query, context)
+            response = self.qa_chain({"query": prompt})
+            
+            # Format source documents
             source_documents = []
-            for doc in result.get('source_documents', []):
-                source_documents.append({
+            sources_markdown = "\n\n### Sources\n"
+            for idx, doc in enumerate(response.get('source_documents', []), 1):
+                source = {
                     "url": doc.metadata.get('source', 'Unknown'),
                     "title": doc.metadata.get('title', 'Unknown'),
                     "content_preview": doc.page_content[:200] + "..."
-                })
+                }
+                source_documents.append(source)
+                sources_markdown += f"{idx}. [{source['title']}]({source['url']})\n"
             
             return {
-                "answer": result['result'],
+                "answer": response['result'] + sources_markdown,
                 "source_documents": source_documents
             }
             
