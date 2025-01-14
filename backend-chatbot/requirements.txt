@@ -1,0 +1,15 @@
+fastapi==0.104.1
+uvicorn==0.24.0
+langchain==0.1.0
+faiss-cpu==1.7.4
+crewai==0.9.4
+beautifulsoup4==4.12.2
+requests==2.31.0
+python-dotenv==1.0.0
+pydantic==2.5.2
+sentence-transformers==2.2.2
+lxml==4.9.3
+ollama==0.1.6
+torch>=2.0.0
+typing-extensions>=4.5.0
+bs4==0.0.1
