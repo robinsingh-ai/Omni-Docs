@@ -5,7 +5,7 @@ import { LLM_Provider } from '@/src/services/ResponseProvider';
 export const fetchResponse = createAsyncThunk<
     any,
     { provider_name: LLM_Provider; message: string; dataSource: string },
-    { rejectValue: string }
+    { rejectValue: Object }
 >(
     'chat/fetchResponse',
     async ({ provider_name, message, dataSource }, { rejectWithValue }) => {
@@ -17,14 +17,27 @@ export const fetchResponse = createAsyncThunk<
                 return {
                     sender: 'bot',
                     text: responseText,
+                    status: 'success',
                     sources: response.source_documents,
                     timestamp: new Date().toISOString(),
                 }
             }
 
-            return rejectWithValue('Empty response from provider.');
+            return rejectWithValue({
+                sender: 'bot',
+                text: 'Something went wrong. Please try again.',
+                sources: [],
+                status: 'error',
+                timestamp: new Date().toISOString(),
+            });
         } catch (error: any) {
-            return rejectWithValue(error.message || 'Failed to fetch response from provider.');
+            return rejectWithValue({
+                sender: 'bot',
+                text: 'Something went wrong. Please try again.',
+                sources: [],
+                status: 'error',
+                timestamp: new Date().toISOString(),
+            });
         }
     }
 );
@@ -32,6 +45,7 @@ export const fetchResponse = createAsyncThunk<
 const initialState = {
     messages: [] as any[],
     loading: false,
+    error: null,
 };
 
 const chatSlice = createSlice({
@@ -41,6 +55,7 @@ const chatSlice = createSlice({
         addUserMessage: (state, action) => {
             state.messages.push({
                 sender: 'user',
+                status: 'success',
                 text: action.payload,
                 timestamp: new Date().toISOString(),
             });
@@ -56,11 +71,16 @@ const chatSlice = createSlice({
         });
         builder.addCase(fetchResponse.rejected, (state, action) => {
             state.loading = false;
-            state.messages.push({
-                sender: 'bot',
-                text: action.payload || 'Failed to fetch response from provider.',
-                timestamp: new Date().toISOString(),
-            });
+            if (action.payload) {
+                state.messages.push(action.payload);
+            } else {
+                state.messages.push({
+                    sender: 'bot',
+                    text: 'Failed to fetch response from provider.',
+                    sources: [],
+                    timestamp: new Date().toISOString(),
+                });
+            }
         });
     },
 });
