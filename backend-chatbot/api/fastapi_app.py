@@ -1,5 +1,5 @@
 # main.py
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, APIRouter
 from pydantic import BaseModel
 import json
 import logging
@@ -24,6 +24,7 @@ class QueryResponse(BaseModel):
     source_documents: List[dict]
 
 app = FastAPI(title="Documentation Chatbot")
+api_router = APIRouter(prefix="/api/v1")
 
 logging.basicConfig(
     level=logging.INFO,
@@ -35,7 +36,7 @@ llm = get_llm()
 embeddings = get_embeddings()
 faiss_manager = FAISSManager(embeddings)
 
-@app.post("/crawl")
+@api_router.post("/crawl")
 async def crawl_sitemap(request: CrawlRequest):
     try:
         logger.info(f"Starting crawl for {request.sitemap_url}")
@@ -47,7 +48,7 @@ async def crawl_sitemap(request: CrawlRequest):
         logger.error(f"Error in crawl endpoint: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.post("/query", response_model=QueryResponse)
+@api_router.post("/query", response_model=QueryResponse)
 async def query_docs(request: QueryRequest):
     try:
         logger.info(f"Processing query for {request.index_name}")
@@ -57,3 +58,6 @@ async def query_docs(request: QueryRequest):
     except Exception as e:
         logger.error(f"Error in query endpoint: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+    
+
+app.include_router(api_router)
