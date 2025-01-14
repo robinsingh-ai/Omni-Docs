@@ -35,7 +35,7 @@ const ChatBubble: React.FC<ChatProps> = ({ message, index, length }) => {
             }
             <div className='flex justify-between'>
                 {/* {loading && index === length - 1 ? <Spinner /> : <div />} */}
-                <div className="text-xs text-gray-500 mt-1">{new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
+                <div className="text-xs text-gray-500 ">{new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
             </div>
         </div >
     );
