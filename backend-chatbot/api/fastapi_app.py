@@ -1,5 +1,5 @@
 # main.py
-from fastapi import APIRouter, FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, APIRouter
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 import json
@@ -30,7 +30,9 @@ api_router = APIRouter(prefix="/api/v1")
 
 origins = [
     'http://localhost:3000', 
-    'https://getpostman.com'
+    'https://getpostman.com', 
+    'https://api-docs-ai.vercel.app/', 
+    
 ]
 
 app.add_middleware(

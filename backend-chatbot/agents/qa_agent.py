@@ -5,6 +5,7 @@ import logging
 from typing import Any, Dict, List, AsyncGenerator
 from langchain.llms.base import BaseLLM
 import asyncio
+import re
 
 from utils.faiss_utils import FAISSManager
 
@@ -40,6 +41,27 @@ class QAAgent:
             self.logger.error(f"Error setting up QA chain: {e}")
             raise
 
+    def _is_task_question(self, query: str) -> bool:
+        """Determine if a question is asking about how to do something."""
+        task_indicators = [
+            r'how to',
+            r'how do I',
+            r'steps to',
+            r'guide for',
+            r'tutorial',
+            r'create',
+            r'build',
+            r'implement',
+            r'set up',
+            r'configure',
+            r'install',
+            r'deploy',
+            r'start',
+            r'make'
+        ]
+        query_lower = query.lower()
+        return any(re.search(pattern, query_lower) for pattern in task_indicators)
+
     def _create_markdown_prompt(self, query: str, context: str) -> str:
         return (
             "Provide a clear, structured answer in markdown format following these guidelines:\n"
@@ -51,17 +73,15 @@ class QAAgent:
             "4. For lists:\n"
             "   - Use * for bullet points\n"
             "   - Use 1. 2. 3. for numbered steps\n"
-            "   - Indent nested lists with 2 spaces\n"
             "5. For emphasis:\n"
             "   - Use **text** for bold\n"
             "   - Use `code` for inline code\n"
             "6. Keep paragraphs separated by blank lines\n"
-            "7. Use --- for horizontal rules between major sections\n"
-            "8. Don't use === or --- for headings, use # syntax instead\n\n"
             f"Question: {query}\n\n"
             f"Context: {context}\n\n"
             "Start with a ### heading summarizing the topic, then provide a clear and concise answer."
         )
+
     async def answer_query_stream(self, query: str) -> AsyncGenerator[str, None]:
         """Stream the answer to a query in markdown format."""
         try:
@@ -74,14 +94,18 @@ class QAAgent:
             # Format context from documents
             context = "\n\n".join([doc.page_content for doc in docs])
             
-            # Prepare source documents
+            # Determine if this is a task question
+            is_task = self._is_task_question(query)
+            
+            # Prepare source documents only for task questions
             source_documents = []
-            for doc in docs:
-                source_documents.append({
-                    "url": doc.metadata.get('source', 'Unknown'),
-                    "title": doc.metadata.get('title', 'Unknown'),
-                    "content_preview": doc.page_content[:200] + "..."
-                })
+            if is_task:
+                for doc in docs:
+                    source_documents.append({
+                        "url": doc.metadata.get('source', 'Unknown'),
+                        "title": doc.metadata.get('title', 'Unknown'),
+                        "content_preview": doc.page_content[:200] + "..."
+                    })
             
             # Create markdown prompt
             prompt = self._create_markdown_prompt(query, context)
@@ -103,12 +127,12 @@ class QAAgent:
             if current_chunk:
                 yield current_chunk
             
-            # Add source references in markdown
-            sources_section = "\n\n### Sources\n"
-            for idx, source in enumerate(source_documents, 1):
-                sources_section += f"{idx}. [{source['title']}]({source['url']})\n"
-            
-            yield sources_section
+            # Add source references only for task questions
+            if is_task and source_documents:
+                sources_section = "\n\n### Sources\n"
+                for idx, source in enumerate(source_documents, 1):
+                    sources_section += f"{idx}. [{source['title']}]({source['url']})\n"
+                yield sources_section
             
         except Exception as e:
             self.logger.error(f"Error in streaming answer: {e}")
@@ -127,17 +151,23 @@ class QAAgent:
             prompt = self._create_markdown_prompt(query, context)
             response = self.qa_chain({"query": prompt})
             
-            # Format source documents
+            # Determine if this is a task question
+            is_task = self._is_task_question(query)
+            
+            # Format source documents only for task questions
             source_documents = []
-            sources_markdown = "\n\n### Sources\n"
-            for idx, doc in enumerate(response.get('source_documents', []), 1):
-                source = {
-                    "url": doc.metadata.get('source', 'Unknown'),
-                    "title": doc.metadata.get('title', 'Unknown'),
-                    "content_preview": doc.page_content[:200] + "..."
-                }
-                source_documents.append(source)
-                sources_markdown += f"{idx}. [{source['title']}]({source['url']})\n"
+            sources_markdown = ""
+            
+            if is_task:
+                sources_markdown = "\n\n### Sources\n"
+                for idx, doc in enumerate(response.get('source_documents', []), 1):
+                    source = {
+                        "url": doc.metadata.get('source', 'Unknown'),
+                        "title": doc.metadata.get('title', 'Unknown'),
+                        "content_preview": doc.page_content[:200] + "..."
+                    }
+                    source_documents.append(source)
+                    sources_markdown += f"{idx}. [{source['title']}]({source['url']})\n"
             
             return {
                 "answer": response['result'] + sources_markdown,
