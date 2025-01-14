@@ -8,7 +8,8 @@ import asyncio
 import re
 
 from utils.faiss_utils import FAISSManager
-from utils.constants import MARKDOWN_PROMPT_TEMPLATE
+from utils.constants import PromptConstants
+
 
 
 class QAAgent:
@@ -66,7 +67,7 @@ class QAAgent:
 
     def _create_markdown_prompt(self, query: str, context: str) -> str:
         """Create markdown-formatted prompt using template from constants."""
-        return MARKDOWN_PROMPT_TEMPLATE.format(
+        return PromptConstants.MARKDOWN_PROMPT_TEMPLATE.format(
             query=query,
             context=context
         )
