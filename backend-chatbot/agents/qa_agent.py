@@ -43,17 +43,25 @@ class QAAgent:
     def _create_markdown_prompt(self, query: str, context: str) -> str:
         return (
             "Provide a clear, structured answer in markdown format following these guidelines:\n"
-            "1. Start with a main header using ###\n"
-            "2. Use code blocks with language specification for any code\n"
-            "3. Use bullet points or numbered lists for steps\n"
-            "4. Make key terms bold using **\n"
-            "5. Include properly formatted links\n"
-            "6. Keep paragraphs clear and separate\n\n"
+            "1. Use a single ### for the main heading\n"
+            "2. Use proper heading hierarchy (### for main, #### for sub-sections)\n"
+            "3. For code blocks:\n"
+            "   - Use ```language-name for code blocks\n"
+            "   - Specify the language (e.g., ```bash, ```javascript)\n"
+            "4. For lists:\n"
+            "   - Use * for bullet points\n"
+            "   - Use 1. 2. 3. for numbered steps\n"
+            "   - Indent nested lists with 2 spaces\n"
+            "5. For emphasis:\n"
+            "   - Use **text** for bold\n"
+            "   - Use `code` for inline code\n"
+            "6. Keep paragraphs separated by blank lines\n"
+            "7. Use --- for horizontal rules between major sections\n"
+            "8. Don't use === or --- for headings, use # syntax instead\n\n"
             f"Question: {query}\n\n"
             f"Context: {context}\n\n"
-            "Format the entire response in clean markdown. Be concise but thorough."
+            "Start with a ### heading summarizing the topic, then provide a clear and concise answer."
         )
-
     async def answer_query_stream(self, query: str) -> AsyncGenerator[str, None]:
         """Stream the answer to a query in markdown format."""
         try:
