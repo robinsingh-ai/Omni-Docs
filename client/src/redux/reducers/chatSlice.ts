@@ -10,15 +10,14 @@ export const fetchResponse = createAsyncThunk<
     'chat/fetchResponse',
     async ({ provider_name, message, dataSource }, { rejectWithValue }) => {
         try {
-            console.log('Fetching response from provider:', provider_name, message, dataSource.toString());
             const provider = ResponseProviderFactory.getProvider(provider_name);
             const response = await provider.generateResponse(message, dataSource);
-            console.log('Response:', response);
-            const responseText = response.content;
+            const responseText = response.answer;
             if (responseText) {
                 return {
                     sender: 'bot',
                     text: responseText,
+                    sources: response.source_documents,
                     timestamp: new Date().toISOString(),
                 }
             }
@@ -53,7 +52,6 @@ const chatSlice = createSlice({
         });
         builder.addCase(fetchResponse.fulfilled, (state, action) => {
             state.loading = false;
-            console.log('Received response:', action.payload);
             state.messages.push(action.payload);
         });
         builder.addCase(fetchResponse.rejected, (state, action) => {

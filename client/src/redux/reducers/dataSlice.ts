@@ -1,10 +1,10 @@
 // src/store/dataSlice.ts
 import { createSlice } from '@reduxjs/toolkit';
 
-export type DataSource = 'crust-data' | 'nextjs-sitemap' | 'flutter-sitemap';
+export type DataSource = 'crust_data' | 'nextjs' | 'flutter';
 
 const initialState: { dataSource: DataSource } = {
-    dataSource: 'nextjs-sitemap',
+    dataSource: 'nextjs',
 };
 
 const dataSlice = createSlice({
