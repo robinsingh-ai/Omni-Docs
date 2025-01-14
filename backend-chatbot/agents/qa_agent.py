@@ -8,6 +8,8 @@ import asyncio
 import re
 
 from utils.faiss_utils import FAISSManager
+from utils.constants import MARKDOWN_PROMPT_TEMPLATE
+
 
 class QAAgent:
     def __init__(self, llm: BaseLLM, faiss_manager: FAISSManager, index_name: str):
@@ -63,23 +65,10 @@ class QAAgent:
         return any(re.search(pattern, query_lower) for pattern in task_indicators)
 
     def _create_markdown_prompt(self, query: str, context: str) -> str:
-        return (
-            "Provide a clear, structured answer in markdown format following these guidelines:\n"
-            "1. Use a single ### for the main heading\n"
-            "2. Use proper heading hierarchy (### for main, #### for sub-sections)\n"
-            "3. For code blocks:\n"
-            "   - Use ```language-name for code blocks\n"
-            "   - Specify the language (e.g., ```bash, ```javascript)\n"
-            "4. For lists:\n"
-            "   - Use * for bullet points\n"
-            "   - Use 1. 2. 3. for numbered steps\n"
-            "5. For emphasis:\n"
-            "   - Use **text** for bold\n"
-            "   - Use `code` for inline code\n"
-            "6. Keep paragraphs separated by blank lines\n"
-            f"Question: {query}\n\n"
-            f"Context: {context}\n\n"
-            "Start with a ### heading summarizing the topic, then provide a clear and concise answer."
+        """Create markdown-formatted prompt using template from constants."""
+        return MARKDOWN_PROMPT_TEMPLATE.format(
+            query=query,
+            context=context
         )
 
     async def answer_query_stream(self, query: str) -> AsyncGenerator[str, None]:
