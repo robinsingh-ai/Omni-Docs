@@ -5,8 +5,10 @@ import logging
 from langchain.llms.base import BaseLLM
 from langchain.docstore.document import Document
 
-from utils.web_utils import WebCrawler
-from utils.faiss_utils import FAISSManager
+from app.utils.web_utils import WebCrawler
+from app.utils.faiss_utils import FAISSManager
+from app.core.logger import setup_logger
+
 
 class CrawlerAgent:
     def __init__(self, llm: BaseLLM, faiss_manager: FAISSManager):
@@ -19,7 +21,7 @@ class CrawlerAgent:
         )
         self.web_crawler = WebCrawler()
         self.faiss_manager = faiss_manager
-        self.logger = logging.getLogger(__name__)
+        self.logger = setup_logger(__name__)
 
     def crawl_and_index(self, sitemap_url: str, index_name: str) -> str:
         """Crawl website and create FAISS index."""
