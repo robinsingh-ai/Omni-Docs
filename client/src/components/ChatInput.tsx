@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
-import { addUserMessage, fetchResponse } from '../redux/reducers/chatSlice';
+import { addUserMessage, fetchResponse, streamResponse } from '../redux/reducers/chatSlice';
 import { Send } from 'lucide-react';
 import { AppDispatch, RootState } from '../redux/store';
 import { useSelector } from 'react-redux';
@@ -23,7 +23,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ className, onSend }) => {
     const sendMessage = async () => {
         if (query.trim()) {
             dispatch(addUserMessage(query));
-            dispatch(fetchResponse({ provider_name: LLM_Provider.local_llm, message: query, dataSource: dataSource }));
+            dispatch(streamResponse({ provider_name: LLM_Provider.local_llm, message: query, dataSource: dataSource }));
             setQuery('');
         }
         if (onSend != null) {

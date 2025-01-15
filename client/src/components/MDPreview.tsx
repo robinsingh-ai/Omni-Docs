@@ -15,11 +15,17 @@ const MDPreview = ({ value, className }: MDPreviewProps) => {
     function LinkRenderer(props: any) {
         return (
             <Tooltip
-                className="cursor-pointer"
+                className="cursor-pointer bg-gray-950 rounded-md px-4 text-white"
                 onClick={(e) => window.open(props.href, '_blank')}
                 content={props.href.length > 50 ? props.href.substring(0, 50) + '...' : props.href}
                 placement='top-start'>
-                <a href={props.href} target="_blank" rel="noreferrer">
+                <a href={props.href}
+                    style={{
+                        color: 'blue',
+                        textDecoration: 'underline'
+
+                    }}
+                    target="_blank" rel="noreferrer">
                     {props.children}
                 </a>
             </Tooltip>

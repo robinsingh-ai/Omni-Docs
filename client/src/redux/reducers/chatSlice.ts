@@ -42,6 +42,20 @@ export const fetchResponse = createAsyncThunk<
     }
 );
 
+export const streamResponse = createAsyncThunk<
+    void,
+    { provider_name: LLM_Provider; message: string; dataSource: string },
+    { rejectValue: Object }
+>(
+    'chat/streamResponse',
+    async ({ provider_name, message, dataSource }, { dispatch }) => {
+        const provider = ResponseProviderFactory.getProvider(provider_name);
+        await provider.streamResponse(message, dataSource, (chunk: string) => {
+            dispatch(addStreamedMessage({ sender: 'bot', text: chunk }));
+        });
+    }
+);
+
 const initialState = {
     messages: [] as any[],
     loading: false,
@@ -60,6 +74,19 @@ const chatSlice = createSlice({
                 timestamp: new Date().toISOString(),
             });
         },
+        addStreamedMessage: (state, action) => {
+            const lastMessage = state.messages[state.messages.length - 1];
+            if (lastMessage && lastMessage.sender === 'bot') {
+                lastMessage.text += action.payload.text;
+            } else {
+                state.messages.push({
+                    sender: 'bot',
+                    status: 'success',
+                    text: action.payload.text,
+                    timestamp: new Date().toISOString(),
+                });
+            }
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(fetchResponse.pending, (state) => {
@@ -82,8 +109,24 @@ const chatSlice = createSlice({
                 });
             }
         });
+
+        builder.addCase(streamResponse.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(streamResponse.fulfilled, (state) => {
+            state.loading = false;
+        });
+        builder.addCase(streamResponse.rejected, (state) => {
+            state.loading = false;
+            state.messages.push({
+                sender: 'bot',
+                text: 'Streaming failed. Please try again.',
+                status: 'error',
+                timestamp: new Date().toISOString(),
+            });
+        });
     },
 });
 
-export const { addUserMessage } = chatSlice.actions;
+export const { addUserMessage, addStreamedMessage } = chatSlice.actions;
 export default chatSlice.reducer;

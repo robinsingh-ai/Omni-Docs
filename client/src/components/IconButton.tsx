@@ -11,6 +11,7 @@ type IconButtonProps = {
 const IconButton: React.FC<IconButtonProps> = ({ onClick, children, ariaLabel, className, tooltipPlacement }) => {
   return (
     <Tooltip
+      className='cursor-pointer bg-gray-950 rounded-md px-4 text-white'
       content={ariaLabel}
       placement={tooltipPlacement}
       showArrow={true}

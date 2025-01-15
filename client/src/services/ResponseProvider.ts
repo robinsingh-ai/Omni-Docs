@@ -6,4 +6,5 @@ export enum LLM_Provider {
 
 export interface ResponseProvider {
     generateResponse(message: string, dataSource: string): Promise<any>;
+    streamResponse(message: string, dataSource: string, onData: (chunk: string) => void): Promise<void>;
 }

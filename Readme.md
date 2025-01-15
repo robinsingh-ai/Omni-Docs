@@ -1,5 +1,25 @@
 # API Docs Chatbot
 
+
+
+#### Running the App
+
+- Start the backend in a virtual env
+
+```bash
+- cd backend-chatbot 
+- source chain-env/bin/activate # use the correct virtual env name
+- python main.py 
+```
+
+- Ensure Ollama is running in the background
+
+- Start the frontend
+
+```bash
+npm run start
+```
+
 ## Overview
 
 The API Docs Chatbot is a conversational AI tool designed to help developers learn and navigate API documentation in an intuitive and engaging way. By utilizing advanced language models, this chatbot offers real-time, up-to-date information from a variety of API docs, including popular technologies like 
