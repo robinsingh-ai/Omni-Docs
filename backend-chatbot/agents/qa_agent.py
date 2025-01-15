@@ -6,11 +6,10 @@ from typing import Any, Dict, List, AsyncGenerator
 from langchain.llms.base import BaseLLM
 import asyncio
 import re
+import json
 
 from utils.faiss_utils import FAISSManager
 from utils.constants import PromptConstants
-
-
 
 class QAAgent:
     def __init__(self, llm: BaseLLM, faiss_manager: FAISSManager, index_name: str):
@@ -73,7 +72,7 @@ class QAAgent:
         )
 
     async def answer_query_stream(self, query: str) -> AsyncGenerator[str, None]:
-        """Stream the answer to a query in markdown format."""
+        """Stream the answer to a query with separated markdown and sources."""
         try:
             self.logger.info(f"Processing streaming query: {query}")
             
@@ -87,15 +86,22 @@ class QAAgent:
             # Determine if this is a task question
             is_task = self._is_task_question(query)
             
-            # Prepare source documents only for task questions
-            source_documents = []
+            # Initialize source documents array
+            sources = []
             if is_task:
                 for doc in docs:
-                    source_documents.append({
+                    sources.append({
                         "url": doc.metadata.get('source', 'Unknown'),
                         "title": doc.metadata.get('title', 'Unknown'),
                         "content_preview": doc.page_content[:200] + "..."
                     })
+            
+            # First, send the sources as a separate object
+            if sources:
+                yield json.dumps({
+                    "type": "sources",
+                    "content": sources
+                }) + "\n"
             
             # Create markdown prompt
             prompt = self._create_markdown_prompt(query, context)
@@ -103,34 +109,41 @@ class QAAgent:
             # Buffer for collecting tokens into meaningful chunks
             current_chunk = ""
             
-            # Stream the response
+            # Stream the markdown content
             async for chunk in self.llm.astream(prompt):
                 token = chunk.content if hasattr(chunk, 'content') else str(chunk)
                 current_chunk += token
                 
                 # Send chunk when we have a complete sentence or significant content
                 if any(token.endswith(p) for p in ['.', '!', '?', '\n']) and current_chunk:
-                    yield current_chunk
+                    yield json.dumps({
+                        "type": "markdown",
+                        "content": current_chunk
+                    }) + "\n"
                     current_chunk = ""
             
             # Send any remaining content
             if current_chunk:
-                yield current_chunk
+                yield json.dumps({
+                    "type": "markdown",
+                    "content": current_chunk
+                }) + "\n"
             
-            # Add source references only for task questions
-            if is_task and source_documents:
-                sources_section = "\n\n### Sources\n"
-                for idx, source in enumerate(source_documents, 1):
-                    sources_section += f"{idx}. [{source['title']}]({source['url']})\n"
-                yield sources_section
+            # Signal completion
+            yield json.dumps({
+                "type": "end"
+            }) + "\n"
             
         except Exception as e:
             self.logger.error(f"Error in streaming answer: {e}")
-            yield f"\n\n### Error\n{str(e)}"
+            yield json.dumps({
+                "type": "error",
+                "content": str(e)
+            }) + "\n"
             raise
 
     def answer_query(self, query: str) -> Dict[str, Any]:
-        """Answer a user query using the QA chain with markdown formatting."""
+        """Answer a user query using the QA chain."""
         try:
             self.logger.info(f"Processing query: {query}")
             
@@ -141,15 +154,10 @@ class QAAgent:
             prompt = self._create_markdown_prompt(query, context)
             response = self.qa_chain({"query": prompt})
             
-            # Determine if this is a task question
             is_task = self._is_task_question(query)
-            
-            # Format source documents only for task questions
             source_documents = []
-            sources_markdown = ""
             
             if is_task:
-                sources_markdown = "\n\n### Sources\n"
                 for idx, doc in enumerate(response.get('source_documents', []), 1):
                     source = {
                         "url": doc.metadata.get('source', 'Unknown'),
@@ -157,10 +165,9 @@ class QAAgent:
                         "content_preview": doc.page_content[:200] + "..."
                     }
                     source_documents.append(source)
-                    sources_markdown += f"{idx}. [{source['title']}]({source['url']})\n"
             
             return {
-                "answer": response['result'] + sources_markdown,
+                "answer": response['result'],
                 "source_documents": source_documents
             }
             
