@@ -5,12 +5,14 @@ from typing import List, Dict
 import os
 import logging
 from pathlib import Path
+from app.core.logger import setup_logger
+
 
 class FAISSManager:
     def __init__(self, embeddings):
         self.embeddings = embeddings
-        self.logger = logging.getLogger(__name__)
-    
+        self.logger = setup_logger(__name__)    
+        
     def create_index_from_documents(self, documents: List[Document], index_name: str) -> FAISS:
         """Create a new FAISS index from documents."""
         self.logger.info(f"Creating new FAISS index: {index_name}")
