@@ -1,3 +1,5 @@
 __pycache__/
 *.py[cod]
 .pyc
+backend-chatbot/data/flutter/index.faiss
+backend-chatbot/data/flutter/index.pkl
