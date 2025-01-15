@@ -15,7 +15,6 @@ from utils.llm_utils import get_llm, get_embeddings
 from utils.faiss_utils import FAISSManager
 from agents.crawler_agent import CrawlerAgent
 from agents.qa_agent import QAAgent
-from utils.constants import MARKDOWN_PROMPT_TEMPLATE
 
 class CrawlRequest(BaseModel):
     sitemap_url: str
