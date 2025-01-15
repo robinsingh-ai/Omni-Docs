@@ -8,8 +8,9 @@ import asyncio
 import re
 import json
 
-from utils.faiss_utils import FAISSManager
-from utils.constants import PromptConstants
+from app.utils.faiss_utils import FAISSManager
+from app.core.constants import PromptConstants
+from app.core.logger import setup_logger
 
 class QAAgent:
     def __init__(self, llm: BaseLLM, faiss_manager: FAISSManager, index_name: str):
@@ -23,7 +24,7 @@ class QAAgent:
         self.llm = llm
         self.faiss_manager = faiss_manager
         self.index_name = index_name
-        self.logger = logging.getLogger(__name__)
+        self.logger = setup_logger(__name__)
         self._setup_qa_chain()
 
     def _setup_qa_chain(self):

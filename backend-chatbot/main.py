@@ -1,5 +1,13 @@
+# main.py
 import uvicorn
-from api.fastapi_app import app
+from app.core.config import get_settings
+
+settings = get_settings()
 
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    uvicorn.run(
+        "app.api_router:app",
+        host=settings.HOST,
+        port=settings.PORT,
+        reload=settings.DEBUG
+    )
