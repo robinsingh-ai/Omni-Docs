@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
 import { addUserMessage, streamResponse } from '../redux/reducers/chatSlice';
@@ -20,6 +20,8 @@ const ChatInput: React.FC<ChatInputProps> = ({ className, onSend }) => {
     const loading = useSelector((state: RootState) => state.chat.loading);
     const dataSource = useSelector((state: RootState) => state.data.dataSource.valueOf());
     const dataKey = Object.keys(items).find(key => items[key] === dataSource);
+    const [rows, setRows] = useState<number>(2);
+    const textAreaRef = useRef<HTMLTextAreaElement>(null);
     const sendMessage = async () => {
         if (query.trim()) {
             dispatch(addUserMessage(query));
@@ -42,22 +44,31 @@ const ChatInput: React.FC<ChatInputProps> = ({ className, onSend }) => {
         }
     }
 
+    const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const { value } = e.target;
+        setQuery(value);
+        const lineCount = value.split('\n').length;
+        const maxRows = 8;
+        setRows(Math.min(maxRows, Math.max(2, lineCount)));
+    };
+
     return (
         <div className={`flex items-center bg-gradient-to-r gap-2 from-gray-100 to-gray-200 p-2 rounded-lg shadow-lg ${className}`}>
             <textarea
                 className="flex-grow bg-white p-3 rounded-l-lg resize-none text-sm border-none focus:outline-none  duration-200"
                 value={query}
+                ref={textAreaRef}
                 onKeyDown={handleKeyDown}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={handleInputChange}
                 placeholder={`Ask me about ${dataKey}`}
-                rows={2}
+                rows={rows}
             />
             <motion.button
                 className="flex items-center justify-center p-3 text-black font-semibold hover:scale-105 active:scale-95 focus:outline-none focus:ring focus:ring-blue-300"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={sendMessage}>
-                {loading ? <Spinner /> : <Send size={24} />}
+                {loading ? <Spinner /> : <Send size={22} />}
             </motion.button>
         </div>
     );
