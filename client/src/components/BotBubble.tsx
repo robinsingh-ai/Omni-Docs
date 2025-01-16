@@ -1,9 +1,9 @@
 import React from "react"
 import MDPreview from "./MDPreview"
 import { Check, Copy } from "lucide-react"
-import CopyIcon from "./CopyIcon"
 import { useSelector } from "react-redux"
 import { RootState } from "../redux/store"
+import CopyIcon from "./CopyIcon"
 
 interface BotBubbleProps {
     message: any
@@ -22,15 +22,14 @@ const BotBubble: React.FC<BotBubbleProps> = ({ message }) => {
                     }`}
                 value={text} />
             <div className='flex justify-center'>
-                {sources && sources.map((source: any, idx: number) => (
+                {!loading && sources && sources.map((source: any, idx: number) => (
                     <div className='flex flex-col bg-gray-200 rounded-md px-2 py-2 mr-2'>
                         <a
                             key={idx}
                             href={source.url}
                             target='_blank'
                             rel='noreferrer'
-                            className='text-xs text-blue-500 underline'
-                        >
+                            className='text-xs text-blue-500 underline'>
                             {source.title}
                         </a>
                         <p className='text-xs'>{source.content_preview.substring(0, 50)}</p>

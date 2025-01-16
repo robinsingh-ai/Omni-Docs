@@ -25,7 +25,7 @@ export class LocalLLMProvider implements ResponseProvider {
         }
     }
 
-    async streamResponse(message: string, dataSource: string, onData: (chunk: string) => void): Promise<void> {
+    async streamResponse(message: string, dataSource: string, onData: (chunk: any) => void): Promise<void> {
         try {
             const url = `${this.api}/api/v1/query/stream`;
             const response = await fetch(url, {
@@ -45,7 +45,13 @@ export class LocalLLMProvider implements ResponseProvider {
             while (reader) {
                 const { done, value } = await reader.read();
                 if (done) break;
-                onData(decoder.decode(value, { stream: true }));
+                const decodedChunk = decoder.decode(value, { stream: true })
+                try {
+                    const parsedChunk = JSON.parse(decodedChunk); // Parse the JSON
+                    onData(parsedChunk); // Pass the parsed JSON
+                } catch (error) {
+                    console.error('Failed to parse chunk:', decodedChunk, error);
+                }
             }
         } catch (error) {
             console.error('Error in streamResponse:', error);

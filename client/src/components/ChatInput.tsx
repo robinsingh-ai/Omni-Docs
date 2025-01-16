@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
-import { addUserMessage, fetchResponse, streamResponse } from '../redux/reducers/chatSlice';
+import { addUserMessage, streamResponse } from '../redux/reducers/chatSlice';
 import { Send } from 'lucide-react';
 import { AppDispatch, RootState } from '../redux/store';
 import { useSelector } from 'react-redux';

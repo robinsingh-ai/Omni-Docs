@@ -50,8 +50,30 @@ export const streamResponse = createAsyncThunk<
     'chat/streamResponse',
     async ({ provider_name, message, dataSource }, { dispatch }) => {
         const provider = ResponseProviderFactory.getProvider(provider_name);
-        await provider.streamResponse(message, dataSource, (chunk: string) => {
-            dispatch(addStreamedMessage({ sender: 'bot', text: chunk }));
+        await provider.streamResponse(message, dataSource, (chunk: any) => {
+            if (chunk.type === 'sources') {
+                dispatch(addStreamedMessage({
+                    sender: 'bot',
+                    text: "",
+                    type: chunk.type,
+                    status: 'success',
+                    sources: chunk.content,
+                }));
+            }
+            else if (chunk.type === 'markdown') {
+                dispatch(addStreamedMessage({
+                    type: 'markdown',
+                    sender: 'bot', text: chunk.content,
+                    status: 'success',
+                }));
+            } else if (chunk.type === 'error') {
+                dispatch(addStreamedMessage({
+                    type: 'error',
+                    sender: 'bot', text: 'Streaming failed. Please try again.', status: 'error',
+                }));
+            } else {
+                console.log("No chunk type found");
+            }
         });
     }
 );
@@ -75,14 +97,24 @@ const chatSlice = createSlice({
             });
         },
         addStreamedMessage: (state, action) => {
-            const lastMessage = state.messages[state.messages.length - 1];
-            if (lastMessage && lastMessage.sender === 'bot') {
-                lastMessage.text += action.payload.text;
+            const { sender, status, type, text, sources } = action.payload;
+            const lastMessageIndex = state.messages.length - 1;
+            const lastMessage = state.messages[lastMessageIndex];
+
+            // Check if the last message is from the bot and is of type markdown
+            if (lastMessage?.sender === 'bot' && lastMessage.type === 'sources' && type === 'markdown') {
+                state.messages[lastMessageIndex] = {
+                    ...lastMessage,
+                    text: lastMessage.text + text,
+                };
             } else {
+                // Push a new message
                 state.messages.push({
-                    sender: 'bot',
-                    status: 'success',
-                    text: action.payload.text,
+                    sender,
+                    status,
+                    type,
+                    text,
+                    sources: sources || null,
                     timestamp: new Date().toISOString(),
                 });
             }
