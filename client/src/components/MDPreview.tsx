@@ -12,25 +12,7 @@ interface MDPreviewProps {
 const MDPreview = ({ value, className }: MDPreviewProps) => {
     const customClass = `px-2 py-2 rounded-b-lg border-surface focus:ring-secondary focus:outline-none focus:ring-2 resize-y w-full reactMarkDown ${className}`;
 
-    function LinkRenderer(props: any) {
-        return (
-            <Tooltip
-                className="cursor-pointer bg-gray-950 rounded-md px-4 text-white"
-                onClick={(e) => window.open(props.href, '_blank')}
-                content={props.href.length > 50 ? props.href.substring(0, 50) + '...' : props.href}
-                placement='top-start'>
-                <a href={props.href}
-                    style={{
-                        color: 'blue',
-                        textDecoration: 'underline'
 
-                    }}
-                    target="_blank" rel="noreferrer">
-                    {props.children}
-                </a>
-            </Tooltip>
-        );
-    }
     return <div
         id='preview'
         style={{
@@ -63,4 +45,25 @@ const MDPreview = ({ value, className }: MDPreviewProps) => {
     </div>
 }
 
+export function LinkRenderer(props: any) {
+    return (
+        <Tooltip
+            className="cursor-pointer bg-gray-950 rounded-md px-4 text-white"
+            onClick={(e) => window.open(props.href, '_blank')}
+            content={props.href.length > 50 ? props.href.substring(0, 50) + '...' : props.href}
+            placement='top-start'>
+            <a href={props.href}
+                style={{
+                    color: 'blue',
+                    textDecoration: 'underline'
+
+                }}
+                target="_blank" rel="noreferrer">
+                {props.children}
+            </a>
+        </Tooltip>
+    );
+}
+
 export default MDPreview;
+
