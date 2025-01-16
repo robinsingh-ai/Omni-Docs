@@ -20,7 +20,7 @@ const IconButton: React.FC<IconButtonProps> = ({ onClick, children, ariaLabel, c
         isIconOnly
         aria-label={ariaLabel}
         className={`bg-transparent rounded-full p-2 dark:text-white ${className}`}
-        onClick={onClick}
+        onPress={onClick}
         size='lg'
       >
         {children}

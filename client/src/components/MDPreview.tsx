@@ -20,7 +20,7 @@ const MDPreview = ({ value, className }: MDPreviewProps) => {
             maxHeight: "100%"
         }}>
         <ReactMarkdown
-            className={`${customClass} mb-2`}
+            className={`${customClass}`}
             components={{
                 a: LinkRenderer,
                 code(props) {
