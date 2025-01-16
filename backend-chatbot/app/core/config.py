@@ -1,37 +1,35 @@
 # app/core/config.py
 from typing import List
 from pydantic_settings import BaseSettings, SettingsConfigDict
-import json
 
 class Settings(BaseSettings):
-    """Application settings with environment variable support."""
+    """Application settings."""
     
     # Server Settings
-    PROJECT_NAME: str
-    DEBUG: bool
-    HOST: str
-    PORT: int
-    ENVIRONMENT: str
+    PROJECT_NAME: str = "Documentation Chatbot"
+    DEBUG: bool = True
+    HOST: str = "0.0.0.0"
+    PORT: int = 8000
+    ENVIRONMENT: str = "development"
 
     # CORS Settings
-    CORS_ORIGINS: List[str]
+    CORS_ORIGINS: List[str] = [
+        "http://localhost:3000",
+        "https://getpostman.com",
+        "https://api-docs-ai.vercel.app"
+    ]
 
-    # LLM Settings
-    DEFAULT_MODEL_NAME: str
+    # Model Settings
+    DEFAULT_MODEL_NAME: str = "llama2"
+    ENABLED_MODELS: List[str] = ["llama2", "llama3"]
+    MODEL_TIMEOUT: int = 30
 
     # Storage Settings
-    DATA_DIR: str
-    MAX_CHUNK_SIZE: int
+    DATA_DIR: str = "data"
+    MAX_CHUNK_SIZE: int = 4000
 
     # Logging
-    LOG_LEVEL: str
-
-    # Custom JSON parsing for CORS_ORIGINS
-    @property
-    def cors_origins(self) -> List[str]:
-        if isinstance(self.CORS_ORIGINS, str):
-            return json.loads(self.CORS_ORIGINS)
-        return self.CORS_ORIGINS
+    LOG_LEVEL: str = "INFO"
 
     model_config = SettingsConfigDict(
         env_file='.env',
