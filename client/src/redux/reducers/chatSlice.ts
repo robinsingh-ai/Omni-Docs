@@ -100,21 +100,19 @@ const chatSlice = createSlice({
             const { sender, status, type, text, sources } = action.payload;
             const lastMessageIndex = state.messages.length - 1;
             const lastMessage = state.messages[lastMessageIndex];
-
-            // Check if the last message is from the bot and is of type markdown
-            if (lastMessage?.sender === 'bot' && lastMessage.type === 'sources' && type === 'markdown') {
+            if (lastMessage?.sender === 'bot') {
                 state.messages[lastMessageIndex] = {
                     ...lastMessage,
                     text: lastMessage.text + text,
-                };
+                }
             } else {
-                // Push a new message
+                // start of bot message
                 state.messages.push({
                     sender,
                     status,
                     type,
                     text,
-                    sources: sources || null,
+                    sources: sources || [],
                     timestamp: new Date().toISOString(),
                 });
             }

@@ -18,7 +18,7 @@ const BotBubble: React.FC<BotBubbleProps> = ({ message }) => {
 
 
     function SourcesList() {
-        if (loading || !sources.length) {
+        if (loading || !sources) {
             return <div />
         }
         return (<div className='flex flex-col'>
