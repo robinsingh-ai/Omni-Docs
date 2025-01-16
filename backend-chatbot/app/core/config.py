@@ -4,7 +4,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 import json
 
 class Settings(BaseSettings):
-    """Application settings with environment variable support."""
+    """Application settings loaded from environment variables."""
     
     # Server Settings
     PROJECT_NAME: str
@@ -14,10 +14,12 @@ class Settings(BaseSettings):
     ENVIRONMENT: str
 
     # CORS Settings
-    CORS_ORIGINS: List[str]
+    CORS_ORIGINS: str  # Will be parsed from JSON string
 
-    # LLM Settings
+    # Model Settings
     DEFAULT_MODEL_NAME: str
+    ENABLED_MODELS: str  # Will be parsed from JSON string
+    MODEL_TIMEOUT: int
 
     # Storage Settings
     DATA_DIR: str
@@ -26,19 +28,28 @@ class Settings(BaseSettings):
     # Logging
     LOG_LEVEL: str
 
-    # Custom JSON parsing for CORS_ORIGINS
-    @property
-    def cors_origins(self) -> List[str]:
-        if isinstance(self.CORS_ORIGINS, str):
-            return json.loads(self.CORS_ORIGINS)
-        return self.CORS_ORIGINS
-
     model_config = SettingsConfigDict(
         env_file='.env',
         env_file_encoding='utf-8',
         case_sensitive=True
     )
 
+    @property
+    def cors_origins_list(self) -> List[str]:
+        """Parse CORS_ORIGINS from JSON string to list."""
+        try:
+            return json.loads(self.CORS_ORIGINS)
+        except json.JSONDecodeError:
+            return []
+
+    @property
+    def enabled_models_list(self) -> List[str]:
+        """Parse ENABLED_MODELS from JSON string to list."""
+        try:
+            return json.loads(self.ENABLED_MODELS)
+        except json.JSONDecodeError:
+            return []
+
 def get_settings() -> Settings:
-    """Get application settings."""
+    """Create and return an instance of Settings."""
     return Settings()

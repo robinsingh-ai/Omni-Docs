@@ -7,11 +7,14 @@ class CrawlRequest(BaseModel):
     index_name: str
 
 class QueryRequest(BaseModel):
+    """Query request model with optional model selection."""
     query: str
     index_name: str
+    model_name: Optional[str] = None  # Make model_name optional with default None
     chat_history: Optional[List[dict]] = None
 
 class QueryResponse(BaseModel):
+    """Query response model."""
     answer: str
     source_documents: List[dict]
 
