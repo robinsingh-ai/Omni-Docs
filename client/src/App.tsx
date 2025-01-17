@@ -50,11 +50,14 @@ const App: React.FC = () => {
           style={{
             background: `linear-gradient(to top, var(--chat-background) 70%, rgba(0, 0, 0, 0) 100%)`,
           }}>
-          <div className="relative flex justify-center px-4 pb-6 pt-16 max-w-3xl mx-auto">
+          <div className="relative flex justify-center px-4 pb-2 pt-16 max-w-3xl mx-auto">
             <ChatInput
               className="w-full"
               onSend={() => { }}
             />
+          </div>
+          <div className="relative flex justify-center pb-2 max-w-3xl mx-auto">
+            <p className='text-xs underline'>Powered by Llama 3</p>
           </div>
         </div>
       </div>
