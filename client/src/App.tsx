@@ -32,7 +32,7 @@ const App: React.FC = () => {
               options={Object.keys(items).map((key) => ({ value: key, label: key }))}
               placeholder="Next.js"
             />
-            <ServiceStatus />
+            {/* <ServiceStatus /> */}
           </div>
         </Navbar>
       </div>
