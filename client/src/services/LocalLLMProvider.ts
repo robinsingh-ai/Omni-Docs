@@ -34,7 +34,7 @@ export class LocalLLMProvider implements ResponseProvider {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    // model_name: 'llama3.1',
+                    model_name: 'llama3',
                     query: message, index_name: dataSource
                 }),
             });
