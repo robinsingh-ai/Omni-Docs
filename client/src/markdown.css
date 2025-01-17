@@ -90,7 +90,8 @@
   font-size: 1rem;
   font-weight: 400;
   list-style: decimal;
-  margin-left: 16px;
+  text-align: justify;
+  margin-left: 22px;
   line-height: 1.5;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
@@ -249,4 +250,17 @@
 .reactMarkDown strong {
   font-weight: 700;
   color: var(--chat-bubble-onSurface);
+}
+
+.fade {
+  position: absolute;
+  bottom: 0px;
+
+  display: block;
+
+  width: 100%;
+
+  background-image: linear-gradient(to bottom,
+      rgba(255, 255, 255, 0),
+      rgba(255, 255, 255, 0.9) 100%);
 }

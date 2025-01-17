@@ -46,8 +46,11 @@ const App: React.FC = () => {
           </div>
         </div>
 
-        <div className="fixed bottom-0 left-0 right-0">
-          <div className="flex justify-center px-4 py-2 max-w-3xl mx-auto">
+        <div className="fixed bottom-0 left-0 right-0"
+          style={{
+            background: `linear-gradient(to top, var(--chat-background) 70%, rgba(0, 0, 0, 0) 100%)`,
+          }}>
+          <div className="relative flex justify-center px-4 pb-6 pt-16 max-w-3xl mx-auto">
             <ChatInput
               className="w-full"
               onSend={() => { }}

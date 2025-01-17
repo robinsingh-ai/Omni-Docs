@@ -33,10 +33,13 @@ export class LocalLLMProvider implements ResponseProvider {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ query: message, index_name: dataSource }),
+                body: JSON.stringify({
+                    // model_name: 'llama3.1',
+                    query: message, index_name: dataSource
+                }),
             });
 
-            if (!response.ok) {
+            if (!response.ok || response.status !== 200) {
                 throw new Error('Failed to fetch streaming response from backend.');
             }
 

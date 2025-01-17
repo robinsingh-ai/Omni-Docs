@@ -54,9 +54,11 @@ const ChatInput: React.FC<ChatInputProps> = ({ className, onSend }) => {
     };
 
     return (
-        <div className={`flex items-center bg-gradient-to-r gap-2 from-gray-100 to-gray-200 p-2 rounded-lg shadow-lg ${className}`}>
+        <div className={`flex items-center gap-2 bg-secondary p-2 rounded-lg shadow-lg ${className}`}>
             <textarea
-                className="flex-grow bg-white p-3 rounded-l-lg resize-none text-sm border-none focus:outline-none  duration-200"
+                className="flex-grow bg-white p-2 rounded-l-lg resize-none text-sm duration-200
+                focus:outline-none focus:ring focus:ring-black focus:ring-opacity-50
+                "
                 value={query}
                 ref={textAreaRef}
                 onKeyDown={handleKeyDown}

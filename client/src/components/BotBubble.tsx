@@ -15,9 +15,10 @@ const BotBubble: React.FC<BotBubbleProps> = ({ message }) => {
     const { status, text, sources, timestamp } = message;
     const success = status === 'success';
     const loading = useSelector((state: RootState) => state.chat.loading);
+    const emptyText = 'Hang on a sec...';
     return (
         <div className={`my-2 pt-2}`}>
-            <TypewriterText text={text} speed={10} success={success} />
+            <TypewriterText text={!text ? emptyText : text} speed={10} success={success} />
             <SourcesList sources={sources} />
             <div className='flex justify-between items-center px-2'>
                 <div className="text-xs text-gray-500 ">{new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
