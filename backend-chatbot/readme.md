@@ -6,7 +6,7 @@ python main.py
 
 # Document Initalization 
 ```
-curl -X POST "http://localhost:8000/crawl" \
+curl -X POST "http://localhost:8000/api/v1/crawl" \
      -H "Content-Type: application/json" \
      -d '{
        "sitemap_url": "https://nextjs.org/sitemap.xml",
@@ -16,7 +16,7 @@ curl -X POST "http://localhost:8000/crawl" \
 
 # Query the documentation:
 ```
-curl -X POST "http://localhost:8000/query" \
+curl -X POST "http://localhost:8000/api/v1/query" \
      -H "Content-Type: application/json" \
      -d '{
        "query": "How do I create a new Next.js project?",

@@ -1,5 +1,27 @@
 # API Docs Chatbot
 
+
+
+#### Running the App
+
+##### Start the backend in a virtual env
+
+```bash
+- cd backend-chatbot 
+- source chain-env/bin/activate # use the correct virtual env name
+- python main.py 
+```
+
+- Ensure Ollama is running in the background
+
+- Start the frontend
+
+```bash
+npm run start
+```
+
+The Swagger documentation can be found at http://localhost:8000/docs
+
 ## Overview
 
 The API Docs Chatbot is a conversational AI tool designed to help developers learn and navigate API documentation in an intuitive and engaging way. By utilizing advanced language models, this chatbot offers real-time, up-to-date information from a variety of API docs, including popular technologies like 
@@ -7,6 +29,10 @@ The API Docs Chatbot is a conversational AI tool designed to help developers lea
 - [Crustdata API Docs](https://crustdata.notion.site/Crustdata-Discovery-And-Enrichment-API-c66d5236e8ea40df8af114f6d447ab48)
 - [NextJS Api Docs](https://nextjs.org/docs)
 - [Flutter Api Docs](https://docs.flutter.dev/)
+
+### Sitemap Urls
+- Flutter: https://docs.flutter.dev/sitemap.xml
+- NextJS: https://nextjs.org/sitemap.xml
 
 As new technologies emerge, our chatbot evolves to become a one-stop solution for API documentation, allowing users to learn about frameworks and libraries through seamless conversations.
 

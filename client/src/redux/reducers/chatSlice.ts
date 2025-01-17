@@ -42,6 +42,42 @@ export const fetchResponse = createAsyncThunk<
     }
 );
 
+export const streamResponse = createAsyncThunk<
+    void,
+    { provider_name: LLM_Provider; message: string; dataSource: string },
+    { rejectValue: Object }
+>(
+    'chat/streamResponse',
+    async ({ provider_name, message, dataSource }, { dispatch }) => {
+        const provider = ResponseProviderFactory.getProvider(provider_name);
+        await provider.streamResponse(message, dataSource, (chunk: any) => {
+            if (chunk.type === 'sources') {
+                dispatch(addStreamedMessage({
+                    sender: 'bot',
+                    text: "",
+                    type: chunk.type,
+                    status: 'success',
+                    sources: chunk.content,
+                }));
+            }
+            else if (chunk.type === 'markdown') {
+                dispatch(addStreamedMessage({
+                    type: 'markdown',
+                    sender: 'bot', text: chunk.content,
+                    status: 'success',
+                }));
+            } else if (chunk.type === 'error') {
+                dispatch(addStreamedMessage({
+                    type: 'error',
+                    sender: 'bot', text: 'Streaming failed. Please try again.', status: 'error',
+                }));
+            } else {
+                console.log("No chunk type found");
+            }
+        });
+    }
+);
+
 const initialState = {
     messages: [] as any[],
     loading: false,
@@ -60,6 +96,27 @@ const chatSlice = createSlice({
                 timestamp: new Date().toISOString(),
             });
         },
+        addStreamedMessage: (state, action) => {
+            const { sender, status, type, text, sources } = action.payload;
+            const lastMessageIndex = state.messages.length - 1;
+            const lastMessage = state.messages[lastMessageIndex];
+            if (lastMessage?.sender === 'bot') {
+                state.messages[lastMessageIndex] = {
+                    ...lastMessage,
+                    text: lastMessage.text + text,
+                }
+            } else {
+                // start of bot message
+                state.messages.push({
+                    sender,
+                    status,
+                    type,
+                    text,
+                    sources: sources || [],
+                    timestamp: new Date().toISOString(),
+                });
+            }
+        }
     },
     extraReducers: (builder) => {
         builder.addCase(fetchResponse.pending, (state) => {
@@ -82,8 +139,24 @@ const chatSlice = createSlice({
                 });
             }
         });
+
+        builder.addCase(streamResponse.pending, (state) => {
+            state.loading = true;
+        });
+        builder.addCase(streamResponse.fulfilled, (state) => {
+            state.loading = false;
+        });
+        builder.addCase(streamResponse.rejected, (state) => {
+            state.loading = false;
+            state.messages.push({
+                sender: 'bot',
+                text: 'Streaming failed. Please try again.',
+                status: 'error',
+                timestamp: new Date().toISOString(),
+            });
+        });
     },
 });
 
-export const { addUserMessage } = chatSlice.actions;
+export const { addUserMessage, addStreamedMessage } = chatSlice.actions;
 export default chatSlice.reducer;
