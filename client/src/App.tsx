@@ -23,8 +23,11 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen bg-white">
-      <div className="flex-none sticky top-0 z-10 bg-white">
+    <div className="flex flex-col h-screen"
+      style={{
+        background: `var(--chat-background)`
+      }}>
+      <div className="flex-none sticky top-0 z-10">
         <Navbar>
           <div className="flex items-center justify-between px-4">
             <Menu
@@ -43,7 +46,7 @@ const App: React.FC = () => {
           </div>
         </div>
 
-        <div className="fixed bottom-0 left-0 right-0 bg-white">
+        <div className="fixed bottom-0 left-0 right-0">
           <div className="flex justify-center px-4 py-2 max-w-3xl mx-auto">
             <ChatInput
               className="w-full"
@@ -52,7 +55,7 @@ const App: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
+    </div >
   );
 };
 

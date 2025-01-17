@@ -27,6 +27,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ className, onSend }) => {
             dispatch(addUserMessage(query));
             dispatch(streamResponse({ provider_name: LLM_Provider.local_llm, message: query, dataSource: dataSource }));
             setQuery('');
+            setRows(2);
         }
         if (onSend != null) {
             onSend(query.trim());

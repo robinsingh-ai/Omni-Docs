@@ -36,6 +36,12 @@
         --ring: 215 20.2% 65.1%;
         --color-code-surface: #fcfdfe;
         --color-code-onSurface: #1f2732;
+        --color-black: #000;
+        --color-white: #fff;
+        --chat-background: #F3F6FB;
+        --chat-bubble-surface: #d3dff3;
+        --chat-bubble-onSurface: #1f2732;
+        --chat-bubble-border: #606369;
         --radius: 0.5rem;
     }
 

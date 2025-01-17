@@ -1,5 +1,3 @@
-import React, { useEffect, useState } from "react"
-import MDPreview, { LinkRenderer } from "./MDPreview"
 import { Check, Copy } from "lucide-react"
 import { useSelector } from "react-redux"
 import { RootState } from "../redux/store"

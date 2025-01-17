@@ -9,48 +9,48 @@
 }
 
 .reactMarkDown h1 {
-  font-size: 2.25rem;
+  font-size: 2.0rem;
   font-weight: 700;
   line-height: 1;
-  color: var(--color-black);
+  color: var(--chat-bubble-onSurface);
   margin-top: 0.5em;
   margin-bottom: 0.5em;
 }
 
 /* add standard styles for headings */
 .reactMarkDown h2 {
-  font-size: 1.875rem;
+  font-size: 1.75rem;
   font-weight: 700;
   line-height: 1;
   margin-top: 0.5em;
-  color: var(--color-black);
+  color: var(--chat-bubble-onSurface);
   margin-bottom: 0.5em;
 }
 
 .reactMarkDown h3 {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   font-weight: 700;
   line-height: 1;
   margin-top: 0.5em;
-  color: var(--color-black);
+  color: var(--chat-bubble-onSurface);
   margin-bottom: 0.5em;
 }
 
 .reactMarkDown h4 {
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 700;
   line-height: 1;
   margin-top: 0.5em;
-  color: var(--color-black);
+  color: var(--chat-bubble-onSurface);
   margin-bottom: 0.5em;
 }
 
 .reactMarkDown h5 {
-  font-size: 1.125rem;
+  font-size: 1.1rem;
   font-weight: 700;
   line-height: 1;
   margin-top: 0.5em;
-  color: var(--color-black);
+  color: var(--chat-bubble-onSurface);
   margin-bottom: 0.5em;
 }
 
@@ -59,7 +59,7 @@
   font-weight: 700;
   line-height: 1;
   margin-top: 0.5em;
-  color: var(--color-black);
+  color: var(--chat-bubble-onSurface);
   margin-bottom: 0.5em;
 }
 
@@ -70,7 +70,7 @@
   font-weight: 400;
   line-height: 1.5;
   margin-top: 0.5em;
-  color: var(--color-black);
+  color: var(--chat-bubble-onSurface);
   margin-bottom: 0.5em;
 }
 
@@ -80,6 +80,8 @@
   font-size: 1rem;
   font-weight: 400;
   line-height: 1.5;
+  list-style: disc;
+  margin-left: 16px;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
 }
@@ -186,8 +188,8 @@
   line-height: 1.5;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
-  color: var(--color-black);
-  background-color: var(--color-black);
+  color: var(--chat-bubble-onSurface);
+  background-color: var(--chat-bubble-onSurface);
   height: 1px;
 }
 
@@ -199,7 +201,7 @@
   line-height: 1.5;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
-  color: var(--color-black);
+  color: var(--chat-bubble-onSurface);
   background-color: var(--color-block-surface);
   border-left: 0.25em solid var(--color-primary);
   padding: 0.5em;
@@ -217,15 +219,16 @@
   border-collapse: collapse;
 }
 
+
 .reactMarkDown th {
   font-size: 1rem;
   font-weight: 700;
   line-height: 1.5;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
-  color: var(--color-black);
+  color: var(--chat-bubble-onSurface);
   background-color: var(--color-background);
-  border: 1px solid var(--color-background);
+  border: 1px solid var(--chat-bubble-onSurface);
   padding: 0.5em;
 }
 
@@ -235,7 +238,7 @@
   line-height: 1.5;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
-  color: var(--color-black);
+  color: var(--chat-bubble-onSurface);
   background-color: var(--color-background);
   border: 1px solid var(--color-background);
   padding: 0.5em;
@@ -245,5 +248,5 @@
 
 .reactMarkDown strong {
   font-weight: 700;
-  color: var(--color-black);
+  color: var(--chat-bubble-onSurface);
 }
