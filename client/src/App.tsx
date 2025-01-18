@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import ChatInput from './components/ChatInput';
 import ChatWindow from './components/ChatWindow';
 import Menu from './components/Menu';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { DataSource, setDataSource } from './redux/reducers/dataSlice';
 import Navbar from './components/Navbar';
+import { ArrowDownCircleIcon } from 'lucide-react';
+import { RootState } from './redux/store';
+import { updateScroll } from './redux/reducers/scrollSlice';
 
 export const items: Record<string, DataSource> = {
   'Crust-Data': 'crust_data',
@@ -15,10 +18,37 @@ export const items: Record<string, DataSource> = {
 const App: React.FC = () => {
 
   const dispatch = useDispatch();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const isAtBottom = useSelector((state: RootState) => state.scroll.isAtBottom);
 
   const handleMenuChange = (value: string) => {
     const selectedDataSource: DataSource = items[value];
     dispatch(setDataSource(selectedDataSource));
+  };
+
+  useEffect(() => {
+    const scrollElement = scrollRef.current;
+
+    if (!scrollElement) return;
+
+    const onScroll = () => {
+      const { scrollTop, scrollHeight, clientHeight } = scrollElement;
+      dispatch(updateScroll({ scrollTop, scrollHeight, clientHeight }));
+    };
+
+    scrollElement.addEventListener('scroll', onScroll);
+    return () => {
+      scrollElement.removeEventListener('scroll', onScroll);
+    };
+  }, [dispatch]);
+
+  const scrollToBottom = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTo({
+        top: scrollRef.current.scrollHeight,
+        behavior: 'smooth',
+      });
+    }
   };
 
   return (
@@ -39,7 +69,9 @@ const App: React.FC = () => {
         </Navbar>
       </div>
       <div className="flex-1 relative overflow-hidden">
-        <div className="absolute inset-0 overflow-y-auto pb-16">
+        <div
+          ref={scrollRef}
+          className="absolute inset-0 overflow-y-auto pb-24">
           <div className="flex justify-center min-h-full pb-16">
             <ChatWindow className="px-4 w-full max-w-3xl" />
           </div>
@@ -49,10 +81,19 @@ const App: React.FC = () => {
           style={{
             background: `linear-gradient(to top, var(--chat-background) 75%, rgba(0, 0, 0, 0) 100%)`,
           }}>
-          <div className="relative flex justify-center px-4 pb-2 pt-12 max-w-3xl mx-auto">
+          <ArrowDownCircleIcon
+            className={`size-8 mx-auto cursor-pointer transition-transform duration-300 ${isAtBottom ? 'scale-0' : 'scale-100'
+              }`}
+            onClick={scrollToBottom}
+          />
+          <div className="relative flex justify-center px-4 pb-2 pt-8 max-w-3xl mx-auto">
             <ChatInput
               className="w-full"
-              onSend={() => { }}
+              onSend={() => {
+                setTimeout(() => {
+                  scrollToBottom();
+                }, 300);
+              }}
             />
           </div>
           <div className="relative flex justify-center pb-2 max-w-3xl mx-auto">
