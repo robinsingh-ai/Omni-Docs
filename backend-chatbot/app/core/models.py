@@ -47,6 +47,17 @@ class ModelsManager:
             context_length=8192,
             description="Llama 3 enhanced model via Ollama",
             parameters={"temperature": 0.7}
+        ), 
+        "llama3.1": ModelConfig(
+            name="llama3.1:8b",  # Using the specific model name from Ollama
+            provider=ModelProvider.OLLAMA,
+            context_length=8192,
+            description="Llama 3.1 8B optimized model via Ollama",
+            parameters={
+                "temperature": 0.7,
+                "top_p": 0.9,
+                "top_k": 40
+            }
         )
     }
 
