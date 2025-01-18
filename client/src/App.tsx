@@ -52,10 +52,7 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen"
-      style={{
-        background: `var(--chat-background)`
-      }}>
+    <div className="flex flex-col h-screen bg-background">
       <div className="flex-none sticky top-0 z-10">
         <Navbar>
           <div className="flex items-center justify-between px-4">
