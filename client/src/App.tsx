@@ -73,11 +73,14 @@ const App: React.FC = () => {
             <ChatWindow className="px-4 w-full max-w-3xl" />
           </div>
         </div>
-
-        <div className="fixed bottom-0 left-0 right-0"
-          style={{
-            background: `linear-gradient(to top, var(--chat-background) 75%, rgba(0, 0, 0, 0) 100%)`,
-          }}>
+        <div className="fixed bottom-0 left-0 right-0">
+          {/* blur layer */}
+          <div
+            className="absolute inset-0 mx-auto max-w-3xl"
+            style={{
+              background: `linear-gradient(to top, hsl(var(--chat-background)) 75%, rgba(0, 0, 0, 0) 100%)`,
+            }}
+          />
           <ArrowDownCircleIcon
             className={`size-8 mx-auto cursor-pointer transition-transform duration-300 ${isAtBottom ? 'scale-0' : 'scale-100'
               }`}
