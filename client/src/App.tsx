@@ -1,7 +1,6 @@
 import React from 'react';
 import ChatInput from './components/ChatInput';
 import ChatWindow from './components/ChatWindow';
-import ServiceStatus from './components/ServiceStatus';
 import Menu from './components/Menu';
 import { useDispatch } from 'react-redux';
 import { DataSource, setDataSource } from './redux/reducers/dataSlice';
@@ -48,9 +47,9 @@ const App: React.FC = () => {
 
         <div className="fixed bottom-0 left-0 right-0"
           style={{
-            background: `linear-gradient(to top, var(--chat-background) 70%, rgba(0, 0, 0, 0) 100%)`,
+            background: `linear-gradient(to top, var(--chat-background) 75%, rgba(0, 0, 0, 0) 100%)`,
           }}>
-          <div className="relative flex justify-center px-4 pb-2 pt-16 max-w-3xl mx-auto">
+          <div className="relative flex justify-center px-4 pb-2 pt-12 max-w-3xl mx-auto">
             <ChatInput
               className="w-full"
               onSend={() => { }}
