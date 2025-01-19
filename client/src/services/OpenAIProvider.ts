@@ -4,7 +4,7 @@ export class OpenAIProvider implements ResponseProvider {
     private openAI: any;
 
     constructor(apiKey: string) {
-        this.openAI = require('openai')(apiKey);
+        this.openAI = null;
     }
     async streamResponse(message: string, dataSource: string, onData: (chunk: string) => void): Promise<void> {
         throw new Error('Method not implemented.');
