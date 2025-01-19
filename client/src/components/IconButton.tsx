@@ -9,6 +9,23 @@ type IconButtonProps = {
 };
 
 const IconButton: React.FC<IconButtonProps> = ({ onClick, children, ariaLabel, className, tooltipPlacement }) => {
+
+  function button() {
+    return (<Button
+      isIconOnly
+      aria-label={ariaLabel}
+      className={`bg-transparent rounded-full p-2 dark:text-white ${className}`}
+      onPress={onClick}
+      size='lg'
+    >
+      {children}
+    </Button>);
+  }
+
+  if (!ariaLabel) {
+    return button();
+  }
+
   return (
     <Tooltip
       className='cursor-pointer bg-gray-950 rounded-md px-4 text-white'
@@ -16,15 +33,7 @@ const IconButton: React.FC<IconButtonProps> = ({ onClick, children, ariaLabel, c
       placement={tooltipPlacement}
       showArrow={true}
     >
-      <Button
-        isIconOnly
-        aria-label={ariaLabel}
-        className={`bg-transparent rounded-full p-2 dark:text-white ${className}`}
-        onPress={onClick}
-        size='lg'
-      >
-        {children}
-      </Button>
+      <button />
     </Tooltip>
   );
 };

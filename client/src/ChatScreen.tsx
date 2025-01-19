@@ -6,8 +6,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { DataSource, setDataSource } from './redux/reducers/dataSlice';
 import Navbar from './components/Navbar';
 import { ArrowDownCircleIcon } from 'lucide-react';
-import { RootState } from './redux/store';
+import { AppDispatch, RootState } from './redux/store';
 import { updateScroll } from './redux/reducers/scrollSlice';
+import IconButton from './components/IconButton';
+import { FiSidebar } from 'react-icons/fi';
+import { toggleSidebar } from './redux/reducers/sidebarSlice';
 
 export const items: Record<string, DataSource> = {
   'Crust-Data': 'crust_data',
@@ -17,10 +20,10 @@ export const items: Record<string, DataSource> = {
 
 const ChatScreen: React.FC = () => {
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
   const scrollRef = useRef<HTMLDivElement>(null);
   const isAtBottom = useSelector((state: RootState) => state.scroll.isAtBottom);
-
+  const sidebar = useSelector((state: RootState) => state.sidebar);
   const handleMenuChange = (value: string) => {
     const selectedDataSource: DataSource = items[value];
     dispatch(setDataSource(selectedDataSource));
@@ -56,6 +59,12 @@ const ChatScreen: React.FC = () => {
       <div className="flex-none sticky top-0 z-10">
         <Navbar>
           <div className="flex items-center justify-between px-4">
+            {!sidebar.isOpen ? <IconButton
+              onClick={() =>
+                dispatch(toggleSidebar())
+              }>
+              <FiSidebar className="w-6 h-6 text-black" />
+            </IconButton> : <div />}
             <Menu
               onChange={handleMenuChange}
               options={Object.keys(items).map((key) => ({ value: key, label: key }))}
