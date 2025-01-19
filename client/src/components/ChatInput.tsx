@@ -7,7 +7,6 @@ import { AppDispatch, RootState } from '../redux/store';
 import { useSelector } from 'react-redux';
 import { LLM_Provider } from '../services/ResponseProvider';
 import { items } from '../ChatScreen';
-import ThreeDotLoader from './ThreeDotLoader';
 
 interface ChatInputProps {
     className?: string;
@@ -71,9 +70,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ className, onSend }) => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={sendMessage}>
-                {loading ? <ThreeDotLoader
-                    size={8}
-                    animation='typing' /> : <Send size={22} />}
+                {<Send size={22} />}
             </motion.button>
         </div>
     );

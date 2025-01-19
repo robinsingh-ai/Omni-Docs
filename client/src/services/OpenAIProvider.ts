@@ -15,7 +15,6 @@ export class OpenAIProvider implements ResponseProvider {
             model: 'gpt-4',
             messages: [{ role: 'user', content: message }],
         });
-
         return result.data.choices[0]?.message?.content || '';
     }
 }

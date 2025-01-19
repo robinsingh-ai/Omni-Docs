@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import MDPreview from "./MDPreview";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../redux/store";
+import { setAnimating } from "../redux/reducers/chatSlice";
 
 interface TypewriterTextProps {
     text: string;
@@ -10,7 +13,7 @@ interface TypewriterTextProps {
 export const TypewriterText: React.FC<TypewriterTextProps> = ({ text, speed = 30, success }) => {
     const [displayedText, setDisplayedText] = useState('');
     const [currentIndex, setCurrentIndex] = useState(0);
-
+    const dispatch = useDispatch<AppDispatch>();
     useEffect(() => {
         if (text.length > displayedText.length) {
             setCurrentIndex(displayedText.length);
@@ -23,8 +26,10 @@ export const TypewriterText: React.FC<TypewriterTextProps> = ({ text, speed = 30
                 setDisplayedText(text.slice(0, currentIndex + 1));
                 setCurrentIndex(prev => prev + 1);
             }, speed);
-
+            dispatch(setAnimating(true));
             return () => clearTimeout(timer);
+        } else {
+            dispatch(setAnimating(false));
         }
     }, [currentIndex, text, speed]);
 

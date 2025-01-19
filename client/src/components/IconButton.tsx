@@ -21,8 +21,7 @@ const IconButton: React.FC<IconButtonProps> = ({ onClick, children, ariaLabel, c
         aria-label={ariaLabel}
         className={`bg-transparent rounded-full p-2 dark:text-white ${className}`}
         onPress={onClick}
-        size='lg'
-      >
+        size='lg'>
         {children}
       </Button>
     </Tooltip>
