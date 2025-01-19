@@ -9,7 +9,7 @@
 }
 
 .reactMarkDown h1 {
-  font-size: 2.0rem;
+  font-size: 2rem;
   font-weight: 700;
   line-height: 1;
   color: var(--chat-bubble-onSurface);
@@ -216,10 +216,10 @@
   line-height: 1.5;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
+  border: 1px solid var(--chat-bubble-onSurface);
   width: 100%;
   border-collapse: collapse;
 }
-
 
 .reactMarkDown th {
   font-size: 1rem;
@@ -241,7 +241,7 @@
   margin-bottom: 0.5em;
   color: var(--chat-bubble-onSurface);
   background-color: var(--color-background);
-  border: 1px solid var(--color-background);
+  border: 1px solid var(--chat-bubble-onSurface);
   padding: 0.5em;
 }
 
@@ -260,7 +260,9 @@
 
   width: 100%;
 
-  background-image: linear-gradient(to bottom,
-      rgba(255, 255, 255, 0),
-      rgba(255, 255, 255, 0.9) 100%);
+  background-image: linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0.9) 100%
+  );
 }
