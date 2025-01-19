@@ -26,6 +26,7 @@ export class LocalLLMProvider implements ResponseProvider {
     }
 
     async streamResponse(message: string, dataSource: string, onData: (chunk: any) => void): Promise<void> {
+        const model_name = process.env.REACT_APP_MODEL_NAME || 'llama3.1';
         try {
             const url = `${this.api}/api/v1/query/stream`;
             const response = await fetch(url, {
@@ -33,10 +34,13 @@ export class LocalLLMProvider implements ResponseProvider {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ query: message, index_name: dataSource }),
+                body: JSON.stringify({
+                    model_name: model_name,
+                    query: message, index_name: dataSource
+                }),
             });
 
-            if (!response.ok) {
+            if (!response.ok || response.status !== 200) {
                 throw new Error('Failed to fetch streaming response from backend.');
             }
 

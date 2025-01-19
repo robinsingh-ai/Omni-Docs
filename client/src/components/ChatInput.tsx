@@ -6,8 +6,8 @@ import { Send } from 'lucide-react';
 import { AppDispatch, RootState } from '../redux/store';
 import { useSelector } from 'react-redux';
 import { LLM_Provider } from '../services/ResponseProvider';
-import Spinner from './Spinner';
-import { items } from '../App';
+import { items } from '../ChatScreen';
+import ThreeDotLoader from './ThreeDotLoader';
 
 interface ChatInputProps {
     className?: string;
@@ -27,6 +27,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ className, onSend }) => {
             dispatch(addUserMessage(query));
             dispatch(streamResponse({ provider_name: LLM_Provider.local_llm, message: query, dataSource: dataSource }));
             setQuery('');
+            setRows(2);
         }
         if (onSend != null) {
             onSend(query.trim());
@@ -53,9 +54,11 @@ const ChatInput: React.FC<ChatInputProps> = ({ className, onSend }) => {
     };
 
     return (
-        <div className={`flex items-center bg-gradient-to-r gap-2 from-gray-100 to-gray-200 p-2 rounded-lg shadow-lg ${className}`}>
+        <div className={`flex items-center gap-2 bg-secondary p-2 rounded-lg shadow-lg ${className}`}>
             <textarea
-                className="flex-grow bg-white p-3 rounded-l-lg resize-none text-sm border-none focus:outline-none  duration-200"
+                className="flex-grow bg-white p-2 rounded-l-lg resize-none text-sm duration-200
+                focus:outline-none focus:ring focus:ring-black focus:ring-opacity-50
+                "
                 value={query}
                 ref={textAreaRef}
                 onKeyDown={handleKeyDown}
@@ -68,7 +71,9 @@ const ChatInput: React.FC<ChatInputProps> = ({ className, onSend }) => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={sendMessage}>
-                {loading ? <Spinner /> : <Send size={22} />}
+                {loading ? <ThreeDotLoader
+                    size={8}
+                    animation='typing' /> : <Send size={22} />}
             </motion.button>
         </div>
     );

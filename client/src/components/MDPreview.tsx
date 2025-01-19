@@ -7,18 +7,17 @@ import CodeBlock from "./CodeHighlight";
 interface MDPreviewProps {
     value?: string;
     className?: string;
+    style?: React.CSSProperties;
 }
 
-const MDPreview = ({ value, className }: MDPreviewProps) => {
+const MDPreview = ({ value, className, style }: MDPreviewProps) => {
     const customClass = `px-2 py-2 rounded-b-lg border-surface focus:ring-secondary focus:outline-none focus:ring-2 resize-y w-full reactMarkDown ${className}`;
 
 
     return <div
         id='preview'
-        style={{
-            height: "100%",
-            maxHeight: "100%"
-        }}>
+        style={style}
+    >
         <ReactMarkdown
             className={`${customClass}`}
             components={{
@@ -49,8 +48,8 @@ export function LinkRenderer(props: any) {
     return (
         <Tooltip
             className="cursor-pointer bg-gray-950 rounded-md px-4 text-white"
-            onClick={(e) => window.open(props.href, '_blank')}
-            content={props.href.length > 50 ? props.href.substring(0, 50) + '...' : props.href}
+            onClick={(e) => window.open(props.href.length === 0 ? null : props.href, '_blank')}
+            content={props.href.length > 50 ? props.href.substring(0, 50) + '...' : props.href.length > 0 ? props.href : '#'}
             placement='top-start'>
             <a href={props.href}
                 style={{
