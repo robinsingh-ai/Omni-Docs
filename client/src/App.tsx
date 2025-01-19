@@ -33,8 +33,8 @@ export default function App() {
         return (
             <motion.div
                 className="flex justify-center items-center min-h-screen"
-                initial={{ y: 200, opacity: 0 }}
-                animate={{ y: 100, opacity: 1 }}
+                initial={{ y: 100, opacity: 0 }}
+                animate={{ y: 50, opacity: 1 }}
                 exit={{ y: 100, opacity: 0 }}
                 transition={{
                     type: "spring",
@@ -44,6 +44,9 @@ export default function App() {
                 }}
             >
                 <div className="max-w-3xl w-full">
+                    <div className="flex justify-center">
+                        <p className="text-xl my-4">AI Chatbot</p>
+                    </div>
                     <ChatInput
                         className="w-full z-20 mb-8"
                         onSend={handleInputSend}
