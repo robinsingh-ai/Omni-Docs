@@ -61,7 +61,6 @@ const ChatScreen: React.FC = () => {
               options={Object.keys(items).map((key) => ({ value: key, label: key }))}
               placeholder="Next.js"
             />
-            {/* <ServiceStatus /> */}
           </div>
         </Navbar>
       </div>
@@ -73,22 +72,22 @@ const ChatScreen: React.FC = () => {
             <ChatWindow className="px-4 w-full max-w-3xl" />
           </div>
         </div>
-        <div className="fixed bottom-0 left-0 right-0">
-          {/* blur layer */}
-          <div
-            className="absolute inset-0 mx-auto max-w-3xl"
-            style={{
-              background: `linear-gradient(to top, hsl(var(--chat-background)) 75%, rgba(0, 0, 0, 0) 100%)`,
-            }}
-          />
+        <div className="absolute bottom-0 left-0 right-0">
           <ArrowDownCircleIcon
-            className={`size-8 mx-auto cursor-pointer transition-transform duration-300 ${isAtBottom ? 'scale-0' : 'scale-100'
+            className={`relative size-8 mx-auto cursor-pointer transition-transform duration-300 z-20 ${isAtBottom ? 'scale-0' : 'scale-100'
               }`}
             onClick={scrollToBottom}
           />
-          <div className="relative flex justify-center px-4 pb-2 pt-8 max-w-3xl mx-auto">
+          <div className="flex px-4 pb-2 pt-4 max-w-3xl mx-auto z-10">
+            {/* blur layer */}
+            <div
+              className="absolute inset-0 mx-auto max-w-3xl z-10"
+              style={{
+                background: `linear-gradient(to top, hsl(var(--chat-background)) 75%, rgba(0, 0, 0, 0) 100%)`,
+              }}
+            />
             <ChatInput
-              className="w-full"
+              className="w-full z-20"
               onSend={() => {
                 setTimeout(() => {
                   scrollToBottom();
@@ -96,12 +95,12 @@ const ChatScreen: React.FC = () => {
               }}
             />
           </div>
-          <div className="relative flex justify-center pb-2 max-w-3xl mx-auto">
+          <div className="flex justify-center pb-2 max-w-3xl mx-auto">
             <p className='text-xs underline'>Powered by Llama 3</p>
           </div>
         </div>
       </div>
-    </div >
+    </div>
   );
 };
 
