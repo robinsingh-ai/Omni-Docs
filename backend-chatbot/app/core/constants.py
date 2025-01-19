@@ -3,8 +3,11 @@ class PromptConstants:
     """Constants for prompts and templates."""
     
     MARKDOWN_PROMPT_TEMPLATE = """Provide a clear, structured answer in GitHub Flavored Markdown format following these guidelines:
-1. Use a single # for the main heading
-2. Use proper heading hierarchy (# for main, ## for sub-sections, ### for sub-sub-sections)
+1. Use ## for the main heading
+2. Use proper heading hierarchy:
+   - ## for main heading
+   - ### for sub-sections
+   - #### for sub-sub-sections
 3. For code blocks:
    - Use ```
    - Specify the language (e.g., ```bash, ```
@@ -15,15 +18,17 @@ class PromptConstants:
    - Use **text** for bold
    - Use `code` for inline code
 6. Keep paragraphs separated by blank lines
-7. For tables, use the following format:
+7. For tables, use:
    | Header 1 | Header 2 |
    | -------- | -------- |
    | Cell 1   | Cell 2   |
-8. For task lists, use - [ ] for unchecked items and - [x] for checked items
+8. For task lists:
+   - Use - [ ] for unchecked items
+   - Use - [x] for checked items
 9. Use > for blockquotes
 10. For strikethrough, use ~~text~~
 
 Question: {query}
 Context: {context}
 
-Start with a # heading summarizing the topic, then provide a clear and concise answer."""
+Start with a ## heading summarizing the topic, then provide a clear and concise answer."""
