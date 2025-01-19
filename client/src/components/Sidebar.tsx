@@ -12,6 +12,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
     return (
         <div className={`${sidebar.isOpen ? 'w-64' : 'w-0'} transition-all duration-300 bg-slate-300`}>
             <IconButton
+                ariaLabel="Sidebar"
                 onClick={() =>
                     dispatch(toggleSidebar())
                 }>

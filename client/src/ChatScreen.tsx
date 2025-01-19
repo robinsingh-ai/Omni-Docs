@@ -60,6 +60,7 @@ const ChatScreen: React.FC = () => {
         <Navbar>
           <div className="flex items-center justify-between px-4">
             {!sidebar.isOpen ? <IconButton
+              ariaLabel="Sidebar"
               onClick={() =>
                 dispatch(toggleSidebar())
               }>
