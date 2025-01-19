@@ -95,7 +95,11 @@ const ChatScreen: React.FC = () => {
               style={{
                 background: `linear-gradient(to top, hsl(var(--chat-background)) 75%, rgba(0, 0, 0, 0) 100%)`,
               }}
-            />
+            >
+              <div className="absolute bottom-2 left-0 right-0 flex justify-center max-w-3xl mx-auto">
+                <p className='text-xs underline'>Powered by {process.env.REACT_APP_MODEL_NAME}</p>
+              </div>
+            </div>
             <ChatInput
               className="w-full z-20 mb-8"
               onSend={() => {
@@ -104,9 +108,7 @@ const ChatScreen: React.FC = () => {
                 }, 300);
               }}
             />
-            <div className="absolute bottom-2 right-4 flex justify-center max-w-3xl mx-auto">
-              <p className='text-xs underline'>Powered by {process.env.REACT_APP_MODEL_NAME}</p>
-            </div>
+
           </div>
         </div>
       </div>
