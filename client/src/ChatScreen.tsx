@@ -96,16 +96,16 @@ const ChatScreen: React.FC = () => {
               }}
             />
             <ChatInput
-              className="w-full z-20"
+              className="w-full z-20 mb-8"
               onSend={() => {
                 setTimeout(() => {
                   scrollToBottom();
                 }, 300);
               }}
             />
-          </div>
-          <div className="flex justify-center pb-2 max-w-3xl mx-auto">
-            <p className='text-xs underline'>Powered by Llama 3</p>
+            <div className="absolute bottom-2 right-4 flex justify-center max-w-3xl mx-auto">
+              <p className='text-xs underline'>Powered by {process.env.REACT_APP_MODEL_NAME}</p>
+            </div>
           </div>
         </div>
       </div>
