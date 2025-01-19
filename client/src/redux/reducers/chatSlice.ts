@@ -81,6 +81,7 @@ export const streamResponse = createAsyncThunk<
 const initialState = {
     messages: [] as any[],
     loading: false,
+    animating: false,
     error: null,
 };
 
@@ -88,6 +89,12 @@ const chatSlice = createSlice({
     name: 'chat',
     initialState,
     reducers: {
+        setAnimating: (state, action) => {
+            state.animating = action.payload;
+        },
+        setLoading: (state, action) => {
+            state.loading = action.payload;
+        },
         addUserMessage: (state, action) => {
             state.messages.push({
                 sender: 'user',
@@ -97,6 +104,7 @@ const chatSlice = createSlice({
             });
         },
         addStreamedMessage: (state, action) => {
+            // Invoked when a chunk of streamed response is received
             const { sender, status, type, text, sources } = action.payload;
             const lastMessageIndex = state.messages.length - 1;
             const lastMessage = state.messages[lastMessageIndex];
@@ -158,5 +166,5 @@ const chatSlice = createSlice({
     },
 });
 
-export const { addUserMessage, addStreamedMessage } = chatSlice.actions;
+export const { addUserMessage, addStreamedMessage, setAnimating, setLoading } = chatSlice.actions;
 export default chatSlice.reducer;
