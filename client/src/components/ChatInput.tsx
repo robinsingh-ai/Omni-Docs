@@ -6,7 +6,7 @@ import { Send } from 'lucide-react';
 import { AppDispatch, RootState } from '../redux/store';
 import { useSelector } from 'react-redux';
 import { LLM_Provider } from '../services/ResponseProvider';
-import { items } from '../App';
+import { items } from '../ChatScreen';
 import ThreeDotLoader from './ThreeDotLoader';
 
 interface ChatInputProps {
