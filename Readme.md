@@ -1,36 +1,54 @@
 # API Docs Chatbot
 
+### Running the App
 
+##### Running the Backend
 
-#### Running the App
-
-##### Start the backend in a virtual env
+> ensure you have .env created for backend, refer `.env.example` in the `backend-chatbot` directory
 
 ```bash
-- cd backend-chatbot 
+- cd backend-chatbot
 - source chain-env/bin/activate # use the correct virtual env name
-- python main.py 
+- python main.py
 ```
 
-- Ensure Ollama is running in the background
 
-- Start the frontend
+
+- Ensure Ollama is running in the background with the required models downloaded.
+Supported models:
+ - llama3.1(8b), 
+ - llama 3 
+ - llama 2
+
+ > The Swagger documentation can be found at http://localhost:8000/docs
+
+##### Running the Client
+
+  Create a `.env` file in the `client` directory with the following content:
 
 ```bash
+REACT_APP_BACKEND_URL=http://localhost:8000
+REACT_APP_BACKEND_WS_URL=ws://localhost:8080
+REACT_APP_MODEL_NAME=llama3.1
+```
+
+Run the app
+
+```bash
+npm ci
 npm run start
 ```
 
-The Swagger documentation can be found at http://localhost:8000/docs
-
 ## Overview
 
-The API Docs Chatbot is a conversational AI tool designed to help developers learn and navigate API documentation in an intuitive and engaging way. By utilizing advanced language models, this chatbot offers real-time, up-to-date information from a variety of API docs, including popular technologies like 
+The API Docs Chatbot is a conversational AI tool designed to help developers learn and navigate API documentation in an intuitive and engaging way. By utilizing advanced language models, this chatbot offers real-time, up-to-date information from a variety of API docs, including popular technologies like
 
 - [Crustdata API Docs](https://crustdata.notion.site/Crustdata-Discovery-And-Enrichment-API-c66d5236e8ea40df8af114f6d447ab48)
 - [NextJS Api Docs](https://nextjs.org/docs)
 - [Flutter Api Docs](https://docs.flutter.dev/)
 
 ### Sitemap Urls
+
 - Flutter: https://docs.flutter.dev/sitemap.xml
 - NextJS: https://nextjs.org/sitemap.xml
 
