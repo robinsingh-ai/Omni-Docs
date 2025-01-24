@@ -5,6 +5,7 @@ import NewChat from './pages/chat/NewChat';
 import LandingPage from './pages/landing/LandingPage';
 import NotFound from './pages/NotFound';
 import App from './App';
+import AuthPage from './pages/auth/AuthPage';
 
 const AppRoutes = () => {
     const isChatSubdomain = window.location.host.startsWith('chat.');
@@ -17,6 +18,7 @@ const AppRoutes = () => {
                         <Route index element={<NewChat />} />
                         <Route path="chat" element={<ChatScreen />} />
                     </Route>
+                    <Route path="/sign_in" element={<AuthPage />} />
                     <Route path="*" element={<NotFound />} />
                 </>
             ) : (

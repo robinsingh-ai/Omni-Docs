@@ -1,3 +1,5 @@
+import { Button } from "@nextui-org/react";
+
 // LandingPage.tsx
 const LandingPage = () => {
     const handleNavigateToChat = () => {
@@ -8,12 +10,11 @@ const LandingPage = () => {
         <div className="flex justify-center items-center min-h-screen">
             <div className="text-center">
                 <h1 className="text-3xl font-bold mb-4">Welcome to the Chat App</h1>
-                <button
-                    onClick={handleNavigateToChat}
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                >
+                <Button
+                    onPress={handleNavigateToChat}
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
                     Go to Chat
-                </button>
+                </Button>
             </div>
         </div>
     );
