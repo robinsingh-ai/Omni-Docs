@@ -28,6 +28,7 @@ Create a `.env` file in the `client` directory with the following content:
 REACT_APP_BACKEND_URL=http://localhost:8000
 REACT_APP_BACKEND_WS_URL=ws://localhost:8080
 REACT_APP_MODEL_NAME=llama3.1
+REACT_APP_SUBDOMAIN=chat.localhost
 ```
 
 ##### Setting up subdmoains
