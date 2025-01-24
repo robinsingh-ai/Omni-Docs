@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ResponseProviderFactory } from '../../services/ResponseProviderFactory';
 import { LLM_Provider } from '@/src/services/ResponseProvider';
+import { i } from 'react-router/dist/development/route-data-Cw8htKcF';
 
 export const fetchResponse = createAsyncThunk<
     any,
@@ -79,6 +80,7 @@ export const streamResponse = createAsyncThunk<
 );
 
 const initialState = {
+    isNewChat: true,
     messages: [] as any[],
     loading: false,
     animating: false,
@@ -89,6 +91,12 @@ const chatSlice = createSlice({
     name: 'chat',
     initialState,
     reducers: {
+        setNewChat: (state, action) => {
+            state.isNewChat = action.payload;
+            if (action.payload) {
+                state.messages = [];
+            }
+        },
         setAnimating: (state, action) => {
             state.animating = action.payload;
         },
@@ -102,6 +110,7 @@ const chatSlice = createSlice({
                 text: action.payload,
                 timestamp: new Date().toISOString(),
             });
+            console.log("added to queue:", state.messages);
         },
         addStreamedMessage: (state, action) => {
             // Invoked when a chunk of streamed response is received
@@ -166,5 +175,5 @@ const chatSlice = createSlice({
     },
 });
 
-export const { addUserMessage, addStreamedMessage, setAnimating, setLoading } = chatSlice.actions;
+export const { addUserMessage, addStreamedMessage, setAnimating, setLoading, setNewChat } = chatSlice.actions;
 export default chatSlice.reducer;
