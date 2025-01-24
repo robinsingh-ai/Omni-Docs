@@ -31,7 +31,7 @@ export default function App() {
             <Sidebar />
             <div
                 className={` flex-grow relative transition-transform duration-300 ease-in-out
-                    md:translate-x-0 overflow-y-auto
+                    md:translate-x-0
                     ${sidebar.isOpen ? 'translate-x-32' : 'translate-x-0'}
                 `}>
                 <AnimatePresence mode="wait">

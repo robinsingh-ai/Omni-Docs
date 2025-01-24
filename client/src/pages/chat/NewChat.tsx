@@ -12,7 +12,7 @@ const NewChat: React.FC<NewChatProps> = () => {
     const navigate = useNavigate();
     return (
         <motion.div
-            className="flex justify-center items-center min-h-screen"
+            className="flex justify-center items-center h-screen overflow-hidden"
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 50, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
