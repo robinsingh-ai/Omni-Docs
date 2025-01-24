@@ -1,16 +1,17 @@
-import React, { useEffect, useRef } from 'react';
-import ChatInput from './components/ChatInput';
-import ChatWindow from './components/ChatWindow';
-import Menu from './components/Menu';
+import React, { use, useEffect, useRef } from 'react';
+import ChatInput from '../../components/ChatInput';
+import ChatWindow from '../../components/ChatWindow';
+import Menu from '../../components/Menu';
 import { useDispatch, useSelector } from 'react-redux';
-import { DataSource, setDataSource } from './redux/reducers/dataSlice';
-import Navbar from './components/Navbar';
+import { DataSource, setDataSource } from '../../redux/reducers/dataSlice';
+import Navbar from '../../components/Navbar';
 import { ArrowDownCircleIcon } from 'lucide-react';
-import { AppDispatch, RootState } from './redux/store';
-import { updateScroll } from './redux/reducers/scrollSlice';
-import IconButton from './components/IconButton';
+import { AppDispatch, RootState } from '../../redux/store';
+import { updateScroll } from '../../redux/reducers/scrollSlice';
+import IconButton from '../../components/IconButton';
 import { FiSidebar } from 'react-icons/fi';
-import { toggleSidebar } from './redux/reducers/sidebarSlice';
+import { toggleSidebar } from '../../redux/reducers/sidebarSlice';
+import { useLocation, useNavigate } from 'react-router';
 
 export const items: Record<string, DataSource> = {
   'Crust-Data': 'crust_data',
@@ -24,6 +25,7 @@ const ChatScreen: React.FC = () => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const isAtBottom = useSelector((state: RootState) => state.scroll.isAtBottom);
   const sidebar = useSelector((state: RootState) => state.sidebar);
+  const location = useLocation(); //
   const handleMenuChange = (value: string) => {
     const selectedDataSource: DataSource = items[value];
     dispatch(setDataSource(selectedDataSource));
@@ -59,7 +61,7 @@ const ChatScreen: React.FC = () => {
       <div className="flex-none sticky top-0 z-10">
         <Navbar>
           <div className="flex items-center justify-between px-4">
-            {!sidebar.isOpen ? <IconButton
+            {!sidebar.isOpen && location.pathname === '/' ? <IconButton
               ariaLabel="Sidebar"
               onClick={() =>
                 dispatch(toggleSidebar())
