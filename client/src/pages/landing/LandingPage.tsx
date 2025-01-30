@@ -1,12 +1,12 @@
 import React from 'react';
-import Navigation from '../../components/landingcomponents/Navigation';
-import HeroSection from '../../components/landingcomponents/HeroSection';
-import FeatureCards from '../../components/landingcomponents/FeatureCards';
-import VideoDemo from '../../components/landingcomponents/VideoDemo';
-import Testimonials from '../../components/landingcomponents/Testimonials';
-import Pricing from '../../components/landingcomponents/Pricing';
-import ChatPreview from '../../components/landingcomponents/ChatPreview';
-import Contact from '../../components/landingcomponents/Contact';
+import Navigation from '../../components/landing/Navigation';
+import HeroSection from '../../components/landing/HeroSection';
+import FeatureCards from '../../components/landing/FeatureCards';
+import VideoDemo from '../../components/landing/VideoDemo';
+import Testimonials from '../../components/landing/Testimonials';
+import Pricing from '../../components/landing/Pricing';
+import ChatPreview from '../../components/landing/ChatPreview';
+import Contact from '../../components/landing/Contact';
 
 const LandingPage: React.FC = () => {
   return (
