@@ -48,3 +48,26 @@ Edit C:\Windows\System32\drivers\etc\hosts and add:
 npm ci
 HOST=chat.localhost npm run start
 ```
+
+### Folder Structure
+
+  src/
+    - components/
+    - assets /
+    - hooks/
+    - models/
+    - pages/
+    - redux/
+        - actions/
+        - reducers/
+        store.ts
+    - services/
+   - App.tsx
+   - index.tsx
+   - index.css
+   - markdown.css
+   - routes.tsx
+   - utils.ts
+   - .env
+   - tailwind.config.js
+   - Readme.md

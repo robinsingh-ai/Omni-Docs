@@ -3,6 +3,8 @@ import { Button } from "@nextui-org/react";
 // LandingPage.tsx
 const LandingPage = () => {
     const handleNavigateToChat = () => {
+        
+
         window.location.href = 'http://chat.localhost:3000'; // Navigate to the subdomain
     };
 
@@ -13,7 +15,7 @@ const LandingPage = () => {
                 <Button
                     onPress={handleNavigateToChat}
                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                    Go to Chat
+                    Get Started
                 </Button>
             </div>
         </div>
