@@ -1,3 +1,4 @@
+import { Button } from "@nextui-org/react";
 import React from "react";
 import { useState } from "react";
 import { FaGoogle } from "react-icons/fa";
@@ -54,12 +55,12 @@ const LoginPage = () => {
                             <a href="#" className="text-blue-500"> Privacy Policy</a>.
                         </label>
                     </div>
-                    <button
+                    <Button
                         className="w-full bg-blue-500 text-white py-2 rounded-lg font-bold hover:bg-blue-600"
-                        onClick={handleLogin}
+                        onPress={handleLogin}
                     >
                         Log in
-                    </button>
+                    </Button>
                     <div className="flex justify-between text-sm text-gray-400 mt-4">
                         <a href="#" className="hover:underline">Forgot password?</a>
                         <a href="#" className="hover:underline">Sign up</a>
