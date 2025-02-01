@@ -1,25 +1,28 @@
-import { Button } from "@nextui-org/react";
+import React from 'react';
+import Navigation from '../../components/landing/Navigation';
+import HeroSection from '../../components/landing/HeroSection';
+import FeatureCards from '../../components/landing/FeatureCards';
+import VideoDemo from '../../components/landing/VideoDemo';
+import Testimonials from '../../components/landing/Testimonials';
+import Pricing from '../../components/landing/Pricing';
+import ChatPreview from '../../components/landing/ChatPreview';
+import Contact from '../../components/landing/Contact';
 
-// LandingPage.tsx
-const LandingPage = () => {
-    const handleNavigateToChat = () => {
-        
-
-        window.location.href = 'http://chat.localhost:3000'; // Navigate to the subdomain
-    };
-
-    return (
-        <div className="flex justify-center items-center min-h-screen">
-            <div className="text-center">
-                <h1 className="text-3xl font-bold mb-4">Welcome to the Chat App</h1>
-                <Button
-                    onPress={handleNavigateToChat}
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-                    Get Started
-                </Button>
-            </div>
-        </div>
-    );
-};
+const LandingPage: React.FC = () => {
+  return (
+    <div className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800 text-white">
+      <Navigation />
+      <main className="container mx-auto px-6 pt-20">
+        <HeroSection />
+        <FeatureCards />
+        <VideoDemo />
+        <Testimonials />
+        <Pricing />
+        <ChatPreview />
+        <Contact />
+      </main>
+    </div>
+  );
+}
 
 export default LandingPage;

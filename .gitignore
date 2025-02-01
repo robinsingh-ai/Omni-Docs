@@ -3,3 +3,12 @@ __pycache__/
 .pyc
 backend-chatbot/data/flutter/index.faiss
 backend-chatbot/data/flutter/index.pkl
+
+research/model_cache
+research/BGE_RAG.ipynb
+research/crawled_data.json
+research/E5_RAG.ipynb
+
+
+
+
