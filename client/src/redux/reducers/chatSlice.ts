@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { ResponseProviderFactory } from '../../services/ResponseProviderFactory';
 import { LLM_Provider } from '@/src/services/ResponseProvider';
-import { i } from 'react-router/dist/development/route-data-Cw8htKcF';
 
 export const fetchResponse = createAsyncThunk<
     any,

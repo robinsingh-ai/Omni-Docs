@@ -5,13 +5,14 @@ import NewChat from './pages/chat/NewChat';
 import LandingPage from './pages/landing/LandingPage';
 import NotFound from './pages/NotFound';
 import App from './App';
-import AuthPage from './pages/auth/AuthPage';
 import LoginPage from './pages/auth/Login';
 import { useAuth } from './hooks/useAuth';
 import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from './redux/store';
 import { supabase } from './services/db/SupabaseService';
+import { setUser } from './redux/reducers/authSlice';
+import SignUp from './pages/auth/SignUp';
 
 const AppRoutes = () => {
     const isChatSubdomain = window.location.host.startsWith('chat.');
@@ -19,11 +20,9 @@ const AppRoutes = () => {
     const { auth } = useAuth();
     useEffect(() => {
         const session = supabase.auth.getSession();
-
         const { data: authListener } = supabase.auth.onAuthStateChange(async (event, session) => {
-            // setUser(session?.user ?? null);
+            dispatch(setUser(session?.user ?? null));
         });
-
         return () => {
             // authListener.unsubscribe();
         };
@@ -41,7 +40,7 @@ const AppRoutes = () => {
                 ) : (
                     <>
                         <Route path="/sign_in" element={<LoginPage />} />
-                        <Route path="/sign_up" element={<AuthPage />} />
+                        <Route path="/sign_up" element={<SignUp />} />
                         <Route path="*" element={<Navigate to="/sign_in" />} />
                     </>
                 )
@@ -50,7 +49,7 @@ const AppRoutes = () => {
                 <>
                     <Route path="/" element={<LandingPage />} />
                     <Route path="/sign_in" element={<LoginPage />} />
-                    <Route path="/sign_up" element={<AuthPage />} />
+                    <Route path="/sign_up" element={<SignUp />} />
                     <Route path="*" element={<NotFound />} />
                 </>
             )}

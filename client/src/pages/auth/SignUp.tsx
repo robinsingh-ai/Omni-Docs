@@ -1,53 +1,119 @@
-export default function SignUp() {
+import React, { useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
+import { Button } from "src/components/ui/button";
+
+const SignUp = () => {
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+    const togglePasswordVisibility = () => setShowPassword(!showPassword);
+    const toggleConfirmPasswordVisibility = () =>
+        setShowConfirmPassword(!showConfirmPassword);
+
     return (
-        <div className="flex items-center justify-center h-screen">
-            <div className="w-full max-w-md p-4 space-y-4 bg-gray-800 rounded-lg">
-                <h1 className="text-3xl text-white font-bold">Sign Up</h1>
-                <div className="relative">
-                    <input
-                        type="text"
-                        className="w-full bg-gray-700 text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Phone number / email address"
-                    />
+        <div className="flex items-center justify-center min-h-screen bg-gray-900">
+            <div className="bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md">
+                <div className="flex flex-col items-center mb-6">
+                    <img src="/logo.png" alt="DeepSeek Logo" className="w-12 h-12 mb-2" />
+                    <h1 className="text-2xl text-blue-400 font-semibold">DeepSeek</h1>
+                    <p className="text-gray-400 text-sm text-center mt-2">
+                        One DeepSeek account is all you need to access all DeepSeek
+                        services. Only email registration is supported in your region.
+                    </p>
                 </div>
-                <div className="relative">
-                    <input
-                        type="password"
-                        className="w-full bg-gray-700 text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        placeholder="Password"
-                    />
+                <form className="space-y-4">
+                    <div>
+                        <input
+                            type="email"
+                            id="email"
+                            placeholder="Email address"
+                            className="w-full px-4 py-2 bg-gray-700 text-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        />
+                    </div>
+                    <div className="relative">
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            id="password"
+                            placeholder="Password"
+                            className="w-full px-4 py-2 bg-gray-700 text-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 pr-10"
+                        />
+                        <Button
+                            className="absolute inset-y-0 right-2 flex items-center bg-transparent hover:bg-transparent"
+                            onClick={togglePasswordVisibility}
+                        >
+                            {showPassword ? (
+                                <EyeOff className="w-5 h-5 text-gray-400" />
+                            ) : (
+                                <Eye className="w-5 h-5 text-gray-400" />
+                            )}
+                        </Button>
+                    </div>
+                    <div className="relative">
+                        <input
+                            type={showConfirmPassword ? "text" : "password"}
+                            id="confirm-password"
+                            placeholder="Confirm password"
+                            className="w-full px-4 py-2 bg-gray-700 text-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 pr-10"
+                        />
+                        <Button
+                            className="absolute inset-y-0 right-2 flex items-center bg-transparent hover:bg-transparent"
+                            onClick={toggleConfirmPasswordVisibility}>
+                            {showConfirmPassword ? (
+                                <EyeOff className="w-5 h-5 text-gray-400" />
+                            ) : (
+                                <Eye className="w-5 h-5 text-gray-400" />
+                            )}
+                        </Button>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <input
+                            type="text"
+                            placeholder="Code"
+                            className="flex-1 px-4 py-2 bg-gray-700 text-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                        />
+                        <Button
+                            type="button"
+                            className="px-4 py-2 bg-blue-500 text-gray-100 rounded-lg hover:bg-blue-600"
+                        >
+                            Send Code
+                        </Button>
+                    </div>
+                    <div className="flex items-center mt-4">
+                        <input
+                            type="checkbox"
+                            id="terms"
+                            className="w-4 h-4 text-blue-500 bg-gray-700 rounded focus:ring-blue-400 focus:ring-2"
+                        />
+                        <label htmlFor="terms" className="ml-2 text-gray-400 text-sm">
+                            I confirm that I have read, consent, and agree to DeepSeek's{" "}
+                            <a href="/terms" className="text-blue-400 hover:underline">
+                                Terms of Use
+                            </a>{" "}
+                            and{" "}
+                            <a href="/privacy" className="text-blue-400 hover:underline">
+                                Privacy Policy
+                            </a>
+                            .
+                        </label>
+                    </div>
+                    <Button
+                        type="submit"
+                        className="w-full py-2 bg-blue-500 text-gray-100 rounded-lg hover:bg-blue-600 mt-4"
+                    >
+                        Sign Up
+                    </Button>
+                </form>
+                <div className="flex justify-between items-center mt-4 text-sm">
+                    <a href="/forgot-password" className="text-gray-400 hover:underline">
+                        Forgot password?
+                    </a>
+                    <a href="/sign_in" className="text-blue-400 hover:underline">
+                        Log in
+                    </a>
                 </div>
-                <div className="flex items-center space-x-2">
-                    <input
-                        type="checkbox"
-                        id="remember"
-                    />
-                    <label htmlFor="remember" className="text-sm text-gray-400">
-                        I confirm that I have read, consent, and agree to DeepSeek's
-                        <a href="#" className="text-blue-500"> Terms of Use</a> and
-                        <a href="#" className="text-blue-500"> Privacy Policy</a>.
-                    </label>
-                </div>
-                <button
-                    className="w-full bg-blue-500 text-white py-2 rounded-lg font-bold hover:bg-blue-600"
-                >
-                    Sign Up
-                </button>
-                <div className="flex justify-between text-sm text-gray-400 mt-4">
-                    <a href="#" className="hover:underline">Forgot password?</a>
-                    <a href="#" className="hover:underline">Sign in</a>
-                </div>
-                <div className="flex items-center my-4">
-                    <div className="flex-grow h-px bg-gray-600"></div>
-                    <span className="px-4 text-gray-400">OR</span>
-                    <div className="flex-grow h-px bg-gray-600"></div>
-                </div>
-                <button
-                    className="w-full flex items-center justify-center bg-white text-black py-2 rounded-lg font-bold hover:bg-gray-200"
-                >
-                    Log in with Google
-                </button>
             </div>
         </div>
     );
-}
+};
+
+export default SignUp;

@@ -1,15 +1,22 @@
+import { setUser } from "src/redux/reducers/authSlice";
+import { AppDispatch } from "src/redux/store";
 import { Button } from "@nextui-org/react";
-import React from "react";
 import { useState } from "react";
 import { FaGoogle } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { Link, useNavigate } from "react-router";
 
 const LoginPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState(false);
+    const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
 
     const handleLogin = () => {
         // Handle login logic here
+        dispatch(setUser({ email, password }));
+        navigate("/");
     };
 
     const handleGoogleLogin = () => {
@@ -62,8 +69,8 @@ const LoginPage = () => {
                         Log in
                     </Button>
                     <div className="flex justify-between text-sm text-gray-400 mt-4">
-                        <a href="#" className="hover:underline">Forgot password?</a>
-                        <a href="#" className="hover:underline">Sign up</a>
+                        <Link to="/forgot_password" className="hover:underline">Forgot password?</Link>
+                        <Link to="/sign_up" className="hover:underline">Sign up</Link>
                     </div>
                     <div className="flex items-center my-4">
                         <div className="flex-grow h-px bg-gray-600"></div>

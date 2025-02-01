@@ -11,13 +11,8 @@ import { updateScroll } from '../../redux/reducers/scrollSlice';
 import IconButton from '../../components/IconButton';
 import { FiSidebar } from 'react-icons/fi';
 import { toggleSidebar } from '../../redux/reducers/sidebarSlice';
-import { useLocation, useNavigate } from 'react-router';
-
-export const items: Record<string, DataSource> = {
-  'Crust-Data': 'crust_data',
-  'Next.js': 'nextjs',
-  'Flutter': 'flutter',
-};
+import { useLocation } from 'react-router';
+import Constants from 'src/utils/Constants';
 
 const ChatScreen: React.FC = () => {
 
@@ -27,7 +22,7 @@ const ChatScreen: React.FC = () => {
   const sidebar = useSelector((state: RootState) => state.sidebar);
   const location = useLocation(); //
   const handleMenuChange = (value: string) => {
-    const selectedDataSource: DataSource = items[value];
+    const selectedDataSource: DataSource = Constants.items[value];
     dispatch(setDataSource(selectedDataSource));
   };
 
@@ -70,7 +65,7 @@ const ChatScreen: React.FC = () => {
             </IconButton> : <div />}
             <Menu
               onChange={handleMenuChange}
-              options={Object.keys(items).map((key) => ({ value: key, label: key }))}
+              options={Object.keys(Constants.items).map((key) => ({ value: key, label: key }))}
               placeholder="Next.js"
             />
           </div>

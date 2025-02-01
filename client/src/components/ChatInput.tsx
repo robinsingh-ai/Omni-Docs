@@ -6,7 +6,7 @@ import { Send } from 'lucide-react';
 import { AppDispatch, RootState } from '../redux/store';
 import { useSelector } from 'react-redux';
 import { LLM_Provider } from '../services/ResponseProvider';
-import { items } from '../pages/chat/ChatScreen';
+import Constants from '../utils/Constants';
 
 interface ChatInputProps {
     className?: string;
@@ -18,9 +18,10 @@ const ChatInput: React.FC<ChatInputProps> = ({ className, onSend }) => {
     const dispatch = useDispatch<AppDispatch>();
     const loading = useSelector((state: RootState) => state.chat.loading);
     const dataSource = useSelector((state: RootState) => state.data.dataSource.valueOf());
-    const dataKey = Object.keys(items).find(key => items[key] === dataSource);
+    const dataKey = Object.keys(Constants.items).find(key => Constants.items[key] === dataSource);
     const [rows, setRows] = useState<number>(1);
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
+
     const sendMessage = async () => {
         if (query.trim()) {
             dispatch(addUserMessage(query));
