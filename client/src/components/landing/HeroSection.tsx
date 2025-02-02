@@ -1,11 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '../ui/button';
-import { ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/src/redux/store';
 
 const HeroSection: React.FC = () => {
   const navigate = useNavigate();
+  const auth = useSelector((state: RootState) => state.auth);
   return (
 
     <div className="max-w-4xl mx-auto text-center">
@@ -21,22 +23,21 @@ const HeroSection: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5, delay: 0.2 }}
-        className="text-xl text-gray-300 mb-12"
-      >
+        className="text-xl text-gray-300 mb-12">
         Engage with our advanced AI chatbot powered by cutting-edge technology.
         Get instant responses, smart suggestions, and human-like interactions.
       </motion.p>
       <div className="flex justify-center space-x-4"> {/* Flex container for buttons */}
         <Button className="bg-blue-500 hover:bg-blue-600 px-8 py-3 rounded-full font-medium flex items-center space-x-2"
           onClick={() => {
-            navigate('/sign_in');
+            window.location.href = 'http://chat.localhost:3000';
           }}
         >
-          Login <ArrowRight className="w-4 h-4" />
+          Start Now
         </Button>
-        <Button className="text-gray-300 hover:text-white px-8 py-3">
+        {/* <Button className="text-gray-300 hover:text-white px-8 py-3">
           Sign Up
-        </Button>
+        </Button> */}
       </div>
     </div>
   );

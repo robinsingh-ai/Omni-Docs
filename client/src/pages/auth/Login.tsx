@@ -1,10 +1,12 @@
-import { setUser } from "src/redux/reducers/authSlice";
-import { AppDispatch } from "src/redux/store";
+import { setAuth, setLoading } from "src/redux/reducers/authSlice";
+import { AppDispatch, RootState } from "src/redux/store";
 import { Button } from "@nextui-org/react";
 import { useState } from "react";
 import { FaGoogle } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router";
+import { SupabaseFactory } from "src/services/db/SupabaseFactory";
+import { useSelector } from "react-redux";
 
 const LoginPage = () => {
     const [email, setEmail] = useState("");
@@ -12,15 +14,27 @@ const LoginPage = () => {
     const [rememberMe, setRememberMe] = useState(false);
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
-
+    const authService = SupabaseFactory.authService;
+    const loading = useSelector((state: RootState) => state.auth.isLoading);
+    
     const handleLogin = () => {
         // Handle login logic here
-        dispatch(setUser({ email, password }));
+        console.log("Logging in...");
         navigate("/");
     };
 
-    const handleGoogleLogin = () => {
-        // Handle Google login logic here
+    const handleGoogleLogin = async () => {
+        try {
+            dispatch(setLoading(true));
+            const response = await authService.signInWithGoogle();
+            if (response.error) {
+                console.error("Error signing in with Google:", response.error);
+                return;
+            }
+        } catch (e) {
+            console.error("Error signing in with Google:", e);
+            dispatch(setLoading(false));
+        }
     };
 
     return (
@@ -66,7 +80,7 @@ const LoginPage = () => {
                         className="w-full bg-blue-500 text-white py-2 rounded-lg font-bold hover:bg-blue-600"
                         onPress={handleLogin}
                     >
-                        Log in
+                        {loading ? "Loading..." : "Log in"}
                     </Button>
                     <div className="flex justify-between text-sm text-gray-400 mt-4">
                         <Link to="/forgot_password" className="hover:underline">Forgot password?</Link>
@@ -81,7 +95,9 @@ const LoginPage = () => {
                         className="w-full flex items-center justify-center bg-white text-black py-2 rounded-lg font-bold hover:bg-gray-200"
                         onClick={handleGoogleLogin}
                     >
-                        <FaGoogle className="mr-2" /> Log in with Google
+                        <FaGoogle className="mr-2" />
+
+                        {loading ? "Loading..." : "Log in with Google"}
                     </button>
                 </div>
             </div>

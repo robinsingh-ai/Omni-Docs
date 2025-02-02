@@ -4,7 +4,7 @@ import chatReducer from "./reducers/chatSlice";
 import dataReducer from "./reducers/dataSlice";
 import scrollReducer from "./reducers/scrollSlice";
 import sidebarReducer from "./reducers/sidebarSlice";
-import { authReducer } from "./reducers/authSlice";
+import authReducer from "./reducers/authSlice";
 
 const store = configureStore({
   reducer: {
