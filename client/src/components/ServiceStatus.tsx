@@ -47,7 +47,6 @@ const ServiceStatus: React.FC = () => {
         };
 
         websocket.onclose = () => {
-            console.log('WebSocket connection closed');
             setStatus('offline');
         };
 

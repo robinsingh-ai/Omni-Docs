@@ -1,13 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Button } from '../ui/button';
-import { useNavigate } from 'react-router';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/src/redux/store';
 
 const HeroSection: React.FC = () => {
-  const navigate = useNavigate();
-  const auth = useSelector((state: RootState) => state.auth);
   return (
 
     <div className="max-w-4xl mx-auto text-center">
@@ -30,7 +25,7 @@ const HeroSection: React.FC = () => {
       <div className="flex justify-center space-x-4"> {/* Flex container for buttons */}
         <Button className="bg-blue-500 hover:bg-blue-600 px-8 py-3 rounded-full font-medium flex items-center space-x-2"
           onClick={() => {
-            window.location.href = 'http://chat.localhost:3000';
+            window.location.href = process.env.REACT_APP_SUBDOMAIN || 'http://localhost:3000';
           }}
         >
           Start Now

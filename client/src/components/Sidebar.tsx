@@ -18,7 +18,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
         try {
             dispatch(setLoading(true));
             const response = await authService.signOut();
-            console.log("Logout response:", response);
             if (response.error) {
                 console.error("Error logging out:", response.error);
                 return;

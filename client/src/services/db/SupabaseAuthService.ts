@@ -4,7 +4,7 @@ import { AuthService } from "./AuthInterface";
 class SupabaseAuthService implements AuthService {
     private static instance: SupabaseAuthService;
 
-    private constructor() {} // Private constructor to prevent direct instantiation
+    private constructor() { } // Private constructor to prevent direct instantiation
 
     static getInstance(): SupabaseAuthService {
         if (!SupabaseAuthService.instance) {
@@ -14,19 +14,35 @@ class SupabaseAuthService implements AuthService {
     }
 
     async signUp(email: string, password: string) {
-        return await supabase.auth.signUp({ email, password });
+        return await supabase.auth.signUp({
+            email, password,
+            options: {
+                emailRedirectTo: `${process.env.REACT_APP_SUBDOMAIN}/sign_in`,
+            }
+        });
     }
 
     async signIn(email: string, password: string) {
-        return await supabase.auth.signInWithPassword({ email, password });
+        try {
+            const response = await supabase.auth.signInWithPassword({ email, password });
+            if (response.error) {
+                console.error("Error signing in:", response.error);
+                return response;
+            }
+            return response;
+        } catch (error) {
+            console.error("Error signing in:", error);
+            return error;
+        }
     }
-
+    
+    // add proper function with return type
     async signInWithGoogle() {
         return await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
                 scopes: 'profile',
-                redirectTo: 'http://chat.localhost:3000',
+                redirectTo: process.env.REACT_APP_SUBDOMAIN
             },
         });
     }

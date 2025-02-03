@@ -11,4 +11,6 @@ export default class Constants {
     static signUpDescription: string = `Sign up and Verify your email to get started with AI Chatbot.`;
 
     static signUpConsent: string = `I confirm that I have read, consent, and agree to AI Chatbot's`;
+
+    static emailSentDescription: string = `An email has been sent to your email address. Please verify your email to get started with AI Chatbot.`;
 }

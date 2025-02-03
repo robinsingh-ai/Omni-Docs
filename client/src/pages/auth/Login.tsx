@@ -1,4 +1,4 @@
-import { setAuth, setLoading } from "src/redux/reducers/authSlice";
+import { setAuth, setAuthError, setLoading } from "src/redux/reducers/authSlice";
 import { Button } from "@nextui-org/react";
 import { useState } from "react";
 import { FaGoogle } from "react-icons/fa";
@@ -7,7 +7,6 @@ import { Link, useNavigate } from "react-router";
 import { SupabaseFactory } from "src/services/db/SupabaseFactory";
 import { useSelector } from "react-redux";
 import { AppDispatch, RootState } from "src/redux/store";
-
 const LoginPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -16,15 +15,19 @@ const LoginPage = () => {
     const dispatch = useDispatch<AppDispatch>();
     const authService = SupabaseFactory.authService;
     const loading = useSelector((state: RootState) => state.auth.isLoading);
+    const auth = useSelector((state: RootState) => state.auth);
 
     const handleLogin = () => {
         dispatch(setLoading(true));
         authService.signIn(email, password)
-            .then((response) => {
-                console.log("Login response:", response);
+            .then((response: any) => {
                 if (response.error) {
                     console.error("Error logging in:", response.error);
                     dispatch(setLoading(false));
+                    dispatch(setAuthError("Invalid email or password."));
+                    setTimeout(() => {
+                        dispatch(setAuthError(null));
+                    }, 5000);
                     return;
                 }
                 const authState = {
@@ -33,10 +36,9 @@ const LoginPage = () => {
                     isAuthenticated: true,
                     provider: "email",
                     loading: false,
+                    error: null
                 };
-                console.log("Auth state:", authState);
                 dispatch(setAuth(authState));
-                console.log(localStorage.getItem('persist:root'));
                 // persistor.persist();
                 navigate("/");
             })
@@ -48,17 +50,22 @@ const LoginPage = () => {
 
     const handleGoogleLogin = async () => {
         try {
-            // // dispatch(setLoading(true));
-            // // const response = await authService.signInWithGoogle();
-            // const { data, error } = await supabase.auth.signInWithPassword({
-            //     email: 'mjamdade@umassd.edu',
-            //     password: 'example-password',
-            // })
-            // if (error) {
-            //     console.error("Error signing in with Google:", error);
-            //     return;
-            // }
-            // console.log("Google login response:", data);
+            // dispatch(setLoading(true));
+            // const response = await authService.signInWithGoogle();
+            const response =
+                await authService.signInWithGoogle();
+            if (response.error) {
+                console.error("Error signing in with Google:", response.error);
+                return;
+            }
+            dispatch(setAuth({
+                session: (response.data as any).session,
+                user: (response.data as any).user,
+                isAuthenticated: true,
+                provider: "google",
+                loading: false,
+            }));
+
         } catch (e) {
             console.error("Error signing in with Google:", e);
             dispatch(setLoading(false));
@@ -69,7 +76,7 @@ const LoginPage = () => {
         <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
             <div className="w-full max-w-md p-6 bg-gray-800 rounded-2xl shadow-lg">
                 <div className="flex justify-center mb-4">
-                    <img src="/logo.png" alt="AI Chatbot Logo" className="h-10" />
+                    <img src="/logo.png" alt="AI Chatbot Logo" className="w-12 h-12 mb-2" />
                 </div>
                 <h1 className="text-center text-xl font-bold text-blue-500 mb-4">Login</h1>
                 <div className="space-y-4">
@@ -113,6 +120,9 @@ const LoginPage = () => {
                     >
                         {loading ? "Loading..." : "Log in"}
                     </Button>
+                    {auth.error && (
+                        <p className="my-2 text-red-500 text-sm">{auth.error}</p>
+                    )}
                     <div className="flex justify-between text-sm text-gray-400 mt-4">
                         <Link to="/forgot_password" className="hover:underline">Forgot password?</Link>
                         <Link to="/sign_up" className="hover:underline">Sign up</Link>
@@ -124,8 +134,7 @@ const LoginPage = () => {
                     </div>
                     <button
                         className="w-full flex items-center justify-center bg-white text-black py-2 rounded-lg font-bold hover:bg-gray-200"
-                        onClick={handleGoogleLogin}
-                    >
+                        onClick={handleGoogleLogin}>
                         <FaGoogle className="mr-2" />
 
                         {loading ? "Loading..." : "Log in with Google"}

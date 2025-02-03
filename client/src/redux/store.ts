@@ -46,10 +46,6 @@ const store = configureStore({
 
 const persistor = persistStore(store);
 
-persistor.subscribe(() => {
-  console.log("Persistor state Update:", persistor.getState());
-});
-
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 

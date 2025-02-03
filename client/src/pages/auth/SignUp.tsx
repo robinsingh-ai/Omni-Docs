@@ -2,15 +2,55 @@ import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "src/components/ui/button";
 import Constants from "src/utils/Constants";
+import EmailSent from "./EmailSent";
+import { SupabaseFactory } from "src/services/db/SupabaseFactory";
 
 const SignUp = () => {
     const [showPassword, setShowPassword] = useState<boolean>(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [emailSent, setEmailSent] = useState<boolean>(false);
 
-    const togglePasswordVisibility = () => setShowPassword(!showPassword);
+    const togglePasswordVisibility = () => setShowPassword((prevState) => !prevState);
 
-    const toggleConfirmPasswordVisibility = () =>
-        setShowConfirmPassword(!showConfirmPassword);
+    const toggleConfirmPasswordVisibility = () => setShowConfirmPassword((prevState) => !prevState);
+    const authService = SupabaseFactory.authService;
+
+    const handleSignUp = async (event: React.FormEvent<HTMLFormElement>) => {
+        setLoading(true);
+        event.preventDefault();
+        const email = (document.getElementById("email") as HTMLInputElement).value;
+        const password = (document.getElementById("password") as HTMLInputElement).value;
+        const confirmPassword = (document.getElementById("confirm-password") as HTMLInputElement).value;
+
+        if (!email || !password || !confirmPassword) {
+            alert("Please fill in all fields.");
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            alert("Passwords do not match.");
+            return;
+        }
+
+        try {
+            const response = await authService.signUp(email, password);
+            if (response.error) {
+                console.error("Error signing up:", response.error);
+                setLoading(false);
+                return;
+            }
+            setLoading(false);
+            setEmailSent(true);
+        } catch (error) {
+            console.error("Error signing up:", error);
+            setLoading(false);
+        }
+    }
+
+    if (emailSent) {
+        return <EmailSent />;
+    }
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-900">
@@ -22,7 +62,9 @@ const SignUp = () => {
                         {Constants.signUpDescription}
                     </p>
                 </div>
-                <form className="space-y-4">
+                <form
+                    onSubmit={handleSignUp}
+                    className="space-y-4">
                     <div>
                         <input
                             type="email"
@@ -40,7 +82,10 @@ const SignUp = () => {
                         />
                         <Button
                             className="absolute inset-y-0 right-2 flex items-center bg-transparent hover:bg-transparent"
-                            onClick={togglePasswordVisibility}
+                            onClick={(e) => {
+                                e.preventDefault(); // Prevent any potential form submission
+                                togglePasswordVisibility();
+                            }}
                         >
                             {showPassword ? (
                                 <EyeOff className="w-5 h-5 text-gray-400" />
@@ -58,7 +103,11 @@ const SignUp = () => {
                         />
                         <Button
                             className="absolute inset-y-0 right-2 flex items-center bg-transparent hover:bg-transparent"
-                            onClick={toggleConfirmPasswordVisibility}>
+                            onClick={(e) => {
+                                e.preventDefault();
+                                toggleConfirmPasswordVisibility();
+                            }}
+                        >
                             {showConfirmPassword ? (
                                 <EyeOff className="w-5 h-5 text-gray-400" />
                             ) : (
@@ -66,19 +115,7 @@ const SignUp = () => {
                             )}
                         </Button>
                     </div>
-                    <div className="flex items-center space-x-2">
-                        <input
-                            type="text"
-                            placeholder="Code"
-                            className="flex-1 px-4 py-2 bg-gray-700 text-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                        />
-                        <Button
-                            type="button"
-                            className="px-4 py-2 bg-blue-500 text-gray-100 rounded-lg hover:bg-blue-600"
-                        >
-                            Send Code
-                        </Button>
-                    </div>
+
                     <div className="flex items-center mt-4">
                         <input
                             type="checkbox"
@@ -99,9 +136,8 @@ const SignUp = () => {
                     </div>
                     <Button
                         type="submit"
-                        className="w-full py-2 bg-blue-500 text-gray-100 rounded-lg hover:bg-blue-600 mt-4"
-                    >
-                        Sign Up
+                        className="w-full py-2 bg-blue-500 text-gray-100 rounded-lg hover:bg-blue-600 mt-4">
+                        {loading ? "Signing Up..." : "Sign Up"}
                     </Button>
                 </form>
                 <div className="flex justify-between items-center mt-4 text-sm">
