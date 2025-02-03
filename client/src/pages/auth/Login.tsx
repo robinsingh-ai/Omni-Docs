@@ -1,5 +1,4 @@
 import { setAuth, setLoading } from "src/redux/reducers/authSlice";
-import { AppDispatch, RootState } from "src/redux/store";
 import { Button } from "@nextui-org/react";
 import { useState } from "react";
 import { FaGoogle } from "react-icons/fa";
@@ -7,6 +6,7 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router";
 import { SupabaseFactory } from "src/services/db/SupabaseFactory";
 import { useSelector } from "react-redux";
+import { AppDispatch, RootState } from "src/redux/store";
 
 const LoginPage = () => {
     const [email, setEmail] = useState("");
@@ -16,21 +16,49 @@ const LoginPage = () => {
     const dispatch = useDispatch<AppDispatch>();
     const authService = SupabaseFactory.authService;
     const loading = useSelector((state: RootState) => state.auth.isLoading);
-    
+
     const handleLogin = () => {
-        // Handle login logic here
-        console.log("Logging in...");
-        navigate("/");
+        dispatch(setLoading(true));
+        authService.signIn(email, password)
+            .then((response) => {
+                console.log("Login response:", response);
+                if (response.error) {
+                    console.error("Error logging in:", response.error);
+                    dispatch(setLoading(false));
+                    return;
+                }
+                const authState = {
+                    session: response.data.session,
+                    user: response.data.user,
+                    isAuthenticated: true,
+                    provider: "email",
+                    loading: false,
+                };
+                console.log("Auth state:", authState);
+                dispatch(setAuth(authState));
+                console.log(localStorage.getItem('persist:root'));
+                // persistor.persist();
+                navigate("/");
+            })
+            .catch((error) => {
+                console.error("Error logging in:", error);
+                dispatch(setLoading(false));
+            });
     };
 
     const handleGoogleLogin = async () => {
         try {
-            dispatch(setLoading(true));
-            const response = await authService.signInWithGoogle();
-            if (response.error) {
-                console.error("Error signing in with Google:", response.error);
-                return;
-            }
+            // // dispatch(setLoading(true));
+            // // const response = await authService.signInWithGoogle();
+            // const { data, error } = await supabase.auth.signInWithPassword({
+            //     email: 'mjamdade@umassd.edu',
+            //     password: 'example-password',
+            // })
+            // if (error) {
+            //     console.error("Error signing in with Google:", error);
+            //     return;
+            // }
+            // console.log("Google login response:", data);
         } catch (e) {
             console.error("Error signing in with Google:", e);
             dispatch(setLoading(false));
@@ -48,6 +76,7 @@ const LoginPage = () => {
                     <div className="relative">
                         <input
                             type="text"
+                            autoComplete="email"
                             className="w-full bg-gray-700 text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                             placeholder="Phone number / email address"
                             value={email}
@@ -56,6 +85,7 @@ const LoginPage = () => {
                     </div>
                     <div className="relative">
                         <input
+                            autoComplete="current-password"
                             type="password"
                             className="w-full bg-gray-700 text-white px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-md"
                             placeholder="Password"
@@ -77,6 +107,7 @@ const LoginPage = () => {
                         </label>
                     </div>
                     <Button
+                        autoSave="true"
                         className="w-full bg-blue-500 text-white py-2 rounded-lg font-bold hover:bg-blue-600"
                         onPress={handleLogin}
                     >

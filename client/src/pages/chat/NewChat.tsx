@@ -2,9 +2,9 @@ import { motion } from "framer-motion";
 import ChatInput from "../../components/ChatInput";
 import React from "react";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../redux/store";
 import { setNewChat } from "../../redux/reducers/chatSlice";
 import { useNavigate } from "react-router";
+import { AppDispatch } from "src/redux/store";
 interface NewChatProps { }
 
 const NewChat: React.FC<NewChatProps> = () => {

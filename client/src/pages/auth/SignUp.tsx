@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 import { Button } from "src/components/ui/button";
+import Constants from "src/utils/Constants";
 
 const SignUp = () => {
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [showPassword, setShowPassword] = useState<boolean>(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
 
     const togglePasswordVisibility = () => setShowPassword(!showPassword);
+
     const toggleConfirmPasswordVisibility = () =>
         setShowConfirmPassword(!showConfirmPassword);
 
@@ -15,10 +17,9 @@ const SignUp = () => {
             <div className="bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md">
                 <div className="flex flex-col items-center mb-6">
                     <img src="/logo.png" alt="DeepSeek Logo" className="w-12 h-12 mb-2" />
-                    <h1 className="text-2xl text-blue-400 font-semibold">DeepSeek</h1>
+                    <h1 className="text-2xl text-blue-400 font-semibold">AI Chatbot</h1>
                     <p className="text-gray-400 text-sm text-center mt-2">
-                        One DeepSeek account is all you need to access all DeepSeek
-                        services. Only email registration is supported in your region.
+                        {Constants.signUpDescription}
                     </p>
                 </div>
                 <form className="space-y-4">
@@ -85,12 +86,12 @@ const SignUp = () => {
                             className="w-4 h-4 text-blue-500 bg-gray-700 rounded focus:ring-blue-400 focus:ring-2"
                         />
                         <label htmlFor="terms" className="ml-2 text-gray-400 text-sm">
-                            I confirm that I have read, consent, and agree to DeepSeek's{" "}
-                            <a href="/terms" className="text-blue-400 hover:underline">
+                            {Constants.signUpConsent}{" "}
+                            <a href="/terms-of-service" className="text-blue-400 hover:underline">
                                 Terms of Use
                             </a>{" "}
                             and{" "}
-                            <a href="/privacy" className="text-blue-400 hover:underline">
+                            <a href="/privacy-policy" className="text-blue-400 hover:underline">
                                 Privacy Policy
                             </a>
                             .

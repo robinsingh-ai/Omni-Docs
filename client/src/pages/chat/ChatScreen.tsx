@@ -6,13 +6,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { DataSource, setDataSource } from '../../redux/reducers/dataSlice';
 import Navbar from '../../components/Navbar';
 import { ArrowDownCircleIcon } from 'lucide-react';
-import { AppDispatch, RootState } from '../../redux/store';
 import { updateScroll } from '../../redux/reducers/scrollSlice';
 import IconButton from '../../components/IconButton';
 import { FiSidebar } from 'react-icons/fi';
 import { toggleSidebar } from '../../redux/reducers/sidebarSlice';
 import { useLocation } from 'react-router';
 import Constants from 'src/utils/Constants';
+import { AppDispatch, RootState } from 'src/redux/store';
 
 const ChatScreen: React.FC = () => {
 
