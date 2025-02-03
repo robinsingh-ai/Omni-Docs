@@ -13,7 +13,6 @@ import { RootState } from './redux/store';
 const AppRoutes = () => {
     const isChatSubdomain = window.location.host.startsWith('chat.');
     const auth = useSelector((state: RootState) => state.auth);
-    console.log('auth', auth)
     return (
         <Routes>
             {isChatSubdomain ? (
