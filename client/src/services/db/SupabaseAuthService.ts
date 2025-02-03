@@ -1,23 +1,39 @@
 import { supabase } from "../SupabaseClient";
+import { AuthService } from "./AuthInterface";
 
-export const SupabaseAuthService = {
-    signUp: async (email: string, password: string) => {
+class SupabaseAuthService implements AuthService {
+    private static instance: SupabaseAuthService;
+
+    private constructor() {} // Private constructor to prevent direct instantiation
+
+    static getInstance(): SupabaseAuthService {
+        if (!SupabaseAuthService.instance) {
+            SupabaseAuthService.instance = new SupabaseAuthService();
+        }
+        return SupabaseAuthService.instance;
+    }
+
+    async signUp(email: string, password: string) {
         return await supabase.auth.signUp({ email, password });
-    },
-    signIn: async (email: string, password: string) => {
+    }
+
+    async signIn(email: string, password: string) {
         return await supabase.auth.signInWithPassword({ email, password });
-    },
-    signInWithGoogle: async () => {
-        // const redirectTo = `${window.location.protocol}//chat.${window.location.hostname}:${window.location.port}/`;
+    }
+
+    async signInWithGoogle() {
         return await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {
                 scopes: 'profile',
-                redirectTo: 'http://chat.localhost:3000'
+                redirectTo: 'http://chat.localhost:3000',
             },
         });
-    },
-    signOut: async () => {
+    }
+
+    async signOut() {
         return await supabase.auth.signOut();
-    },
-};
+    }
+}
+
+export default SupabaseAuthService;
