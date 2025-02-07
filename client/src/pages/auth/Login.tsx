@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router";
 import { SupabaseFactory } from "src/services/db/SupabaseFactory";
 import { useSelector } from "react-redux";
 import { AppDispatch, RootState } from "src/redux/store";
+
 const LoginPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -30,16 +31,14 @@ const LoginPage = () => {
                     }, 5000);
                     return;
                 }
-                const authState = {
+                dispatch(setAuth({
                     session: response.data.session,
                     user: response.data.user,
                     isAuthenticated: true,
                     provider: "email",
                     loading: false,
                     error: null
-                };
-                dispatch(setAuth(authState));
-                // persistor.persist();
+                }));
                 navigate("/");
             })
             .catch((error) => {
@@ -50,10 +49,7 @@ const LoginPage = () => {
 
     const handleGoogleLogin = async () => {
         try {
-            // dispatch(setLoading(true));
-            // const response = await authService.signInWithGoogle();
-            const response =
-                await authService.signInWithGoogle();
+            const response = await authService.signInWithGoogle();
             if (response.error) {
                 console.error("Error signing in with Google:", response.error);
                 return;
@@ -65,7 +61,6 @@ const LoginPage = () => {
                 provider: "google",
                 loading: false,
             }));
-
         } catch (e) {
             console.error("Error signing in with Google:", e);
             dispatch(setLoading(false));
@@ -73,71 +68,63 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
-            <div className="w-full max-w-md p-6 bg-gray-800 rounded-2xl shadow-lg">
-                <div className="flex justify-center mb-4">
-                    <img src="/logo.png" alt="AI Chatbot Logo" className="w-12 h-12 mb-2" />
+        <div className="flex items-center justify-center min-h-screen bg-gray-900">
+            <div className="w-full max-w-md p-8 bg-gray-800 rounded-2xl shadow-lg space-y-6 animate-glow-slow">
+                <div className="flex justify-center">
+                    <img src="/logo.png" alt="Logo" className="w-20 h-20 mb-4" />
                 </div>
-                <h1 className="text-center text-xl font-bold text-blue-500 mb-4">Login</h1>
+                <h1 className="text-center text-3xl font-bold text-blue-500 mb-4">Login</h1>
                 <div className="space-y-4">
-                    <div className="relative">
-                        <input
-                            type="text"
-                            autoComplete="email"
-                            className="w-full bg-gray-700 text-white p-3 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Phone number / email address"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                        />
-                    </div>
-                    <div className="relative">
-                        <input
-                            autoComplete="current-password"
-                            type="password"
-                            className="w-full bg-gray-700 text-white px-3 py-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-md"
-                            placeholder="Password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                    </div>
-                    <div className="flex items-center space-x-2">
-                        <input
-                            type="checkbox"
-                            id="remember"
-                            checked={rememberMe}
-                            onChange={() => setRememberMe(!rememberMe)}
-                        />
-                        <label htmlFor="remember" className="text-sm text-gray-400">
-                            I confirm that I have read, consent, and agree to DeepSeek's
-                            <a href="#" className="text-blue-500"> Terms of Use</a> and
-                            <a href="#" className="text-blue-500"> Privacy Policy</a>.
+                    <input
+                        type="text"
+                        autoComplete="email"
+                        className="w-full p-3 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 ease-in-out"
+                        placeholder="Email address"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+                    <input
+                        type="password"
+                        autoComplete="current-password"
+                        className="w-full p-3 bg-gray-700 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all duration-300 ease-in-out"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                    <div className="flex items-center justify-between">
+                        <label className="flex items-center space-x-2">
+                            <input
+                                type="checkbox"
+                                className="form-checkbox rounded text-blue-500 focus:ring-blue-500"
+                                checked={rememberMe}
+                                onChange={() => setRememberMe(!rememberMe)}
+                            />
+                            <span className="text-sm text-gray-400">Remember me</span>
                         </label>
+                        <Link to="/forgot_password" className="text-sm text-blue-500 hover:underline">Forgot password?</Link>
                     </div>
                     <Button
-                        autoSave="true"
-                        className="w-full bg-blue-500 text-white py-2 rounded-lg font-bold hover:bg-blue-600"
+                        color="primary"
+                        className="w-full text-white font-bold py-3 rounded-lg hover:bg-blue-600 transition duration-300"
                         onPress={handleLogin}
+                        disabled={loading}
                     >
                         {loading ? "Loading..." : "Log in"}
                     </Button>
                     {auth.error && (
-                        <p className="my-2 text-red-500 text-sm">{auth.error}</p>
+                        <p className="text-red-500 text-center text-sm mt-2">{auth.error}</p>
                     )}
-                    <div className="flex justify-between text-sm text-gray-400 mt-4">
-                        <Link to="/forgot_password" className="hover:underline">Forgot password?</Link>
-                        <Link to="/sign_up" className="hover:underline">Sign up</Link>
-                    </div>
-                    <div className="flex items-center my-4">
-                        <div className="flex-grow h-px bg-gray-600"></div>
-                        <span className="px-4 text-gray-400">OR</span>
-                        <div className="flex-grow h-px bg-gray-600"></div>
+                    <div className="relative flex items-center my-4">
+                        <div className="flex-grow border-t border-gray-600"></div>
+                        <span className="px-4 bg-gray-800 text-gray-400">OR</span>
+                        <div className="flex-grow border-t border-gray-600"></div>
                     </div>
                     <button
-                        className="w-full flex items-center justify-center bg-white text-black py-2 rounded-lg font-bold hover:bg-gray-200"
-                        onClick={handleGoogleLogin}>
+                        className="w-full flex items-center justify-center bg-white text-black py-2 rounded-lg font-bold hover:bg-gray-200 transition duration-300"
+                        onClick={handleGoogleLogin}
+                    >
                         <FaGoogle className="mr-2" />
-
-                        {loading ? "Loading..." : "Log in with Google"}
+                        Log in with Google
                     </button>
                 </div>
             </div>
