@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import MDPreview from "./MDPreview";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../redux/store";
-import { setAnimating } from "../redux/reducers/chatSlice";
+import { setAnimating } from "../redux/reducers/chatResponseSlice";
 
 interface TypewriterTextProps {
     text: string;

@@ -86,8 +86,8 @@ const initialState = {
     error: null,
 };
 
-const chatSlice = createSlice({
-    name: 'chat',
+const chatResponseSlice = createSlice({
+    name: 'chatResponse',
     initialState,
     reducers: {
         setNewChat: (state, action) => {
@@ -174,5 +174,5 @@ const chatSlice = createSlice({
     },
 });
 
-export const { addUserMessage, addStreamedMessage, setAnimating, setLoading, setNewChat } = chatSlice.actions;
-export default chatSlice.reducer;
+export const { addUserMessage, addStreamedMessage, setAnimating, setLoading, setNewChat } = chatResponseSlice.actions;
+export default chatResponseSlice.reducer;
