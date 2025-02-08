@@ -23,7 +23,9 @@ const ThreeDotLoader: React.FC<ThreeDotLoaderProps> = ({ animation = "wave", tra
             className="dot"></span>;
     }
     return (
-        <div className="flex justify-center items-center gap-2">
+        <div
+            key={Math.random()}
+            className="flex justify-center items-center gap-2">
             {
                 [0, 1, 2].map((i) => {
                     return Dot(childrenAnimationDelay[i]);
