@@ -10,12 +10,11 @@ import {
   REGISTER
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-
-import chatReducer from "./reducers/chatSlice";
 import dataReducer from "./reducers/dataSlice";
 import scrollReducer from "./reducers/scrollSlice";
 import sidebarReducer from "./reducers/sidebarSlice";
 import authReducer from "./reducers/authSlice";
+import chatResponseReducer from "./reducers/chatResponseSlice";
 
 const persistConfig = {
   key: 'root',
@@ -27,7 +26,7 @@ const persistConfig = {
 const persistedReducer = persistReducer(persistConfig,
   combineReducers({
     auth: authReducer,
-    chat: chatReducer,
+    chat: chatResponseReducer,
     data: dataReducer,
     scroll: scrollReducer,
     sidebar: sidebarReducer,
