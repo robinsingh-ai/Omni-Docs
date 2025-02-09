@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router";
 import { SupabaseFactory } from "src/services/db/SupabaseFactory";
 import { useSelector } from "react-redux";
 import { AppDispatch, RootState } from "src/redux/store";
+import Constants from "src/utils/Constants";
 
 const LoginPage = () => {
     const [email, setEmail] = useState("");
@@ -67,6 +68,7 @@ const LoginPage = () => {
         }
     };
 
+
     return (
         <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
             <div className="w-full max-w-md p-8 bg-gray-800/50 backdrop-blur-lg rounded-2xl shadow-2xl space-y-6 transition-all duration-300 ease-in-out hover:shadow-blue-500/10">
@@ -77,13 +79,13 @@ const LoginPage = () => {
                 </div>
                 <h1 className="text-center text-3xl font-bold bg-gradient-to-r from-blue-500 to-blue-400 bg-clip-text text-transparent mb-2">Welcome Back</h1>
                 <p className="text-center text-gray-400 text-sm mb-6">Sign in to continue to your account</p>
-                <div className="space-y-5">
+                <div className="space-y-4">
                     <div className="space-y-2">
                         <label className="text-sm font-medium text-gray-300 ml-1">Email address</label>
                         <input
                             type="text"
                             autoComplete="email"
-                            className="w-full p-3 bg-gray-700/50 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 ease-in-out"
+                            className={Constants.styles.inputClassName}
                             placeholder="Enter your email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
@@ -94,7 +96,7 @@ const LoginPage = () => {
                         <input
                             type="password"
                             autoComplete="current-password"
-                            className="w-full p-3 bg-gray-700/50 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 ease-in-out"
+                            className={Constants.styles.inputClassName}
                             placeholder="Enter your password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}

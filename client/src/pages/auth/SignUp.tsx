@@ -54,7 +54,7 @@ const SignUp = () => {
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-900">
-            <div className="bg-gray-800 rounded-lg shadow-lg p-6 w-full max-w-md">
+            <div className={Constants.styles.cardBackground}>
                 <div className="flex flex-col items-center mb-6">
                     <img src="/logo.png" alt="DeepSeek Logo" className="w-12 h-12 mb-2" />
                     <h1 className="text-2xl text-blue-400 font-semibold">AI Chatbot</h1>
@@ -70,7 +70,7 @@ const SignUp = () => {
                             type="email"
                             id="email"
                             placeholder="Email address"
-                            className="w-full px-4 py-2 bg-gray-700 text-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+                            className={Constants.styles.inputClassName}
                         />
                     </div>
                     <div className="relative">
@@ -78,7 +78,7 @@ const SignUp = () => {
                             type={showPassword ? "text" : "password"}
                             id="password"
                             placeholder="Password"
-                            className="w-full px-4 py-2 bg-gray-700 text-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 pr-10"
+                            className={Constants.styles.inputClassName}
                         />
                         <Button
                             className="absolute inset-y-0 right-2 flex items-center bg-transparent hover:bg-transparent"
@@ -99,7 +99,7 @@ const SignUp = () => {
                             type={showConfirmPassword ? "text" : "password"}
                             id="confirm-password"
                             placeholder="Confirm password"
-                            className="w-full px-4 py-2 bg-gray-700 text-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 pr-10"
+                            className={Constants.styles.inputClassName}
                         />
                         <Button
                             className="absolute inset-y-0 right-2 flex items-center bg-transparent hover:bg-transparent"
