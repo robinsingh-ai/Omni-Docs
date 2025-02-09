@@ -140,7 +140,7 @@ const LoginPage = () => {
                     <div className="text-center pt-4">
                         <p className="text-gray-400 text-sm">
                             Don't have an account?{' '}
-                            <Link to="/signup" className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
+                            <Link to="/sign_up" className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
                                 Sign up
                             </Link>
                         </p>
