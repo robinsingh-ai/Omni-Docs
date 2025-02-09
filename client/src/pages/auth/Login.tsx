@@ -132,13 +132,13 @@ const LoginPage = () => {
                         <span className="px-4 text-gray-400 text-sm">or continue with</span>
                         <div className="flex-grow border-t border-gray-600/50"></div>
                     </div>
-                    <button
+                    <Button
                         className="w-full flex items-center justify-center bg-white/5 backdrop-blur-sm text-white py-3 rounded-lg font-medium hover:bg-white/10 transition-all duration-300 border border-gray-600/50"
-                        onClick={handleGoogleLogin}
+                        onPress={handleGoogleLogin}
                     >
                         <FaGoogle className="mr-2 text-lg" />
                         Sign in with Google
-                    </button>
+                    </Button>
                     <div className="text-center pt-4">
                         <p className="text-gray-400 text-sm">
                             Don't have an account?{' '}
