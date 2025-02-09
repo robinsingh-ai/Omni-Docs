@@ -22,7 +22,6 @@ const ChatInput: React.FC<ChatInputProps> = ({ className, onSend, onNewChatCreat
     const dataKey = Object.keys(Constants.items).find(key => Constants.items[key] === agent);
     const app = useSelector((state: RootState) => state.app);
     const [rows, setRows] = useState<number>(1);
-    const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
     const sendQuery = async () => {
         if (app.chatId != null) {
@@ -56,8 +55,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ className, onSend, onNewChatCreat
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
         // ignore add new line
-        console.log("sending:", isSendingMessage, app.chatId);
-        if (isSendingMessage || app.chatId == null || query === '') {
+        if (isSendingMessage || query.trim() === '') {
             return;
         }
         if (e.key === 'Enter') {
@@ -80,7 +78,6 @@ const ChatInput: React.FC<ChatInputProps> = ({ className, onSend, onNewChatCreat
                 <textarea
                     className="flex-grow bg-slate-50 p-2 rounded-2xl resize-none text-sm duration-200 outline-none focus:outline-none"
                     value={query}
-                    ref={textAreaRef}
                     onKeyDown={handleKeyDown}
                     onChange={handleInputChange}
                     placeholder={`Ask me about ${dataKey}`}
