@@ -101,6 +101,11 @@ module.exports = {
         "accordion-up": "accordion-up 0.2s ease-out",
         'glow-slow': 'glow 2s ease-in-out infinite',
       },
+      transitionProperty: {
+        'height': 'height',
+        'spacing': 'margin, padding',
+        'scale': 'transform',
+      },
     },
   },
   plugins: [require("tailwindcss-animate")],
