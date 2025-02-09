@@ -20,7 +20,7 @@ const AppRoutes = () => {
                 auth.user && auth.isAuthenticated ? (
                     <Route path="/" element={<App />}>
                         <Route index element={<NewChat />} />
-                        <Route path="chat" element={<ChatScreen />} />
+                        <Route path="chat/:chatId" element={<ChatScreen />} />
                     </Route>
                 ) : (
                     <>

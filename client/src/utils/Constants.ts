@@ -1,8 +1,7 @@
-import { DataSource } from "../redux/reducers/dataSlice";
 
 export default class Constants {
 
-    static readonly items: Record<string, DataSource> = {
+    static readonly items: Record<string, Agent> = {
         'Crust Data': 'crust_data',
         'Next.js': 'nextjs',
         'Flutter': 'flutter',
@@ -14,3 +13,7 @@ export default class Constants {
 
     static emailSentDescription: string = `An email has been sent to your email address. Please verify your email to get started with AI Chatbot.`;
 }
+
+export type Agent = 'crust_data' | 'nextjs' | 'flutter';
+export type LLM_Model = 'llama2' | 'llama3' | 'llama3.1';
+export type UserType = 'user' | 'bot'; 

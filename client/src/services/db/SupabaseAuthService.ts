@@ -14,9 +14,13 @@ class SupabaseAuthService implements AuthService {
     }
 
     async signUp(email: string, password: string) {
+        const username = email.split('@')[0];
         return await supabase.auth.signUp({
             email, password,
             options: {
+                data: {
+                    username,
+                },
                 emailRedirectTo: `${process.env.REACT_APP_SUBDOMAIN}/sign_in`,
             }
         });
@@ -35,7 +39,7 @@ class SupabaseAuthService implements AuthService {
             return error;
         }
     }
-    
+
     // add proper function with return type
     async signInWithGoogle() {
         return await supabase.auth.signInWithOAuth({

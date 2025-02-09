@@ -25,7 +25,7 @@ export class LocalLLMProvider implements ResponseProvider {
         }
     }
 
-    async streamResponse(message: string, dataSource: string, onData: (chunk: any) => void): Promise<void> {
+    async streamResponse(message: string, agent: string, onData: (chunk: any) => void): Promise<void> {
         const model_name = process.env.REACT_APP_MODEL_NAME || 'llama3.1';
         try {
             const url = `${this.api}/api/v1/query/stream`;
@@ -36,7 +36,7 @@ export class LocalLLMProvider implements ResponseProvider {
                 },
                 body: JSON.stringify({
                     model_name: model_name,
-                    query: message, index_name: dataSource
+                    query: message, index_name: agent
                 }),
             });
 

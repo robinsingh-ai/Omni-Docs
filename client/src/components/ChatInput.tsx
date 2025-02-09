@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
-import { addUserMessage, streamResponse } from '../redux/reducers/chatResponseSlice';
+import { addUserMessage, sendMessage, streamResponse } from '../redux/reducers/chatSlice';
 import { Send } from 'lucide-react';
 import { AppDispatch, RootState } from '../redux/store';
 import { useSelector } from 'react-redux';
@@ -10,38 +10,59 @@ import Constants from '../utils/Constants';
 
 interface ChatInputProps {
     className?: string;
-    onSend(val: string): void
+    onSend(query: string, chatId: string): void
+    onNewChatCreate?(val: string): void;
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({ className, onSend }) => {
+const ChatInput: React.FC<ChatInputProps> = ({ className, onSend, onNewChatCreate }) => {
     const [query, setQuery] = useState('');
     const dispatch = useDispatch<AppDispatch>();
-    const loading = useSelector((state: RootState) => state.chat.loading);
-    const dataSource = useSelector((state: RootState) => state.data.dataSource.valueOf());
-    const dataKey = Object.keys(Constants.items).find(key => Constants.items[key] === dataSource);
+    const isSendingMessage = useSelector((state: RootState) => state.chat.isSendingMessage);
+    const agent = useSelector((state: RootState) => state.app.agent.valueOf());
+    const dataKey = Object.keys(Constants.items).find(key => Constants.items[key] === agent);
+    const app = useSelector((state: RootState) => state.app);
     const [rows, setRows] = useState<number>(1);
     const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
-    const sendMessage = async () => {
-        if (query.trim()) {
-            dispatch(addUserMessage(query));
-            dispatch(streamResponse({ provider_name: LLM_Provider.local_llm, message: query, dataSource: dataSource }));
+    const sendQuery = async () => {
+        if (app.chatId != null) {
+            console.log("Sending in chatId:", app.chatId);
+            await dispatch(addUserMessage({
+                chat_id: app.chatId,
+                message: query,
+                sender: "user"
+            }));
+
+            // Start parallel operations
+            await Promise.all([
+                dispatch(sendMessage({
+                    chat_id: app.chatId,
+                    message: query,
+                    sender: "user"
+                })).unwrap(),
+                dispatch(streamResponse({
+                    provider_name: LLM_Provider.local_llm,
+                    message: query,
+                    agent: agent
+                })).unwrap()
+            ]);
             setQuery('');
             setRows(1);
+            onSend?.(query, app.chatId);
+        } else {
+            await onNewChatCreate?.(query);
         }
-        if (onSend != null) {
-            onSend(query.trim());
-        }
-    };
+    }
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
         // ignore add new line
-        if ((e.key === 'Enter' && e.shiftKey) || loading) {
+        console.log("sending:", isSendingMessage, app.chatId);
+        if (isSendingMessage || app.chatId == null || query === '') {
             return;
         }
         if (e.key === 'Enter') {
             e.preventDefault();
-            sendMessage();
+            sendQuery();
         }
     }
 
@@ -69,7 +90,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ className, onSend }) => {
                     className="flex items-center justify-center p-3 text-black font-semibold hover:scale-105 active:scale-95 focus:outline-none focus:ring focus:ring-blue-300"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={sendMessage}>
+                    onClick={sendQuery}>
                     {<Send size={22} />}
                 </motion.button>
             </div>

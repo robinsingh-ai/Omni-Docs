@@ -2,13 +2,13 @@ import React from 'react';
 import MDPreview from './MDPreview';
 
 interface ChatProps {
-    message: any
+    chat: any
     index: number
     length: number
 }
 
-const ChatBubble: React.FC<ChatProps> = ({ message, index, length }) => {
-    const { text, timestamp } = message;
+const ChatBubble: React.FC<ChatProps> = ({ chat, index, length }) => {
+    const { message, timestamp } = chat;
 
     return (
         <div className={`my-2 pt-2}`}>
@@ -19,7 +19,7 @@ const ChatBubble: React.FC<ChatProps> = ({ message, index, length }) => {
                     backgroundColor: 'var(--chat-bubble-surface)'
                 }}
                 className={`inline-block px-4 py-2 rounded-lgtext-white`}
-                value={text} />
+                value={message} />
             <div className='flex justify-between px-2 pt-1'>
                 {/* {loading && index === length - 1 ? <Spinner /> : <div />} */}
                 <div className="text-xs text-gray-500 ">{new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
