@@ -8,6 +8,7 @@ import { SupabaseFactory } from "src/services/db/SupabaseFactory";
 import { useSelector } from "react-redux";
 import { AppDispatch, RootState } from "src/redux/store";
 
+
 const LoginPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
