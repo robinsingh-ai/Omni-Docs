@@ -10,7 +10,6 @@ interface ChatWindowProps {
 
 const ChatWindow: React.FC<ChatWindowProps> = ({ className }) => {
     const messages = useSelector((state: RootState) => state.chat.messages);
-    console.log("fetched messages", messages);
     return (
         <div className={`${className}`}>
             {messages.map((msg: any, idx: number) => {

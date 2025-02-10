@@ -47,6 +47,11 @@ const ChatScreen: React.FC = () => {
   useEffect(() => {
     if (chatId) {
       dispatch(fetchChatById(chatId));
+
+      setTimeout(() => {
+        scrollToBottom();
+      }, 1000);
+
     }
   }, [chatId, dispatch]);
 
@@ -114,7 +119,6 @@ const ChatScreen: React.FC = () => {
                 }, 300);
               }}
             />
-
           </div>
         </div>
       </div>

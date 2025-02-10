@@ -23,7 +23,7 @@ class SupabaseChatService implements ChatService {
     }
 
     async createChat(userId: string, chat: Chat) {
-        return await supabase
+        const resp = await supabase
             .from('chats')
             .insert(
                 {
@@ -32,7 +32,8 @@ class SupabaseChatService implements ChatService {
                     agent: chat.agent,
                     model: chat.model,
                 }
-            );
+            ).select();
+        return resp;
     }
 
     async sendMessage(chatId: string, message: string, sender: UserType) {
@@ -44,7 +45,7 @@ class SupabaseChatService implements ChatService {
                     message: message,
                     message_type: sender,
                 }
-            );
+            ).select();
     }
 
     async fetchChatById(chatId: string) {
@@ -59,11 +60,13 @@ class SupabaseChatService implements ChatService {
             const resp1 = await supabase
                 .from('messages')
                 .delete()
-                .eq('chat_id', chatId);
+                .eq('chat_id', chatId)
+                .select();
             const resp2 = await supabase
                 .from('chats')
                 .delete()
-                .eq('id', chatId);
+                .eq('id', chatId)
+                .select();
             return [resp1, resp2];
         } catch (e) {
             console.error(e);

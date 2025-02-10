@@ -15,7 +15,7 @@ interface BotBubbleProps {
 const BotBubble: React.FC<BotBubbleProps> = ({ chat, index, length }) => {
     const { status, message, sources, timestamp, animate } = chat;
     const success = status === 'success';
-    const isSendingMessage = useSelector((state: RootState) => state.chat.isSendingMessage);
+    const respLoading = useSelector((state: RootState) => state.chat.respLoading);
     const animating = useSelector((state: RootState) => state.chat.animating);
     const messageIndex = Math.floor(Math.random() * 4);
     const emptyText = ['Hang on a sec...', 'Just a moment...', 'One sec...', 'Hold on...'];
@@ -25,15 +25,15 @@ const BotBubble: React.FC<BotBubbleProps> = ({ chat, index, length }) => {
             <TypewriterText
                 animate={animate ?? true}
                 text={!message ? emptyText[messageIndex] : message} speed={5} success={success} />
-            {isLastMessage && isSendingMessage && !animating && <div className="flex p-2">
+            {isLastMessage && respLoading && !animating && <div className="flex p-2">
                 <ThreeDotLoader
                     size={6}
                     animation='typing' />
             </div>}
-            {!isSendingMessage && !animating && <SourcesList sources={sources} />}
+            {!respLoading && !animating && <SourcesList sources={sources} />}
             <div className='flex justify-between items-center px-2'>
                 <div className="text-xs text-gray-500 ">{new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
-                {!isSendingMessage && <CopyIcon
+                {!respLoading && <CopyIcon
                     id='copy-content'
                     message='Copied!'
                     tooltip='Copy'

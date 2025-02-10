@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
 import { addUserMessage, sendMessage, streamResponse } from '../redux/reducers/chatSlice';
@@ -17,7 +17,7 @@ interface ChatInputProps {
 const ChatInput: React.FC<ChatInputProps> = ({ className, onSend, onNewChatCreate }) => {
     const [query, setQuery] = useState('');
     const dispatch = useDispatch<AppDispatch>();
-    const isSendingMessage = useSelector((state: RootState) => state.chat.isSendingMessage);
+    const respLoading = useSelector((state: RootState) => state.chat.respLoading);
     const agent = useSelector((state: RootState) => state.app.agent.valueOf());
     const dataKey = Object.keys(Constants.items).find(key => Constants.items[key] === agent);
     const app = useSelector((state: RootState) => state.app);
@@ -25,37 +25,36 @@ const ChatInput: React.FC<ChatInputProps> = ({ className, onSend, onNewChatCreat
 
     const sendQuery = async () => {
         if (app.chatId != null) {
-            console.log("Sending in chatId:", app.chatId);
             await dispatch(addUserMessage({
                 chat_id: app.chatId,
                 message: query,
                 sender: "user"
             }));
-
-            // Start parallel operations
+            const q = query;
+            setQuery('');
+            setRows(1);
+            onSend?.(query, app.chatId);
             await Promise.all([
                 dispatch(sendMessage({
                     chat_id: app.chatId,
-                    message: query,
+                    message: q,
                     sender: "user"
                 })).unwrap(),
                 dispatch(streamResponse({
                     provider_name: LLM_Provider.local_llm,
-                    message: query,
+                    message: q,
                     agent: agent
                 })).unwrap()
             ]);
-            setQuery('');
-            setRows(1);
-            onSend?.(query, app.chatId);
         } else {
+            console.error("Chat ID is null, creating new chat...");
             await onNewChatCreate?.(query);
         }
     }
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
         // ignore add new line
-        if (isSendingMessage || query.trim() === '') {
+        if (respLoading || query.trim() === '') {
             return;
         }
         if (e.key === 'Enter') {

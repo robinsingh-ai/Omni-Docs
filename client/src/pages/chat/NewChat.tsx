@@ -2,11 +2,13 @@ import { motion } from "framer-motion";
 import ChatInput from "../../components/ChatInput";
 import React from "react";
 import { useDispatch } from "react-redux";
-import { addUserMessage, sendMessage, setNewChat } from "../../redux/reducers/chatSlice";
+import { addUserMessage, sendMessage, setNewChat, streamResponse } from "../../redux/reducers/chatSlice";
 import { useNavigate } from "react-router";
 import { AppDispatch, RootState } from "src/redux/store";
 import { createChat } from "src/redux/reducers/userChatsSlice";
 import { useSelector } from "react-redux";
+import { setChatId } from "src/redux/reducers/appSlice";
+import { LLM_Provider } from "src/services/ResponseProvider";
 interface NewChatProps { }
 
 const NewChat: React.FC<NewChatProps> = () => {
@@ -14,7 +16,8 @@ const NewChat: React.FC<NewChatProps> = () => {
     const navigate = useNavigate();
     const app = useSelector((state: RootState) => state.app);
     const auth = useSelector((state: RootState) => state.auth)
-
+    const agent = useSelector((state: RootState) => state.app.agent.valueOf());
+    
     const handleCreateChat = async (query: string) => {
         if (auth.user) {
             console.log("Creating new chat...");
@@ -33,8 +36,8 @@ const NewChat: React.FC<NewChatProps> = () => {
                 const resultAction = await dispatch(createChat(chat));
                 if (createChat.fulfilled.match(resultAction)) {
                     console.log("Chat created:", resultAction.payload);
-                    console.log("Navigating to chat...");
                     const newChat = resultAction.payload;
+                    dispatch(setChatId(newChat.id!));
                     handleSend(query, newChat.id!);
                     navigate(`/chat/${newChat.id}`);
                 } else {
@@ -47,24 +50,27 @@ const NewChat: React.FC<NewChatProps> = () => {
             console.log("User not logged in.");
         }
     }
+
     const handleSend = async (message: string, chatId: string) => {
         console.log("Sending:", message);
-        if (!app.chatId) {
-            return;
-        }
         // update state
         dispatch(addUserMessage({
-            chat_id: app.chatId!,
+            chat_id: chatId!,
             message: message,
             sender: "user",
         }));
 
         try {
             await dispatch(sendMessage({
-                chat_id: app.chatId!,
+                chat_id: chatId!,
                 message: message,
                 sender: "user",
             }));
+            dispatch(streamResponse({
+                provider_name: LLM_Provider.local_llm,
+                message: message,
+                agent: agent
+            })).unwrap()
         } catch (error) {
             console.error("Error sending message:", error);
         }
