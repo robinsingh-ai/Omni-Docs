@@ -4,6 +4,7 @@ import { LLM_Provider } from 'src/services/ResponseProvider';
 import { UserType } from 'src/utils/Constants';
 import { SupabaseFactory } from 'src/services/db/SupabaseFactory';
 import { RootState } from '../store';
+import { animate } from 'framer-motion';
 
 export const fetchResponse = createAsyncThunk<
     any,
@@ -21,6 +22,7 @@ export const fetchResponse = createAsyncThunk<
                     sender: 'bot',
                     text: responseText,
                     status: 'success',
+                    animate: true,
                     sources: response.source_documents,
                     timestamp: new Date().toISOString(),
                 }
@@ -69,6 +71,7 @@ export const streamResponse = createAsyncThunk<
                             sender: 'bot',
                             message: "",
                             type: chunk.type,
+                            animate: true,
                             status: 'success',
                             sources: chunk.sources,
                         }));
@@ -79,6 +82,7 @@ export const streamResponse = createAsyncThunk<
                             dispatch(addStreamedMessage({
                                 type: 'markdown',
                                 sender: 'bot',
+                                animate: true,
                                 message: chunk.content,
                                 status: 'success',
                             }));
@@ -91,7 +95,6 @@ export const streamResponse = createAsyncThunk<
                         const state = getState();
                         const chatId = state.app.chatId;
                         if (chatId && collectedResponse) {
-                            console.log("saving collected response", collectedResponse);
                             dispatch(sendMessage({
                                 chat_id: chatId,
                                 message: collectedResponse,
@@ -161,7 +164,6 @@ export const sendMessage = createAsyncThunk<Object, { chat_id: string, message: 
     'chats/sendMessage',
     async ({ chat_id, message, sender }, { rejectWithValue }) => {
         try {
-            console.log("Sending message", message, chat_id);
             const { data, error } = await SupabaseFactory.chatService.sendMessage(chat_id, message, sender);
             if (error) throw new Error(error.message);
             return data;
@@ -192,7 +194,6 @@ const chatReducer = createSlice({
         setNewChat: (state, action) => {
             state.isNewChat = action.payload;
             if (action.payload) {
-                console.log("Clearing messages");
                 state.messages = [];
             }
         },
@@ -222,6 +223,7 @@ const chatReducer = createSlice({
             if (lastMessage?.sender === 'bot') {
                 state.messages[lastMessageIndex] = {
                     ...lastMessage,
+                    animate: true,
                     message: lastMessage.message + message,
                 }
             } else {
@@ -231,6 +233,7 @@ const chatReducer = createSlice({
                     status,
                     type,
                     message,
+                    animate: true,
                     sources: sources || [],
                     timestamp: new Date().toISOString(),
                 });

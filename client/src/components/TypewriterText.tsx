@@ -22,17 +22,23 @@ export const TypewriterText: React.FC<TypewriterTextProps> = ({ text, speed = 30
     }, [text]);
 
     useEffect(() => {
+        if (!animate) {
+            // If animation is disabled, show full text immediately
+            setDisplayedText(text);
+            dispatch(setAnimating(false));
+            return;
+        }
         if (currentIndex < text.length) {
+            dispatch(setAnimating(true));
             const timer = setTimeout(() => {
                 setDisplayedText(text.slice(0, currentIndex + 1));
                 setCurrentIndex(prev => prev + 1);
             }, speed);
-            dispatch(setAnimating(true));
             return () => clearTimeout(timer);
         } else {
             dispatch(setAnimating(false));
         }
-    }, [currentIndex, text, speed, animate]);
+    }, [currentIndex, text, speed]);
 
     return (
         <MDPreview

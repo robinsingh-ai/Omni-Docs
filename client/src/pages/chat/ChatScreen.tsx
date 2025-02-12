@@ -12,7 +12,7 @@ import { toggleSidebar } from '../../redux/reducers/sidebarSlice';
 import { useLocation, useParams } from 'react-router';
 import Constants, { Agent } from 'src/utils/Constants';
 import { AppDispatch, RootState } from 'src/redux/store';
-import { setAgent } from 'src/redux/reducers/appSlice';
+import { setAgent, setChatId } from 'src/redux/reducers/appSlice';
 import { fetchChatById } from 'src/redux/reducers/chatSlice';
 
 const ChatScreen: React.FC = () => {
@@ -47,10 +47,10 @@ const ChatScreen: React.FC = () => {
   useEffect(() => {
     if (chatId) {
       dispatch(fetchChatById(chatId));
-
       setTimeout(() => {
         scrollToBottom();
-      }, 1000);
+      }, 2000);
+      dispatch(setChatId(chatId));
 
     }
   }, [chatId, dispatch]);
