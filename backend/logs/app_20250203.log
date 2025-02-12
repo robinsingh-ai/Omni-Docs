@@ -1,0 +1,26 @@
+[2025-02-03 19:20:22] INFO [main.startup_event:22] Starting up FastAPI application
+[2025-02-03 19:20:26] INFO [main.shutdown_event:26] Shutting down FastAPI application
+[2025-02-03 19:20:27] INFO [main.startup_event:22] Starting up FastAPI application
+[2025-02-03 19:21:11] INFO [main.shutdown_event:26] Shutting down FastAPI application
+[2025-02-03 19:21:12] INFO [main.lifespan:18] Starting up FastAPI application
+[2025-02-03 19:21:20] INFO [main.lifespan:21] Shutting down FastAPI application
+[2025-02-03 19:21:22] INFO [main.lifespan:18] Starting up FastAPI application
+[2025-02-03 19:21:46] INFO [app.services.redis.__init__:17] Successfully connected to Redis at localhost:6379
+[2025-02-03 19:21:46] INFO [app.services.supabase.__init__:11] Successfully connected to Supabase at https://scvjcsutiyircyrusvsb.supabase.co
+[2025-02-03 19:21:47] ERROR [app.services.supabase.get_user:22] Error getting user 1: {'code': '22P02', 'details': None, 'hint': None, 'message': 'invalid input syntax for type uuid: "1"'}
+[2025-02-03 19:22:18] INFO [main.lifespan:21] Shutting down FastAPI application
+[2025-02-03 19:22:19] INFO [main.lifespan:18] Starting up FastAPI application
+[2025-02-03 19:23:02] INFO [app.services.redis.__init__:17] Successfully connected to Redis at localhost:6379
+[2025-02-03 19:23:02] INFO [app.services.supabase.__init__:11] Successfully connected to Supabase at https://scvjcsutiyircyrusvsb.supabase.co
+[2025-02-03 19:23:03] ERROR [app.services.supabase.get_user:22] Error getting user 1: {'code': '22P02', 'details': None, 'hint': None, 'message': 'invalid input syntax for type uuid: "1"'}
+[2025-02-03 19:24:29] INFO [app.services.redis.__init__:17] Successfully connected to Redis at localhost:6379
+[2025-02-03 19:24:29] INFO [app.services.supabase.__init__:11] Successfully connected to Supabase at https://scvjcsutiyircyrusvsb.supabase.co
+[2025-02-03 19:24:29] ERROR [app.services.supabase.get_user:22] Error getting user 1: {'code': '22P02', 'details': None, 'hint': None, 'message': 'invalid input syntax for type uuid: "1"'}
+[2025-02-03 19:26:08] INFO [main.lifespan:21] Shutting down FastAPI application
+[2025-02-03 19:26:14] INFO [main.lifespan:18] Starting up FastAPI application
+[2025-02-03 19:26:22] INFO [app.services.redis.__init__:17] Successfully connected to Redis at localhost:6379
+[2025-02-03 19:26:22] INFO [app.services.supabase.__init__:11] Successfully connected to Supabase at https://scvjcsutiyircyrusvsb.supabase.co
+[2025-02-03 19:26:22] ERROR [app.services.supabase.get_user:22] Error getting user ce0599e9-f106-4006-a648-95c41b748cd6: object APIResponse[~_ReturnT] can't be used in 'await' expression
+[2025-02-03 19:26:42] INFO [main.lifespan:21] Shutting down FastAPI application
+[2025-02-03 19:26:42] INFO [main.lifespan:18] Starting up FastAPI application
+[2025-02-04 10:45:00] INFO [main.lifespan:21] Shutting down FastAPI application
