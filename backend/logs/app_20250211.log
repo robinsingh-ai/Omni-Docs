@@ -1,0 +1,24 @@
+[2025-02-11 10:11:39] INFO [app.services.redis.__init__:18] Successfully connected to Redis at localhost:6379
+[2025-02-11 10:11:39] INFO [main.lifespan:29] Redis connection established at startup
+[2025-02-11 10:11:39] INFO [app.services.supabase.__init__:11] Successfully connected to Supabase at https://scvjcsutiyircyrusvsb.supabase.co
+[2025-02-11 10:11:39] INFO [main.lifespan:37] Supabase connection established at startup
+[2025-02-11 10:11:39] INFO [main.lifespan:42] Starting up FastAPI application
+[2025-02-11 10:11:40] INFO [main.lifespan:46] Shutting down FastAPI application and closing connections
+[2025-02-11 10:11:41] INFO [app.services.redis.__init__:18] Successfully connected to Redis at localhost:6379
+[2025-02-11 10:11:41] INFO [main.lifespan:29] Redis connection established at startup
+[2025-02-11 10:11:41] INFO [app.services.supabase.__init__:11] Successfully connected to Supabase at https://scvjcsutiyircyrusvsb.supabase.co
+[2025-02-11 10:11:41] INFO [main.lifespan:37] Supabase connection established at startup
+[2025-02-11 10:11:41] INFO [main.lifespan:42] Starting up FastAPI application
+[2025-02-11 12:31:33] INFO [main.lifespan:46] Shutting down FastAPI application and closing connections
+[2025-02-11 12:31:35] INFO [app.services.redis.__init__:18] Successfully connected to Redis at localhost:6379
+[2025-02-11 12:31:35] INFO [main.lifespan:29] Redis connection established at startup
+[2025-02-11 12:31:35] INFO [app.services.supabase.__init__:11] Successfully connected to Supabase at https://scvjcsutiyircyrusvsb.supabase.co
+[2025-02-11 12:31:35] INFO [main.lifespan:37] Supabase connection established at startup
+[2025-02-11 12:31:35] INFO [main.lifespan:42] Starting up FastAPI application
+[2025-02-11 12:31:37] INFO [main.lifespan:46] Shutting down FastAPI application and closing connections
+[2025-02-11 12:31:38] INFO [app.services.redis.__init__:18] Successfully connected to Redis at localhost:6379
+[2025-02-11 12:31:38] INFO [main.lifespan:29] Redis connection established at startup
+[2025-02-11 12:31:38] INFO [app.services.supabase.__init__:11] Successfully connected to Supabase at https://scvjcsutiyircyrusvsb.supabase.co
+[2025-02-11 12:31:38] INFO [main.lifespan:37] Supabase connection established at startup
+[2025-02-11 12:31:38] INFO [main.lifespan:42] Starting up FastAPI application
+[2025-02-11 12:32:42] INFO [main.lifespan:46] Shutting down FastAPI application and closing connections
