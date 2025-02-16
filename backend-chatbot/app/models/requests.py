@@ -3,7 +3,6 @@ from pydantic import BaseModel
 from typing import List, Optional, Dict, Any
 
 class CrawlRequest(BaseModel):
-    sitemap_url: str
     index_name: str
 
 class QueryRequest(BaseModel):
