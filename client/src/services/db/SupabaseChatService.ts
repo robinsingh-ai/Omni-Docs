@@ -43,7 +43,7 @@ class SupabaseChatService implements ChatService {
                 {
                     chat_id: chatId,
                     message: message,
-                    message_type: sender,
+                    sender: sender,
                 }
             ).select();
     }
@@ -72,6 +72,24 @@ class SupabaseChatService implements ChatService {
             console.error(e);
         }
     }
-}
 
+    async deleteMessageById(messageId: string, chatId: string) {
+        return await supabase
+            .from('messages')
+            .delete()
+            .eq('id', messageId)
+            .eq('chat_id', chatId)
+            .select();
+    }
+
+    async deleteMessages(messages: { id: string; chat_id: string }[]) {
+        const messageIds = messages.map((msg) => msg.id);
+        return await supabase
+            .from('messages')
+            .delete()
+            .in('id', messageIds)
+            .eq('chat_id', messages[0].chat_id)
+            .select();
+    }
+}
 export default SupabaseChatService;

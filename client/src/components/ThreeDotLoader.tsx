@@ -12,6 +12,7 @@ const ThreeDotLoader: React.FC<ThreeDotLoaderProps> = ({ animation = "wave", tra
 
     function Dot(animationDelay: string) {
         return <span
+            key={Math.random()}
             style={{
                 backgroundColor: 'currentColor',
                 borderRadius: '50%',

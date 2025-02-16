@@ -43,7 +43,6 @@ const SignUp = () => {
             setLoading(false);
             setEmailSent(true);
         } catch (error) {
-            console.error("Error signing up:", error);
             setLoading(false);
         }
     }

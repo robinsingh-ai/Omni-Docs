@@ -27,7 +27,6 @@ const NewChat: React.FC<NewChatProps> = () => {
     const location = useLocation(); //
     const handleCreateChat = async (query: string) => {
         if (auth.user) {
-            console.log("Creating new chat...");
             const userId = auth.user ? (auth.user as any).id : null;
             dispatch(setNewChat(false));
             const chat = {
@@ -42,7 +41,6 @@ const NewChat: React.FC<NewChatProps> = () => {
             try {
                 const resultAction = await dispatch(createChat(chat));
                 if (createChat.fulfilled.match(resultAction)) {
-                    console.log("Chat created:", resultAction.payload);
                     const newChat = resultAction.payload;
                     dispatch(setChatId(newChat.id!));
                     handleSend(query, newChat.id!);
@@ -59,7 +57,6 @@ const NewChat: React.FC<NewChatProps> = () => {
     }
 
     const handleSend = async (message: string, chatId: string) => {
-        console.log("Sending:", message);
         // update state
         dispatch(addUserMessage({
             chat_id: chatId!,

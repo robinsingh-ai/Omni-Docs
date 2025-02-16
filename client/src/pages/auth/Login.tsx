@@ -24,7 +24,6 @@ const LoginPage = () => {
         authService.signIn(email, password)
             .then((response: any) => {
                 if (response.error) {
-                    console.error("Error logging in:", response.error);
                     dispatch(setLoading(false));
                     dispatch(setAuthError("Invalid email or password."));
                     setTimeout(() => {
@@ -43,7 +42,6 @@ const LoginPage = () => {
                 navigate("/");
             })
             .catch((error) => {
-                console.error("Error logging in:", error);
                 dispatch(setLoading(false));
             });
     };
@@ -52,7 +50,6 @@ const LoginPage = () => {
         try {
             const response = await authService.signInWithGoogle();
             if (response.error) {
-                console.error("Error signing in with Google:", response.error);
                 return;
             }
             dispatch(setAuth({

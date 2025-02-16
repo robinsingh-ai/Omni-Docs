@@ -13,8 +13,8 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ className }) => {
     return (
         <div className={`${className}`}>
             {messages.map((msg: any, idx: number) => {
-                const { message_type } = msg;
-                if (message_type === 'bot') {
+                const { sender } = msg;
+                if (sender === 'bot') {
                     return (
                         <BotBubble key={idx} chat={msg} index={idx} length={messages.length} />
                     );

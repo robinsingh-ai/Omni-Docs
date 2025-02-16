@@ -19,14 +19,13 @@ const BotBubble: React.FC<BotBubbleProps> = ({ chat, index, length }) => {
     const animating = useSelector((state: RootState) => state.chat.animating);
     const messageIndex = Math.floor(Math.random() * 4);
     const emptyText = ['Hang on a sec...', 'Just a moment...', 'One sec...', 'Hold on...'];
-    // const isLastMessage: boolean = (index === length - 1);
-    console.log('last message:', index, length);
+    const isLastMessage: boolean = (index === length - 1);
     return (
         <div className={`my-2 pt-2}`}>
             <TypewriterText
                 animate={animate}
                 text={!message ? emptyText[messageIndex] : message} speed={5} success={success} />
-            {respLoading && !animating && <div className="flex p-2">
+            {isLastMessage && respLoading && !animating && <div className="flex p-2">
                 <ThreeDotLoader
                     size={6}
                     animation='typing' />

@@ -4,7 +4,6 @@ import { LLM_Provider } from 'src/services/ResponseProvider';
 import { UserType } from 'src/utils/Constants';
 import { SupabaseFactory } from 'src/services/db/SupabaseFactory';
 import { RootState } from '../store';
-import { animate } from 'framer-motion';
 
 export const fetchResponse = createAsyncThunk<
     any,
@@ -178,11 +177,30 @@ export const sendMessage = createAsyncThunk<Object, { chat_id: string, message: 
     }
 );
 
+export const deleteMessagesById = createAsyncThunk<Object, string, { rejectValue: Object }>(
+    'chats/deleteMessages',
+    async (messages: any, { rejectWithValue }) => {
+        try {
+            const { data, error } = await SupabaseFactory.chatService.deleteMessages(messages);
+            if (error) throw new Error(error.message);
+            return data;
+        } catch (error: any) {
+            return rejectWithValue({
+                sender: 'bot',
+                message: 'Failed to delete messages',
+                status: 'error',
+                timestamp: new Date().toISOString(),
+            });
+        }
+    }
+);
+
 const initialState = {
     isNewChat: true,
     messages: [] as any[],
     isFetchingChat: false,
     respLoading: false,
+    messageSending: false,
     animating: false,
     error: null,
 };
@@ -197,11 +215,14 @@ const chatReducer = createSlice({
                 state.messages = [];
             }
         },
+        setMessages: (state, action) => {
+            state.messages = action.payload;
+        },
         setAnimating: (state, action) => {
             state.animating = action.payload;
         },
         setSendingMessage: (state, action) => {
-            state.respLoading = action.payload;
+            state.messageSending = action.payload;
         },
         setFetchingChat: (state, action) => {
             state.isFetchingChat = action.payload;
@@ -217,6 +238,7 @@ const chatReducer = createSlice({
         },
         addStreamedMessage: (state, action) => {
             // Invoked when a chunk of streamed response is received
+            // state.respLoading = false;
             const { sender, status, type, message, sources } = action.payload;
             const lastMessageIndex = state.messages.length - 1;
             const lastMessage = state.messages[lastMessageIndex];
@@ -228,6 +250,7 @@ const chatReducer = createSlice({
                 }
             } else {
                 // start of bot message
+                console.log("Start of bot message...");
                 state.messages.push({
                     sender,
                     status,
@@ -285,7 +308,7 @@ const chatReducer = createSlice({
             // add success = true for each bot message
             const msgs = action.payload! as any[];
             msgs.forEach((msg: any) => {
-                if (msg.message_type === 'bot') {
+                if (msg.sender === 'bot') {
                     msg.status = 'success';
                     msg.animate = false;
                 }
@@ -294,10 +317,10 @@ const chatReducer = createSlice({
         });
 
         builder.addCase(sendMessage.pending, (state) => {
-            state.respLoading = true;
+            state.messageSending = true;
         });
         builder.addCase(sendMessage.fulfilled, (state, action) => {
-            state.respLoading = false;
+            state.messageSending = false;
         });
         builder.addCase(deleteChatById.pending, (state) => {
             state.isFetchingChat = true;
@@ -310,5 +333,5 @@ const chatReducer = createSlice({
     },
 });
 
-export const { addUserMessage, addStreamedMessage, setAnimating, setFetchingChat, setSendingMessage, setNewChat } = chatReducer.actions;
+export const { addUserMessage, addStreamedMessage, setAnimating, setFetchingChat, setSendingMessage, setNewChat, setMessages } = chatReducer.actions;
 export default chatReducer.reducer;
