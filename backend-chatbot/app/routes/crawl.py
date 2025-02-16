@@ -3,20 +3,26 @@ from fastapi import APIRouter, HTTPException
 from app.core.logger import setup_logger
 from app.models.requests import CrawlRequest
 from app.agents.crawler_agent import CrawlerAgent
-from app.core.dependencies import get_llm, get_faiss_manager
-
+from retrieval_service.app.core.enums import DocSource
 router = APIRouter()
 logger = setup_logger(__name__)
 
 @router.post("/crawl")
-async def crawl_sitemap(request: CrawlRequest):
-    """Crawl and index documentation from sitemap."""
+async def process_docs(request: CrawlRequest):
+    """Process documentation using the hybrid retrieval pipeline.
+    This endpoint is typically called monthly to update documentation."""
     try:
-        logger.info(f"Starting crawl for {request.sitemap_url}")
-        crawler = CrawlerAgent(get_llm(), get_faiss_manager())
-        result = crawler.crawl_and_index(request.sitemap_url, request.index_name)
-        logger.info(f"Crawl completed: {result}")
+        logger.info(f"Starting documentation processing for {request.index_name}")
+        crawler = CrawlerAgent()
+        result = crawler.process_documentation(request.index_name)
+        logger.info(f"Processing completed: {result}")
         return {"message": result}
+        
+    except KeyError:
+        raise HTTPException(
+            status_code=400,
+            detail=f"Invalid documentation source: {request.index_name}. Must be one of: {', '.join(DocSource.__members__.keys())}"
+        )
     except Exception as e:
-        logger.error(f"Error in crawl endpoint: {e}")
+        logger.error(f"Error in processing endpoint: {e}")
         raise HTTPException(status_code=500, detail=str(e))

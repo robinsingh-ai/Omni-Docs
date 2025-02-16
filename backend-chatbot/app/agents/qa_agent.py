@@ -1,48 +1,23 @@
-# agents/qa_agent.py
-from crewai import Agent
-from langchain.chains import RetrievalQA
-import logging
+# app/agents/qa_agent.py
 from typing import Any, Dict, List, AsyncGenerator
 from langchain.llms.base import BaseLLM
 import asyncio
 import re
 import json
 
-from app.utils.faiss_utils import FAISSManager
-from app.core.constants import PromptConstants
 from app.core.logger import setup_logger
+from app.core.constants import PromptConstants
+# from app.core.retrieval_setup import DocSource
+from retrieval_service.app.core.enums import DocSource
+from app.utils.retrival_manager import PipelineManager
 
 class QAAgent:
-    def __init__(self, llm: BaseLLM, faiss_manager: FAISSManager, index_name: str):
-        self.agent = Agent(
-            role='Documentation Assistant',
-            goal='Answer user queries about documentation with well-formatted markdown responses',
-            backstory='I am an AI assistant specialized in providing clear, well-structured documentation answers in markdown format.',
-            llm=llm,
-            verbose=True
-        )
+    def __init__(self, llm: BaseLLM, index_name: str):
+        """Initialize QA Agent with LLM and index name."""
         self.llm = llm
-        self.faiss_manager = faiss_manager
         self.index_name = index_name
+        self.pipeline_manager = PipelineManager()
         self.logger = setup_logger(__name__)
-        self._setup_qa_chain()
-
-    def _setup_qa_chain(self):
-        """Initialize the QA chain with FAISS retriever."""
-        try:
-            index = self.faiss_manager.load_faiss_index(self.index_name)
-            self.qa_chain = RetrievalQA.from_chain_type(
-                llm=self.llm,
-                chain_type="stuff",
-                retriever=index.as_retriever(
-                    search_kwargs={"k": 4}
-                ),
-                return_source_documents=True,
-                verbose=True
-            )
-        except Exception as e:
-            self.logger.error(f"Error setting up QA chain: {e}")
-            raise
 
     def _is_task_question(self, query: str) -> bool:
         """Determine if a question is asking about how to do something."""
@@ -77,12 +52,18 @@ class QAAgent:
         try:
             self.logger.info(f"Processing streaming query: {query}")
             
-            # Get relevant documents
-            index = self.faiss_manager.load_faiss_index(self.index_name)
-            docs = index.similarity_search(query, k=4)
+            # Get relevant documents using pipeline
+            results = self.pipeline_manager.search_documents(
+                DocSource(self.index_name), 
+                query
+            )
+            
+            if results['status'] != 'success':
+                raise Exception(f"Search failed with status: {results['status']}")
             
             # Format context from documents
-            context = "\n\n".join([doc.page_content for doc in docs])
+            docs = results['results'][:4]  # Get top 4 results
+            context = "\n\n".join([doc['text'] for doc in docs])
             
             # Determine if this is a task question
             is_task = self._is_task_question(query)
@@ -92,9 +73,9 @@ class QAAgent:
             if is_task:
                 for doc in docs:
                     sources.append({
-                        "url": doc.metadata.get('source', 'Unknown'),
-                        "title": doc.metadata.get('title', 'Unknown'),
-                        "content_preview": doc.page_content[:200] + "..."
+                        "url": doc['url'],
+                        "title": doc['url'].split('/')[-1],
+                        "content_preview": doc['text'][:200] + "..."
                     })
             
             # First, send the sources as a separate object
@@ -144,31 +125,38 @@ class QAAgent:
             raise
 
     def answer_query(self, query: str) -> Dict[str, Any]:
-        """Answer a user query using the QA chain."""
+        """Answer a user query using the retrieval pipeline."""
         try:
             self.logger.info(f"Processing query: {query}")
             
-            index = self.faiss_manager.load_faiss_index(self.index_name)
-            docs = index.similarity_search(query, k=4)
-            context = "\n\n".join([doc.page_content for doc in docs])
+            results = self.pipeline_manager.search_documents(
+                DocSource(self.index_name), 
+                query
+            )
+            
+            if results['status'] != 'success':
+                raise Exception(f"Search failed with status: {results['status']}")
+            
+            docs = results['results'][:4]
+            context = "\n\n".join([doc['text'] for doc in docs])
             
             prompt = self._create_markdown_prompt(query, context)
-            response = self.qa_chain({"query": prompt})
+            response = self.llm(prompt)
             
             is_task = self._is_task_question(query)
             source_documents = []
             
             if is_task:
-                for idx, doc in enumerate(response.get('source_documents', []), 1):
+                for doc in docs:
                     source = {
-                        "url": doc.metadata.get('source', 'Unknown'),
-                        "title": doc.metadata.get('title', 'Unknown'),
-                        "content_preview": doc.page_content[:200] + "..."
+                        "url": doc['url'],
+                        "title": doc['url'].split('/')[-1],
+                        "content_preview": doc['text'][:200] + "..."
                     }
                     source_documents.append(source)
             
             return {
-                "answer": response['result'],
+                "answer": response,
                 "source_documents": source_documents
             }
             
