@@ -54,6 +54,22 @@ class SupabaseAuthService implements AuthService {
     async signOut() {
         return await supabase.auth.signOut();
     }
+
+    async resetPasswordForEmail(email: string) {
+        try {
+            const response = await supabase.auth.resetPasswordForEmail(email);
+            if (response.error) {
+                console.error("Error sending password reset email:", response.error);
+                return response;
+            }
+            return response;
+        } catch (error) {
+            console.error("Error sending password reset email:", error);
+            return error;
+        }
+    }
+    
 }
+
 
 export default SupabaseAuthService;

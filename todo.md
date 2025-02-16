@@ -10,8 +10,8 @@ This todo is a self-reminder for the tasks that need to be done to achieve the g
 - [X] Route to new chat_id
 - [X] Bot response should be collected and saved in state and also saved to database on Stream completion
 - [X] Create New Chat is not sending first message
-- [ ] Show loading when bot response is being fetched
-- [ ] Bot message animation is not showing 
+- [X] Show loading when bot response is being fetched
+- [X] Bot message animation is not showing 
 - [ ] Bot animation should not be shown when fetching messages
 
 

@@ -9,6 +9,7 @@ import { useSelector } from "react-redux";
 import { AppDispatch, RootState } from "src/redux/store";
 import Constants from "src/utils/Constants";
 
+
 const LoginPage = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -68,7 +69,7 @@ const LoginPage = () => {
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
-            <div className="w-full max-w-md p-8 bg-gray-800/50 backdrop-blur-lg rounded-2xl shadow-2xl space-y-6 transition-all duration-300 ease-in-out hover:shadow-blue-500/10">
+            <div className={Constants.styles.cardBackground}>
                 <div className="flex justify-center">
                     <div className="w-20 h-20 mb-4 rounded-full bg-blue-500/10 flex items-center justify-center">
                         <img src="/logo.png" alt="Logo" className="w-16 h-16 object-contain" />
@@ -113,7 +114,7 @@ const LoginPage = () => {
                     </div>
                     <Button
                         color="primary"
-                        className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold py-3 rounded-lg hover:from-blue-500 hover:to-blue-400 transition-all duration-300 shadow-lg hover:shadow-blue-500/25"
+                        className={Constants.styles.primaryButtonClassName}
                         onPress={handleLogin}
                         disabled={loading}
                     >

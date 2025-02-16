@@ -9,6 +9,7 @@ import LoginPage from './pages/auth/Login';
 import SignUp from './pages/auth/SignUp';
 import { useSelector } from 'react-redux';
 import { RootState } from './redux/store';
+import ForgotPassword from './pages/auth/ForgotPassword';
 
 const AppRoutes = () => {
     const isChatSubdomain = window.location.host.startsWith('chat.');
@@ -26,6 +27,7 @@ const AppRoutes = () => {
                     <>
                         <Route path="/sign_in" element={<LoginPage />} />
                         <Route path="/sign_up" element={<SignUp />} />
+                        <Route path='/forgot_password' element={<ForgotPassword />} />
                         <Route path="*" element={<Navigate to="/sign_in" />} />
                     </>
                 )

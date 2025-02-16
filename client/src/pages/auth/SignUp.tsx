@@ -12,7 +12,6 @@ const SignUp = () => {
     const [emailSent, setEmailSent] = useState<boolean>(false);
 
     const togglePasswordVisibility = () => setShowPassword((prevState) => !prevState);
-
     const toggleConfirmPasswordVisibility = () => setShowConfirmPassword((prevState) => !prevState);
     const authService = SupabaseFactory.authService;
 
@@ -61,10 +60,10 @@ const SignUp = () => {
                         {Constants.signUpDescription}
                     </p>
                 </div>
-                <form
-                    onSubmit={handleSignUp}
-                    className="space-y-4">
-                    <div>
+
+                <form onSubmit={handleSignUp} className="space-y-5">
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-300 ml-1">Email address</label>
                         <input
                             type="email"
                             id="email"
@@ -115,38 +114,41 @@ const SignUp = () => {
                         </Button>
                     </div>
 
-                    <div className="flex items-center mt-4">
+                    <div className="flex items-center">
                         <input
                             type="checkbox"
                             id="terms"
-                            className="w-4 h-4 text-blue-500 bg-gray-700 rounded focus:ring-blue-400 focus:ring-2"
+                            className="w-4 h-4 rounded text-blue-500 border-gray-600 focus:ring-blue-500 focus:ring-offset-gray-800"
                         />
                         <label htmlFor="terms" className="ml-2 text-gray-400 text-sm">
                             {Constants.signUpConsent}{" "}
-                            <a href="/terms-of-service" className="text-blue-400 hover:underline">
+                            <a href="/terms-of-service" className="text-blue-400 hover:text-blue-300 transition-colors">
                                 Terms of Use
                             </a>{" "}
                             and{" "}
-                            <a href="/privacy-policy" className="text-blue-400 hover:underline">
+                            <a href="/privacy-policy" className="text-blue-400 hover:text-blue-300 transition-colors">
                                 Privacy Policy
                             </a>
                             .
                         </label>
                     </div>
+
                     <Button
                         type="submit"
-                        className="w-full py-2 bg-blue-500 text-gray-100 rounded-lg hover:bg-blue-600 mt-4">
-                        {loading ? "Signing Up..." : "Sign Up"}
+                        className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold py-3 rounded-lg hover:from-blue-500 hover:to-blue-400 transition-all duration-300 shadow-lg hover:shadow-blue-500/25"
+                    >
+                        {loading ? "Creating Account..." : "Create Account"}
                     </Button>
+
+                    <div className="text-center pt-4">
+                        <p className="text-gray-400 text-sm">
+                            Already have an account?{' '}
+                            <a href="/sign_in" className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
+                                Sign in
+                            </a>
+                        </p>
+                    </div>
                 </form>
-                <div className="flex justify-between items-center mt-4 text-sm">
-                    <a href="/forgot-password" className="text-gray-400 hover:underline">
-                        Forgot password?
-                    </a>
-                    <a href="/sign_in" className="text-blue-400 hover:underline">
-                        Log in
-                    </a>
-                </div>
             </div>
         </div>
     );
