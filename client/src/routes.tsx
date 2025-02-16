@@ -10,10 +10,16 @@ import SignUp from './pages/auth/SignUp';
 import { useSelector } from 'react-redux';
 import { RootState } from './redux/store';
 import ForgotPassword from './pages/auth/ForgotPassword';
+import NewPassword from './pages/auth/NewPassword';
+// import { supabase } from './services/SupabaseClient';
 
 const AppRoutes = () => {
     const isChatSubdomain = window.location.host.startsWith('chat.');
     const auth = useSelector((state: RootState) => state.auth);
+    // supabase.auth.onAuthStateChange((event, session) => {
+    //     console.log('event', event);
+    //     console.log('session', session);
+    // });
     return (
         <Routes>
             {isChatSubdomain ? (
@@ -22,9 +28,11 @@ const AppRoutes = () => {
                     <Route path="/" element={<App />}>
                         <Route index element={<NewChat />} />
                         <Route path="chat/:chatId" element={<ChatScreen />} />
+                        <Route path="*" element={<NotFound />} />
                     </Route>
                 ) : (
                     <>
+                        <Route path="/reset_password" element={<NewPassword />} />
                         <Route path="/sign_in" element={<LoginPage />} />
                         <Route path="/sign_up" element={<SignUp />} />
                         <Route path='/forgot_password' element={<ForgotPassword />} />

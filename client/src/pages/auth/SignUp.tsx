@@ -135,8 +135,7 @@ const SignUp = () => {
 
                     <Button
                         type="submit"
-                        className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold py-3 rounded-lg hover:from-blue-500 hover:to-blue-400 transition-all duration-300 shadow-lg hover:shadow-blue-500/25"
-                    >
+                        className={Constants.styles.primaryButtonClassName}>
                         {loading ? "Creating Account..." : "Create Account"}
                     </Button>
 
