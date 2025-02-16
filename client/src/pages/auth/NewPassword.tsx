@@ -11,7 +11,6 @@ const NewPassword = () => {
     const authService = SupabaseFactory.authService;
     const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
-    // Extract tokens from URL fragment (#access_token=...&refresh_token=...)
     useEffect(() => {
         const hashParams = new URLSearchParams(window.location.hash.substring(1));
         const access_token = hashParams.get('access_token');
@@ -22,7 +21,6 @@ const NewPassword = () => {
                 access_token,
                 refresh_token,
             }).then(({ error }) => {
-                console.log("error:", error)
                 if (error) {
                     console.error('Failed to set session:', error);
                     alert('Session could not be established. Please request a new password reset link.');
@@ -32,7 +30,6 @@ const NewPassword = () => {
                 }
             });
         } else {
-            console.error('No tokens found in URL');
             window.location.href = '/sign_in';
         }
     }, [authService]);
