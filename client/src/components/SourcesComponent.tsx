@@ -8,8 +8,8 @@ interface SourcesProps {
 }
 
 const SourcesList: React.FC<SourcesProps> = ({ sources }) => {
-    const loading = useSelector((state: RootState) => state.chat.loading);
-    if (loading || !sources || sources.length === 0) {
+    const respLoading = useSelector((state: RootState) => state.chat.respLoading);
+    if (respLoading || !sources || sources.length === 0) {
         return <div />
     }
     return (<motion.div

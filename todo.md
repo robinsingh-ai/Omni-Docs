@@ -1,73 +1,26 @@
 ### Goal to create a LLM powered API DOCS chatbot (Dash API)
 
-Setup NodeJS Backend
+This todo is a self-reminder for the tasks that need to be done to achieve the goal. This helps to have a clarity on what needs to be done and what is pending. You can also add your notes here.
 
-- [X] Initialize Express/Node project
-- [X] Setup environment configuration
-- [X] Create basic server structure
+#### Notes for Mahesh
 
-Notion Integration
+- [X] During signup save a new user
+- [X] Create New Chat and return the chat_id
+- [X] New Chat creation should also send first message and also save first message in state
+- [X] Route to new chat_id
+- [X] Bot response should be collected and saved in state and also saved to database on Stream completion
+- [X] Create New Chat is not sending first message
+- [ ] Show loading when bot response is being fetched
+- [ ] Bot message animation is not showing 
+- [ ] Bot animation should not be shown when fetching messages
 
-- [] Setup Notion SDK
-- [] Create API to fetch pages from Notion
-- [] Parse and clean Notion content
 
-Vector Database Setup
+-           ChatInput
+               |
+               |
+      NewChat ------ ChatScreen
+        |               |        
 
-- [X] Choose and setup vector database (e.g., Pinecone)
-- [X] Setup OpenAI for embeddings
-- [] Create embedding generation pipeline
+#### Notes for Robin
 
-RAG Implementation
-
-- [] Create document chunking system
-- [X] Setup vector storage system
-- [X] Implement retrieval system
-
-Chat Integration
-
-- [] Setup OpenAI/Claude for chat completion (optional)
-- [] Create context injection system
-- [] Implement chat API endpoints
-
-Now only focus on setting up the nodejs backend with typescript and use proper design pattern to structure the code and setup appropriate classes
-
-The backend will expose an Api for our frontend
-
-- type:post:
-  endppoint: localhost:3000/api/v1/query
-  body: {
-  query: "How do I search for people given their current title, current company and location?"
-  }
-
-One of the class is Responsible for interacting with Notion
-
-- type: class
-  name: NotionService
-  methods: - getPages (priority) - getPage (priority) - getDatabase (priority) - getDatabaseQuery - getBlockChildren - getBlock - getBlockChildren
-
-One of the class is responsible for interacting with the vector database Pinecone
-
-- type: class
-  name: PineconeService
-  methods: - createIndex (priority) - insertItems (priority) - deleteItems - queryItems - queryItemsByVector
-
-One of the class is responsible for interacting with OpenAI
-
-- type: class
-  name: OpenAIService
-  methods: - createEmbeddings (priority) - queryEmbeddings
-
-One of the class is responsible for interacting with RAG
-
-- type: class
-  name: RAGService
-  methods: - createChunks (priority) - createRetrieval - queryRetrieval
-
-_This is for Later_
-
-One of the class is responsible for making an API call to crust_data API based on the query dynamically
-
-- type: class
-  name: CaddyService
-  methods: - queryCrustData (priority)
+#### Notes for Darshan

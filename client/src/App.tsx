@@ -12,7 +12,6 @@ export default function App() {
     const sidebar = useSelector((state: RootState) => state.sidebar);
     const isNewChat = useSelector((state: RootState) => state.chat.isNewChat);
     const location = useLocation(); //
-
     const checkWindowSize = () => {
         if (typeof window !== 'undefined') {
             if (sidebar.isOpen && window.innerWidth <= 768) {
@@ -30,7 +29,7 @@ export default function App() {
         <div className="flex h-screen overflow-hidden">
             <Sidebar />
             <div
-                className={` flex-grow relative transition-transform duration-300 ease-in-out
+                className={` flex-grow relative transition-all duration-300 ease-in-out ${sidebar.isOpen ? 'ml-64' : 'ml-0'}
                     md:translate-x-0
                     ${sidebar.isOpen ? 'translate-x-32' : 'translate-x-0'}
                 `}>

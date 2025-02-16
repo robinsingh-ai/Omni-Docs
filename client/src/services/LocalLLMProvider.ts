@@ -19,13 +19,12 @@ export class LocalLLMProvider implements ResponseProvider {
             const data = await response.json();
             return data;
         } catch (error) {
-            console.error('Error in LocalLLMProvider:', error);
             return 'Failed to fetch response from backend.';
 
         }
     }
 
-    async streamResponse(message: string, dataSource: string, onData: (chunk: any) => void): Promise<void> {
+    async streamResponse(message: string, agent: string, onData: (chunk: any) => void): Promise<void> {
         const model_name = process.env.REACT_APP_MODEL_NAME || 'llama3.1';
         try {
             const url = `${this.api}/api/v1/query/stream`;
@@ -36,7 +35,7 @@ export class LocalLLMProvider implements ResponseProvider {
                 },
                 body: JSON.stringify({
                     model_name: model_name,
-                    query: message, index_name: dataSource
+                    query: message, index_name: agent
                 }),
             });
 
@@ -58,7 +57,6 @@ export class LocalLLMProvider implements ResponseProvider {
                 }
             }
         } catch (error) {
-            console.error('Error in streamResponse:', error);
             onData('Error occurred while streaming response.');
         }
     }

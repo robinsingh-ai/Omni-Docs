@@ -64,3 +64,10 @@ Request body:
     - Add the initial prompt to data/initial_prompts.json
     - Crawl and index the documentation using the /crawl endpoint
     - Start querying using the /query endpoint
+
+
+##### Database Structure
+
+For more details about the backend architecture, refer to the [Github Wiki](https://github.com/maheshj01/api-docs-ai/wiki/Backend-Architecture)
+
+<img width="935" alt="Image" src="https://github.com/user-attachments/assets/30a1e19f-902b-4ac5-8395-b1327e9d448d" />

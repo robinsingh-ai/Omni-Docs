@@ -1,46 +1,80 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
-import { addUserMessage, streamResponse } from '../redux/reducers/chatSlice';
-import { ImageIcon, Send } from 'lucide-react';
+import { addUserMessage, sendMessage, streamResponse } from '../redux/reducers/chatSlice';
+import { Send } from 'lucide-react';
 import { AppDispatch, RootState } from '../redux/store';
 import { useSelector } from 'react-redux';
 import { LLM_Provider } from '../services/ResponseProvider';
-import { items } from '../pages/chat/ChatScreen';
+import Constants from '../utils/Constants';
 
 interface ChatInputProps {
     className?: string;
-    onSend(val: string): void
+    onSend(query: string, chatId: string): void
+    onNewChatCreate?(val: string): void;
+    value?: string;
+    overrideSend?: boolean;
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({ className, onSend }) => {
+const ChatInput: React.FC<ChatInputProps> = ({ className, value, onSend, onNewChatCreate, overrideSend = false }) => {
     const [query, setQuery] = useState('');
     const dispatch = useDispatch<AppDispatch>();
-    const loading = useSelector((state: RootState) => state.chat.loading);
-    const dataSource = useSelector((state: RootState) => state.data.dataSource.valueOf());
-    const dataKey = Object.keys(items).find(key => items[key] === dataSource);
+    const respLoading = useSelector((state: RootState) => state.chat.respLoading);
+    const agent = useSelector((state: RootState) => state.app.agent.valueOf());
+    const dataKey = Object.keys(Constants.items).find(key => Constants.items[key] === agent);
+    const app = useSelector((state: RootState) => state.app);
     const [rows, setRows] = useState<number>(1);
-    const textAreaRef = useRef<HTMLTextAreaElement>(null);
-    const sendMessage = async () => {
-        if (query.trim()) {
-            dispatch(addUserMessage(query));
-            dispatch(streamResponse({ provider_name: LLM_Provider.local_llm, message: query, dataSource: dataSource }));
+    const maxRows = 8;
+
+    useEffect(() => {
+        if (value) {
+            setQuery(value);
+            const lines = value.split('\n').length;
+            setRows(Math.min(maxRows, Math.max(2, lines)));
+        }
+    }, [value]);
+
+    const sendQuery = async () => {
+        if (overrideSend) {
+            onSend?.(query, app.chatId!);
+            return;
+        }
+        if (app.chatId != null) {
+            await dispatch(addUserMessage({
+                chat_id: app.chatId,
+                message: query,
+                sender: "user"
+            }));
+            const q = query;
             setQuery('');
             setRows(1);
+            onSend?.(query, app.chatId);
+            await Promise.all([
+                dispatch(sendMessage({
+                    chat_id: app.chatId,
+                    message: q,
+                    sender: "user"
+                })).unwrap(),
+                dispatch(streamResponse({
+                    provider_name: LLM_Provider.local_llm,
+                    message: q,
+                    agent: agent
+                })).unwrap()
+            ]);
+        } else {
+            console.error("Chat ID is null, creating new chat...");
+            await onNewChatCreate?.(query);
         }
-        if (onSend != null) {
-            onSend(query.trim());
-        }
-    };
+    }
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
         // ignore add new line
-        if ((e.key === 'Enter' && e.shiftKey) || loading) {
+        if (respLoading || query.trim() === '') {
             return;
         }
         if (e.key === 'Enter') {
             e.preventDefault();
-            sendMessage();
+            sendQuery();
         }
     }
 
@@ -48,7 +82,6 @@ const ChatInput: React.FC<ChatInputProps> = ({ className, onSend }) => {
         const { value } = e.target;
         setQuery(value);
         const lineCount = value.split('\n').length;
-        const maxRows = 8;
         setRows(Math.min(maxRows, Math.max(2, lineCount)));
     };
 
@@ -58,7 +91,6 @@ const ChatInput: React.FC<ChatInputProps> = ({ className, onSend }) => {
                 <textarea
                     className="flex-grow bg-slate-50 p-2 rounded-2xl resize-none text-sm duration-200 outline-none focus:outline-none"
                     value={query}
-                    ref={textAreaRef}
                     onKeyDown={handleKeyDown}
                     onChange={handleInputChange}
                     placeholder={`Ask me about ${dataKey}`}
@@ -68,7 +100,7 @@ const ChatInput: React.FC<ChatInputProps> = ({ className, onSend }) => {
                     className="flex items-center justify-center p-3 text-black font-semibold hover:scale-105 active:scale-95 focus:outline-none focus:ring focus:ring-blue-300"
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    onClick={sendMessage}>
+                    onClick={sendQuery}>
                     {<Send size={22} />}
                 </motion.button>
             </div>

@@ -16,11 +16,11 @@ const ChatWindow: React.FC<ChatWindowProps> = ({ className }) => {
                 const { sender } = msg;
                 if (sender === 'bot') {
                     return (
-                        <BotBubble key={idx} message={msg} index={idx} length={messages.length} />
+                        <BotBubble key={idx} chat={msg} index={idx} length={messages.length} />
                     );
                 }
                 return (
-                    <ChatBubble key={idx} message={msg} index={idx} length={messages.length} />
+                    <ChatBubble key={idx} chat={msg} index={idx} length={messages.length} />
                 );
             })}
         </div>

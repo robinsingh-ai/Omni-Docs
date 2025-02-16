@@ -16,7 +16,6 @@ const ServiceStatus: React.FC = () => {
                 setStatus('offline');
             }
         } catch (error) {
-            console.error('Error fetching status:', error);
             setStatus('offline');
         } finally {
             setLoading(false);
@@ -47,7 +46,6 @@ const ServiceStatus: React.FC = () => {
         };
 
         websocket.onclose = () => {
-            console.log('WebSocket connection closed');
             setStatus('offline');
         };
 
