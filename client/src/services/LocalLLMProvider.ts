@@ -19,7 +19,6 @@ export class LocalLLMProvider implements ResponseProvider {
             const data = await response.json();
             return data;
         } catch (error) {
-            console.error('Error in LocalLLMProvider:', error);
             return 'Failed to fetch response from backend.';
 
         }
@@ -58,7 +57,6 @@ export class LocalLLMProvider implements ResponseProvider {
                 }
             }
         } catch (error) {
-            console.error('Error in streamResponse:', error);
             onData('Error occurred while streaming response.');
         }
     }

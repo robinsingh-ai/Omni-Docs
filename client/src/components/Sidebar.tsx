@@ -23,7 +23,6 @@ const Sidebar: React.FC<SidebarProps> = () => {
     const navigate = useNavigate();
     const userChats = useSelector((state: RootState) => state.userChats);
     const authService = SupabaseFactory.authService;
-    const chatsLoading = userChats.chatsLoading;
 
     const handleLogOut = async () => {
         try {
@@ -105,24 +104,24 @@ const Sidebar: React.FC<SidebarProps> = () => {
                     <FiEdit className="w-6 h-6 m-2 text-black" />
                 </IconButton>
             </div>
-            {chatsLoading ? (
+            {/* {chatsLoading ? (
                 <div className="flex items-center justify-center flex-grow">
                     <LoaderCircle className="w-10 h-10 text-black animate-spin" />
                 </div>
-            ) : (
-                <div className="flex-grow overflow-y-auto">
-                    {userChats.chats.map((chat: any, index) => (
-                        <SidebarItem
-                            key={index}
-                            active={app.chatId === chat.id}
-                            index={index}
-                            onClick={() => handleChatClick(chat)}
-                            onChatDelete={handleDeleteChat}
-                            chat={chat}
-                        />
-                    ))}
-                </div>
-            )}
+            ) : ( */}
+            <div className="flex-grow overflow-y-auto">
+                {userChats.chats.map((chat: any, index) => (
+                    <SidebarItem
+                        key={index}
+                        active={app.chatId === chat.id}
+                        index={index}
+                        onClick={() => handleChatClick(chat)}
+                        onChatDelete={handleDeleteChat}
+                        chat={chat}
+                    />
+                ))}
+            </div>
+            {/* )} */}
             <div className="">
                 {/* Profile in Sidebar with a logout button */}
                 <div className="flex items-center p-4 gap-1">

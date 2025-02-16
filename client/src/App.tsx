@@ -6,8 +6,6 @@ import { toggleSidebar } from "./redux/reducers/sidebarSlice";
 import { motion, AnimatePresence } from "framer-motion";
 import { Outlet, useLocation } from "react-router";
 import NewChat from "./pages/chat/NewChat";
-import IconButton from "./components/IconButton";
-import { FiSidebar } from "react-icons/fi";
 
 export default function App() {
     const dispatch = useDispatch<AppDispatch>();
@@ -35,16 +33,6 @@ export default function App() {
                     md:translate-x-0
                     ${sidebar.isOpen ? 'translate-x-32' : 'translate-x-0'}
                 `}>
-
-                {!sidebar.isOpen && (
-                    <IconButton
-                        ariaLabel="Sidebar"
-                        onClick={() =>
-                            dispatch(toggleSidebar())
-                        }>
-                        <FiSidebar className="w-6 h-6 m-2 text-black" />
-                    </IconButton>
-                )}
                 <AnimatePresence mode="wait">
                     {isNewChat && location.pathname === '/' ? (
                         <motion.div

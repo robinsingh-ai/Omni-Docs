@@ -10,12 +10,11 @@ interface ChatWindowProps {
 
 const ChatWindow: React.FC<ChatWindowProps> = ({ className }) => {
     const messages = useSelector((state: RootState) => state.chat.messages);
-    console.log("fetched messages", messages);
     return (
         <div className={`${className}`}>
             {messages.map((msg: any, idx: number) => {
-                const { message_type } = msg;
-                if (message_type === 'bot') {
+                const { sender } = msg;
+                if (sender === 'bot') {
                     return (
                         <BotBubble key={idx} chat={msg} index={idx} length={messages.length} />
                     );

@@ -21,6 +21,7 @@ export const fetchResponse = createAsyncThunk<
                     sender: 'bot',
                     text: responseText,
                     status: 'success',
+                    animate: true,
                     sources: response.source_documents,
                     timestamp: new Date().toISOString(),
                 }
@@ -67,8 +68,9 @@ export const streamResponse = createAsyncThunk<
                     case 'sources':
                         dispatch(addStreamedMessage({
                             sender: 'bot',
-                            text: "",
+                            message: "",
                             type: chunk.type,
+                            animate: true,
                             status: 'success',
                             sources: chunk.sources,
                         }));
@@ -79,7 +81,8 @@ export const streamResponse = createAsyncThunk<
                             dispatch(addStreamedMessage({
                                 type: 'markdown',
                                 sender: 'bot',
-                                text: chunk.content,
+                                animate: true,
+                                message: chunk.content,
                                 status: 'success',
                             }));
                             collectedResponse += chunk.content;
@@ -109,7 +112,7 @@ export const streamResponse = createAsyncThunk<
         } catch (error) {
             return rejectWithValue({
                 sender: 'bot',
-                text: error instanceof Error ? error.message : 'Streaming failed. Please try again.',
+                message: error instanceof Error ? error.message : 'Streaming failed. Please try again.',
                 status: 'error',
                 timestamp: new Date().toISOString(),
             });
@@ -128,7 +131,7 @@ export const fetchChatById = createAsyncThunk<Object, string, { rejectValue: Obj
         catch (error: any) {
             return rejectWithValue({
                 sender: 'bot',
-                text: 'Failed to fetch chat',
+                message: 'Failed to fetch chat',
                 status: 'error',
                 timestamp: new Date().toISOString(),
             });
@@ -148,7 +151,7 @@ export const deleteChatById = createAsyncThunk<Object, string, { rejectValue: Ob
         catch (error: any) {
             return rejectWithValue({
                 sender: 'bot',
-                text: 'Failed to delete chat',
+                message: 'Failed to delete chat',
                 status: 'error',
                 timestamp: new Date().toISOString(),
             });
@@ -160,14 +163,31 @@ export const sendMessage = createAsyncThunk<Object, { chat_id: string, message: 
     'chats/sendMessage',
     async ({ chat_id, message, sender }, { rejectWithValue }) => {
         try {
-            console.log("Sending message", message, chat_id);
             const { data, error } = await SupabaseFactory.chatService.sendMessage(chat_id, message, sender);
             if (error) throw new Error(error.message);
             return data;
         } catch (error: any) {
             return rejectWithValue({
                 sender: 'bot',
-                text: 'Failed to send message',
+                message: 'Failed to send message',
+                status: 'error',
+                timestamp: new Date().toISOString(),
+            });
+        }
+    }
+);
+
+export const deleteMessagesById = createAsyncThunk<Object, string, { rejectValue: Object }>(
+    'chats/deleteMessages',
+    async (messages: any, { rejectWithValue }) => {
+        try {
+            const { data, error } = await SupabaseFactory.chatService.deleteMessages(messages);
+            if (error) throw new Error(error.message);
+            return data;
+        } catch (error: any) {
+            return rejectWithValue({
+                sender: 'bot',
+                message: 'Failed to delete messages',
                 status: 'error',
                 timestamp: new Date().toISOString(),
             });
@@ -179,7 +199,8 @@ const initialState = {
     isNewChat: true,
     messages: [] as any[],
     isFetchingChat: false,
-    isSendingMessage: false,
+    respLoading: false,
+    messageSending: false,
     animating: false,
     error: null,
 };
@@ -191,15 +212,17 @@ const chatReducer = createSlice({
         setNewChat: (state, action) => {
             state.isNewChat = action.payload;
             if (action.payload) {
-                console.log("Clearing messages");
                 state.messages = [];
             }
+        },
+        setMessages: (state, action) => {
+            state.messages = action.payload;
         },
         setAnimating: (state, action) => {
             state.animating = action.payload;
         },
         setSendingMessage: (state, action) => {
-            state.isSendingMessage = action.payload;
+            state.messageSending = action.payload;
         },
         setFetchingChat: (state, action) => {
             state.isFetchingChat = action.payload;
@@ -215,21 +238,25 @@ const chatReducer = createSlice({
         },
         addStreamedMessage: (state, action) => {
             // Invoked when a chunk of streamed response is received
-            const { sender, status, type, text, sources } = action.payload;
+            // state.respLoading = false;
+            const { sender, status, type, message, sources } = action.payload;
             const lastMessageIndex = state.messages.length - 1;
             const lastMessage = state.messages[lastMessageIndex];
             if (lastMessage?.sender === 'bot') {
                 state.messages[lastMessageIndex] = {
                     ...lastMessage,
-                    text: lastMessage.text + text,
+                    animate: true,
+                    message: lastMessage.message + message,
                 }
             } else {
                 // start of bot message
+                console.log("Start of bot message...");
                 state.messages.push({
                     sender,
                     status,
                     type,
-                    text,
+                    message,
+                    animate: true,
                     sources: sources || [],
                     timestamp: new Date().toISOString(),
                 });
@@ -238,20 +265,20 @@ const chatReducer = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(fetchResponse.pending, (state) => {
-            state.isFetchingChat = true;
+            state.respLoading = true;
         });
         builder.addCase(fetchResponse.fulfilled, (state, action) => {
-            state.isFetchingChat = false;
+            state.respLoading = false;
             state.messages.push(action.payload);
         });
         builder.addCase(fetchResponse.rejected, (state, action) => {
-            state.isFetchingChat = false;
+            state.respLoading = false;
             if (action.payload) {
                 state.messages.push(action.payload);
             } else {
                 state.messages.push({
                     sender: 'bot',
-                    text: 'Failed to fetch response from provider.',
+                    message: 'Failed to fetch response from provider.',
                     sources: [],
                     timestamp: new Date().toISOString(),
                 });
@@ -259,16 +286,16 @@ const chatReducer = createSlice({
         });
 
         builder.addCase(streamResponse.pending, (state) => {
-            state.isFetchingChat = true;
+            state.respLoading = true;
         });
         builder.addCase(streamResponse.fulfilled, (state) => {
-            state.isFetchingChat = false;
+            state.respLoading = false;
         });
         builder.addCase(streamResponse.rejected, (state) => {
-            state.isSendingMessage = false;
+            state.respLoading = false;
             state.messages.push({
                 sender: 'bot',
-                text: 'Streaming failed. Please try again.',
+                message: 'Streaming failed. Please try again.',
                 status: 'error',
                 timestamp: new Date().toISOString(),
             });
@@ -281,7 +308,7 @@ const chatReducer = createSlice({
             // add success = true for each bot message
             const msgs = action.payload! as any[];
             msgs.forEach((msg: any) => {
-                if (msg.message_type === 'bot') {
+                if (msg.sender === 'bot') {
                     msg.status = 'success';
                     msg.animate = false;
                 }
@@ -290,10 +317,10 @@ const chatReducer = createSlice({
         });
 
         builder.addCase(sendMessage.pending, (state) => {
-            state.isSendingMessage = true;
+            state.messageSending = true;
         });
         builder.addCase(sendMessage.fulfilled, (state, action) => {
-            state.isSendingMessage = false;
+            state.messageSending = false;
         });
         builder.addCase(deleteChatById.pending, (state) => {
             state.isFetchingChat = true;
@@ -306,5 +333,5 @@ const chatReducer = createSlice({
     },
 });
 
-export const { addUserMessage, addStreamedMessage, setAnimating, setFetchingChat, setSendingMessage, setNewChat } = chatReducer.actions;
+export const { addUserMessage, addStreamedMessage, setAnimating, setFetchingChat, setSendingMessage, setNewChat, setMessages } = chatReducer.actions;
 export default chatReducer.reducer;

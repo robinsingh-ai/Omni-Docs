@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router";
 import { SupabaseFactory } from "src/services/db/SupabaseFactory";
 import { useSelector } from "react-redux";
 import { AppDispatch, RootState } from "src/redux/store";
+import Constants from "src/utils/Constants";
 
 
 const LoginPage = () => {
@@ -24,7 +25,6 @@ const LoginPage = () => {
         authService.signIn(email, password)
             .then((response: any) => {
                 if (response.error) {
-                    console.error("Error logging in:", response.error);
                     dispatch(setLoading(false));
                     dispatch(setAuthError("Invalid email or password."));
                     setTimeout(() => {
@@ -43,7 +43,6 @@ const LoginPage = () => {
                 navigate("/");
             })
             .catch((error) => {
-                console.error("Error logging in:", error);
                 dispatch(setLoading(false));
             });
     };
@@ -52,7 +51,6 @@ const LoginPage = () => {
         try {
             const response = await authService.signInWithGoogle();
             if (response.error) {
-                console.error("Error signing in with Google:", response.error);
                 return;
             }
             dispatch(setAuth({
@@ -68,9 +66,10 @@ const LoginPage = () => {
         }
     };
 
+
     return (
         <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
-            <div className="w-full max-w-md p-8 bg-gray-800/50 backdrop-blur-lg rounded-2xl shadow-2xl space-y-6 transition-all duration-300 ease-in-out hover:shadow-blue-500/10">
+            <div className={Constants.styles.cardBackground}>
                 <div className="flex justify-center">
                     <div className="w-20 h-20 mb-4 rounded-full bg-blue-500/10 flex items-center justify-center">
                         <img src="/logo.png" alt="Logo" className="w-16 h-16 object-contain" />
@@ -78,13 +77,13 @@ const LoginPage = () => {
                 </div>
                 <h1 className="text-center text-3xl font-bold bg-gradient-to-r from-blue-500 to-blue-400 bg-clip-text text-transparent mb-2">Welcome Back</h1>
                 <p className="text-center text-gray-400 text-sm mb-6">Sign in to continue to your account</p>
-                <div className="space-y-5">
+                <div className="space-y-4">
                     <div className="space-y-2">
                         <label className="text-sm font-medium text-gray-300 ml-1">Email address</label>
                         <input
                             type="text"
                             autoComplete="email"
-                            className="w-full p-3 bg-gray-700/50 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 ease-in-out"
+                            className={Constants.styles.inputClassName}
                             placeholder="Enter your email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
@@ -95,7 +94,7 @@ const LoginPage = () => {
                         <input
                             type="password"
                             autoComplete="current-password"
-                            className="w-full p-3 bg-gray-700/50 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-300 ease-in-out"
+                            className={Constants.styles.inputClassName}
                             placeholder="Enter your password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
@@ -115,7 +114,7 @@ const LoginPage = () => {
                     </div>
                     <Button
                         color="primary"
-                        className="w-full bg-gradient-to-r from-blue-600 to-blue-500 text-white font-bold py-3 rounded-lg hover:from-blue-500 hover:to-blue-400 transition-all duration-300 shadow-lg hover:shadow-blue-500/25"
+                        className={Constants.styles.primaryButtonClassName}
                         onPress={handleLogin}
                         disabled={loading}
                     >
@@ -131,13 +130,13 @@ const LoginPage = () => {
                         <span className="px-4 text-gray-400 text-sm">or continue with</span>
                         <div className="flex-grow border-t border-gray-600/50"></div>
                     </div>
-                    <button
+                    <Button
                         className="w-full flex items-center justify-center bg-white/5 backdrop-blur-sm text-white py-3 rounded-lg font-medium hover:bg-white/10 transition-all duration-300 border border-gray-600/50"
-                        onClick={handleGoogleLogin}
+                        onPress={handleGoogleLogin}
                     >
                         <FaGoogle className="mr-2 text-lg" />
                         Sign in with Google
-                    </button>
+                    </Button>
                     <div className="text-center pt-4">
                         <p className="text-gray-400 text-sm">
                             Don't have an account?{' '}

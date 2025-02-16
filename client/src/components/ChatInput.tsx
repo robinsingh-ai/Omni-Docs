@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
 import { addUserMessage, sendMessage, streamResponse } from '../redux/reducers/chatSlice';
@@ -12,52 +12,64 @@ interface ChatInputProps {
     className?: string;
     onSend(query: string, chatId: string): void
     onNewChatCreate?(val: string): void;
+    value?: string;
+    overrideSend?: boolean;
 }
 
-const ChatInput: React.FC<ChatInputProps> = ({ className, onSend, onNewChatCreate }) => {
+const ChatInput: React.FC<ChatInputProps> = ({ className, value, onSend, onNewChatCreate, overrideSend = false }) => {
     const [query, setQuery] = useState('');
     const dispatch = useDispatch<AppDispatch>();
-    const isSendingMessage = useSelector((state: RootState) => state.chat.isSendingMessage);
+    const respLoading = useSelector((state: RootState) => state.chat.respLoading);
     const agent = useSelector((state: RootState) => state.app.agent.valueOf());
     const dataKey = Object.keys(Constants.items).find(key => Constants.items[key] === agent);
     const app = useSelector((state: RootState) => state.app);
     const [rows, setRows] = useState<number>(1);
-    const textAreaRef = useRef<HTMLTextAreaElement>(null);
+    const maxRows = 8;
+
+    useEffect(() => {
+        if (value) {
+            setQuery(value);
+            const lines = value.split('\n').length;
+            setRows(Math.min(maxRows, Math.max(2, lines)));
+        }
+    }, [value]);
 
     const sendQuery = async () => {
+        if (overrideSend) {
+            onSend?.(query, app.chatId!);
+            return;
+        }
         if (app.chatId != null) {
-            console.log("Sending in chatId:", app.chatId);
             await dispatch(addUserMessage({
                 chat_id: app.chatId,
                 message: query,
                 sender: "user"
             }));
-
-            // Start parallel operations
+            const q = query;
+            setQuery('');
+            setRows(1);
+            onSend?.(query, app.chatId);
             await Promise.all([
                 dispatch(sendMessage({
                     chat_id: app.chatId,
-                    message: query,
+                    message: q,
                     sender: "user"
                 })).unwrap(),
                 dispatch(streamResponse({
                     provider_name: LLM_Provider.local_llm,
-                    message: query,
+                    message: q,
                     agent: agent
                 })).unwrap()
             ]);
-            setQuery('');
-            setRows(1);
-            onSend?.(query, app.chatId);
         } else {
+            console.error("Chat ID is null, creating new chat...");
             await onNewChatCreate?.(query);
         }
     }
 
     const handleKeyDown = (e: React.KeyboardEvent) => {
         // ignore add new line
-        console.log("sending:", isSendingMessage, app.chatId);
-        if (isSendingMessage || app.chatId == null || query === '') {
+        if (respLoading || query.trim() === '') {
             return;
         }
         if (e.key === 'Enter') {
@@ -70,7 +82,6 @@ const ChatInput: React.FC<ChatInputProps> = ({ className, onSend, onNewChatCreat
         const { value } = e.target;
         setQuery(value);
         const lineCount = value.split('\n').length;
-        const maxRows = 8;
         setRows(Math.min(maxRows, Math.max(2, lineCount)));
     };
 
@@ -80,7 +91,6 @@ const ChatInput: React.FC<ChatInputProps> = ({ className, onSend, onNewChatCreat
                 <textarea
                     className="flex-grow bg-slate-50 p-2 rounded-2xl resize-none text-sm duration-200 outline-none focus:outline-none"
                     value={query}
-                    ref={textAreaRef}
                     onKeyDown={handleKeyDown}
                     onChange={handleInputChange}
                     placeholder={`Ask me about ${dataKey}`}

@@ -23,7 +23,7 @@ class SupabaseChatService implements ChatService {
     }
 
     async createChat(userId: string, chat: Chat) {
-        return await supabase
+        const resp = await supabase
             .from('chats')
             .insert(
                 {
@@ -32,7 +32,8 @@ class SupabaseChatService implements ChatService {
                     agent: chat.agent,
                     model: chat.model,
                 }
-            );
+            ).select();
+        return resp;
     }
 
     async sendMessage(chatId: string, message: string, sender: UserType) {
@@ -42,9 +43,9 @@ class SupabaseChatService implements ChatService {
                 {
                     chat_id: chatId,
                     message: message,
-                    message_type: sender,
+                    sender: sender,
                 }
-            );
+            ).select();
     }
 
     async fetchChatById(chatId: string) {
@@ -59,16 +60,36 @@ class SupabaseChatService implements ChatService {
             const resp1 = await supabase
                 .from('messages')
                 .delete()
-                .eq('chat_id', chatId);
+                .eq('chat_id', chatId)
+                .select();
             const resp2 = await supabase
                 .from('chats')
                 .delete()
-                .eq('id', chatId);
+                .eq('id', chatId)
+                .select();
             return [resp1, resp2];
         } catch (e) {
             console.error(e);
         }
     }
-}
 
+    async deleteMessageById(messageId: string, chatId: string) {
+        return await supabase
+            .from('messages')
+            .delete()
+            .eq('id', messageId)
+            .eq('chat_id', chatId)
+            .select();
+    }
+
+    async deleteMessages(messages: { id: string; chat_id: string }[]) {
+        const messageIds = messages.map((msg) => msg.id);
+        return await supabase
+            .from('messages')
+            .delete()
+            .in('id', messageIds)
+            .eq('chat_id', messages[0].chat_id)
+            .select();
+    }
+}
 export default SupabaseChatService;
