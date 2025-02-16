@@ -57,7 +57,9 @@ class SupabaseAuthService implements AuthService {
 
     async resetPasswordForEmail(email: string) {
         try {
-            const response = await supabase.auth.resetPasswordForEmail(email);
+            const response = await supabase.auth.resetPasswordForEmail(email,
+                { redirectTo: `${process.env.REACT_APP_SUBDOMAIN}/reset_password` }
+            );
             if (response.error) {
                 console.error("Error sending password reset email:", response.error);
                 return response;
@@ -68,7 +70,11 @@ class SupabaseAuthService implements AuthService {
             return error;
         }
     }
-    
+
+    async updateUserPassword(password: string) {
+        return await supabase.auth.updateUser({ password });
+    }
+
 }
 
 
