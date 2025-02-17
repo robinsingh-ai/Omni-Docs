@@ -106,7 +106,9 @@ export const streamResponse = createAsyncThunk<
                         throw new Error(chunk.content || 'Streaming failed');
 
                     default:
-                        console.warn(`Unhandled chunk type: ${(chunk as any).type}`);
+                        if (chunk.toString().includes('TypeError') || chunk instanceof TypeError) {
+                            throw new Error(chunk.message);
+                        }
                 }
             });
         } catch (error) {

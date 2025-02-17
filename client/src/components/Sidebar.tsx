@@ -47,6 +47,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
     };
 
     const handleChatClick = (chat: any) => {
+        if (app.chatId === chat.id) return;
         dispatch(setChatId(chat.id));
         dispatch(fetchChatById(chat.id));
         navigate(`/chat/${chat.id}`);

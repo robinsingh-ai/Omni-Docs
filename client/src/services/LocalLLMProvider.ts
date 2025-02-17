@@ -57,7 +57,7 @@ export class LocalLLMProvider implements ResponseProvider {
                 }
             }
         } catch (error) {
-            onData('Error occurred while streaming response.');
+            throw new Error('Failed to fetch streaming response from backend.');
         }
     }
 }
