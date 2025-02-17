@@ -5,6 +5,7 @@ import { createSlice } from '@reduxjs/toolkit';
 const initialState: { agent: Agent, model: LLM_Model, chatId?: string } = {
     agent: 'nextjs',
     model: 'llama3.1',
+    // currently selected chatId in the sidebar
     chatId: undefined,
 };
 

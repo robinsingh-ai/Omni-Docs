@@ -5,7 +5,7 @@ import { AppDispatch, RootState } from "../redux/store";
 import { toggleSidebar } from "../redux/reducers/sidebarSlice";
 import { SupabaseFactory } from "../services/db/SupabaseFactory";
 import { setAuth, setLoading } from "../redux/reducers/authSlice";
-import { LoaderCircle, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { useEffect } from "react";
 import { fetchChats } from "../redux/reducers/userChatsSlice";
 import SidebarItem from "./SidebarItem";

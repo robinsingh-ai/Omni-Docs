@@ -70,7 +70,7 @@ module.exports = {
         "7xl": "3rem",
         "8xl": "3.5rem",
         "9xl": "4rem",
-      },  
+      },
       borderRadius: {
         xxl: "var(--radius) * 4",
         xl: "var(--radius) * 2",
