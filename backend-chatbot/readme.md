@@ -4,6 +4,14 @@
 python main.py
 ```
 
+or 
+
+for multi-threaded server:
+
+```
+ uvicorn app.api_router:app --host 127.0.0.1 --port 8000 --workers 4 --reload
+```
+
 # Document Initalization 
 ```
 curl -X POST "http://localhost:8000/api/v1/crawl" \
