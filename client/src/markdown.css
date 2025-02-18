@@ -10,7 +10,7 @@
 
 .reactMarkDown h1 {
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1;
   color: var(--chat-bubble-onSurface);
   margin-top: 0.5em;
@@ -20,7 +20,7 @@
 /* add standard styles for headings */
 .reactMarkDown h2 {
   font-size: 1.75rem;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1;
   margin-top: 0.5em;
   color: var(--chat-bubble-onSurface);
@@ -29,7 +29,7 @@
 
 .reactMarkDown h3 {
   font-size: 1.3rem;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1;
   margin-top: 0.5em;
   color: var(--chat-bubble-onSurface);
@@ -38,7 +38,7 @@
 
 .reactMarkDown h4 {
   font-size: 1.2rem;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1;
   margin-top: 0.5em;
   color: var(--chat-bubble-onSurface);
@@ -47,7 +47,7 @@
 
 .reactMarkDown h5 {
   font-size: 1.1rem;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1;
   margin-top: 0.5em;
   color: var(--chat-bubble-onSurface);
@@ -56,7 +56,7 @@
 
 .reactMarkDown h6 {
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1;
   margin-top: 0.5em;
   color: var(--chat-bubble-onSurface);
@@ -248,7 +248,7 @@
 /* standard css for bold */
 
 .reactMarkDown strong {
-  font-weight: 700;
+  font-weight: 600;
   color: var(--chat-bubble-onSurface);
 }
 
