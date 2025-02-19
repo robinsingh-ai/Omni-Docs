@@ -4,7 +4,17 @@ __pycache__/
 backend-chatbot/data/flutter/index.faiss
 backend-chatbot/data/flutter/index.pkl
 
-research/
+research/model_cache
+research/BGE_RAG.ipynb
+research/CAG.ipynb
+research/Embed.ipynb
+research/data
+research/del_dat
+research/data1
+research/saved_index
+
+
+
 
 
 retrieval_service/retrieval_service.egg-info/
