@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     # New Settings for Supabase
     SUPABASE_URL: str
     SUPABASE_KEY: str
+    SUPABASE_JWT_SECRET: str
 
     # New Settings for Redis
     REDIS_HOST: str = "localhost"

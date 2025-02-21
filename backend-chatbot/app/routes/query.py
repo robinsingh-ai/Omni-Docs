@@ -1,5 +1,5 @@
 # app/routes/query.py
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
 from fastapi.responses import StreamingResponse
 from typing import Tuple, Any, Optional
 from app.core.logger import setup_logger
@@ -10,6 +10,7 @@ from app.core.models import NoAvailableModelsError, ModelResponse
 from app.core.exceptions import ModelNotFoundError
 from app.utils.retrival_manager import PipelineManager
 from retrieval_service.app.core.enums import DocSource
+from app.middleware.auth import auth_middleware
 
 router = APIRouter()
 logger = setup_logger(__name__)
@@ -51,8 +52,11 @@ async def startup_event():
             logger.error(f"Failed to initialize pipeline for {source.value}: {e}")
 
 @router.post("/query/stream")
-async def query_docs_stream(request: QueryRequest):
-    """Stream query responses with model selection and fallback handling."""
+async def query_docs_stream(
+    request: QueryRequest,
+    user: dict = Depends(auth_middleware)  # Add authentication dependency
+):
+    """Stream query responses with authentication."""
     try:
         logger.info(f"Processing streaming query for {request.index_name}")
         if request.model_name:
@@ -76,8 +80,11 @@ async def query_docs_stream(request: QueryRequest):
         )
 
 @router.post("/query", response_model=QueryResponse)
-async def query_docs(request: QueryRequest):
-    """Process non-streaming queries with comprehensive error handling."""
+async def query_docs(
+    request: QueryRequest,
+    user: dict = Depends(auth_middleware)  # Add authentication dependency
+):
+    """Process non-streaming queries with authentication."""
     try:
         logger.info(f"Processing query for {request.index_name}")
         if request.model_name:
