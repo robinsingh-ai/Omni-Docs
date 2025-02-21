@@ -9,7 +9,7 @@ or
 for multi-threaded server:
 
 ```
- uvicorn app.api_router:app --host 127.0.0.1 --port 8000 --workers 4 --reload
+uvicorn app.api_router:app --host 127.0.0.1 --port 8000 --workers 4 --reload
 ```
 
 # Document Initalization 

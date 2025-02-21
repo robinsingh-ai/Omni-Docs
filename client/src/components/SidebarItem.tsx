@@ -1,10 +1,9 @@
-import { EllipsisIcon } from "lucide-react";
-import AIDropdown from "./Dropdown";
-import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { IoMdClose } from "react-icons/io";
 import { RootState } from "../redux/store";
-import React from "react";
-
+import React, { useState } from "react";
+import AIDropdown from "./Dropdown";
+import { EllipsisIcon } from "lucide-react";
+import { useSelector } from "react-redux";
 interface SidebarItemProps {
     chat: any;
     active: boolean;
@@ -16,13 +15,13 @@ interface SidebarItemProps {
 const SidebarItem: React.FC<SidebarItemProps> = ({ chat, active, onClick, index, onChatDelete }) => {
     const chatName = chat.name.length > 30 ? chat.name.substring(0, 30) : chat.name;
     const chatId = useSelector((state: RootState) => state.app.chatId);
-    const isSelected = chat.id === chatId; // Directly derive isSelected
+    const isSelected = chat.id === chatId;
     const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-    const [isHovered, setIsHovered] = useState(false);
+    const [isHovered, setIsHovered] = useState<boolean>(false);
     const ref = React.useRef<HTMLDivElement>(null);
 
     function MoreOptions() {
-        const options = ['Share', 'Delete', 'Republish', 'Rename'];
+        const options = ['Share', 'Delete', 'Rename'];
         return (
             <AIDropdown
                 dropdownOpen={isDropdownOpen}
@@ -55,8 +54,6 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ chat, active, onClick, index,
                 break;
             case 'Share':
                 break;
-            case 'Republish':
-                break;
             case 'Rename':
                 break;
             default:
@@ -68,13 +65,12 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ chat, active, onClick, index,
         <div
             ref={ref}
             key={index}
-            className={`flex justify-between items-center px-2 py-1 mx-2 my-1 rounded-md cursor-pointer ${isSelected ? 'bg-slate-200' : 'hover:bg-slate-200'}
-            `}
+            className={`flex justify-between items-center px-2 py-2 mx-2 my-1 rounded-md cursor-pointer ${isSelected ? 'bg-slate-200' : 'hover:bg-slate-200'}`}
             onMouseEnter={() => setIsHovered(true)} // Set hovered on mouse enter
             onMouseLeave={() => setIsHovered(false)}
             onClick={() => onClick(chat.id)}
         >
-            <div className="flex-grow">{chatName}</div>
+            <p className="text-sm">{chatName}</p>
             {(isSelected || isDropdownOpen || isHovered) && <MoreOptions />} {/* Include isHovered in the condition */}
         </div>
     );

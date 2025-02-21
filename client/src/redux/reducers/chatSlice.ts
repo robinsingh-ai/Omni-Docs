@@ -4,6 +4,7 @@ import { LLM_Provider } from 'src/services/ResponseProvider';
 import { UserType } from 'src/utils/Constants';
 import { SupabaseFactory } from 'src/services/db/SupabaseFactory';
 import { RootState } from '../store';
+import { LocalLLMProvider } from 'src/services/LocalLLMProvider';
 
 export const fetchResponse = createAsyncThunk<
     any,
@@ -101,9 +102,8 @@ export const streamResponse = createAsyncThunk<
                             }));
                         }
                         break;
-
                     case 'error':
-                        throw new Error(chunk.content || 'Streaming failed');
+                        throw new Error(chunk.message);
 
                     default:
                         if (chunk.toString().includes('TypeError') || chunk instanceof TypeError) {
@@ -118,6 +118,17 @@ export const streamResponse = createAsyncThunk<
                 status: 'error',
                 timestamp: new Date().toISOString(),
             });
+        }
+    }
+);
+
+export const stopStreaming = createAsyncThunk<void, { provider_name: LLM_Provider }>(
+    'chat/stopStreaming',
+    async ({ provider_name }) => {
+        console.log("Stopping streaming...");
+        const provider = ResponseProviderFactory.getProvider(provider_name);
+        if (provider instanceof LocalLLMProvider) {
+            provider.stopStreaming();
         }
     }
 );
@@ -331,6 +342,11 @@ const chatReducer = createSlice({
             state.isFetchingChat = false;
             state.isNewChat = true;
             state.messages = [];
+        });
+        builder.addCase(stopStreaming.fulfilled, (state) => {
+            state.respLoading = false;
+            state.animating = false;
+            state.messageSending = false;
         });
     },
 });

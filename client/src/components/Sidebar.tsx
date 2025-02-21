@@ -126,8 +126,8 @@ const Sidebar: React.FC<SidebarProps> = () => {
             <div className="">
                 {/* Profile in Sidebar with a logout button */}
                 <div className="flex items-center p-4 gap-1">
-                    <div className="w-10 h-10 bg-slate-400 rounded-full"></div>
-                    <div className="text-sm font-semibold text-black">{auth.user.email}</div>
+                    {/* <div className="w-10 h-10 bg-slate-400 rounded-full"></div> */}
+                    <div className="text-sm font-medium text-black">{auth.user.email}</div>
                     <div className="text-xs text-slate-500">
                         <LogOut
                             onClick={handleLogOut}
