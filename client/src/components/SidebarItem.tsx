@@ -31,9 +31,7 @@ const SidebarItem: React.FC<SidebarItemProps> = ({ chat, active, onClick, index,
                     e.stopPropagation();
                     handleonAction(event);
                     setIsDropdownOpen(false);
-                }}
-                className="min-w-32 w-fit"
-            >
+                }}>
                 <EllipsisIcon
                     onClick={(e) => {
                         e.stopPropagation();
