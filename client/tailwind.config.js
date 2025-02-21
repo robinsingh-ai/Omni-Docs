@@ -70,7 +70,7 @@ module.exports = {
         "7xl": "3rem",
         "8xl": "3.5rem",
         "9xl": "4rem",
-      },  
+      },
       borderRadius: {
         xxl: "var(--radius) * 4",
         xl: "var(--radius) * 2",
@@ -81,6 +81,13 @@ module.exports = {
       },
       fontFamily: {
         sans: ["var(--font-sans)", ...fontFamily.sans],
+      },
+      fontWeight: {
+        light: 300,
+        normal: 400,
+        medium: 500,
+        semibold: 600,
+        bold: 700,
       },
       keyframes: {
         "accordion-down": {

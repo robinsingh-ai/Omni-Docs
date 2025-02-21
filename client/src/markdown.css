@@ -10,7 +10,7 @@
 
 .reactMarkDown h1 {
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 550;
   line-height: 1;
   color: var(--chat-bubble-onSurface);
   margin-top: 0.5em;
@@ -20,7 +20,7 @@
 /* add standard styles for headings */
 .reactMarkDown h2 {
   font-size: 1.75rem;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1;
   margin-top: 0.5em;
   color: var(--chat-bubble-onSurface);
@@ -29,7 +29,7 @@
 
 .reactMarkDown h3 {
   font-size: 1.3rem;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1;
   margin-top: 0.5em;
   color: var(--chat-bubble-onSurface);
@@ -38,7 +38,7 @@
 
 .reactMarkDown h4 {
   font-size: 1.2rem;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1;
   margin-top: 0.5em;
   color: var(--chat-bubble-onSurface);
@@ -47,7 +47,7 @@
 
 .reactMarkDown h5 {
   font-size: 1.1rem;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1;
   margin-top: 0.5em;
   color: var(--chat-bubble-onSurface);
@@ -56,7 +56,7 @@
 
 .reactMarkDown h6 {
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 500;
   line-height: 1;
   margin-top: 0.5em;
   color: var(--chat-bubble-onSurface);
@@ -68,8 +68,9 @@
 .reactMarkDown p {
   font-size: 1rem;
   font-weight: 400;
-  line-height: 1.5;
+  line-height: 1;
   margin-top: 0.5em;
+  font-family: "Inter", serif;
   color: var(--chat-bubble-onSurface);
   margin-bottom: 0.5em;
 }
@@ -78,7 +79,7 @@
 
 .reactMarkDown ul {
   font-size: 1rem;
-  font-weight: 400;
+  font-weight: 350;
   line-height: 1.5;
   list-style: disc;
   margin-left: 16px;
@@ -88,7 +89,7 @@
 
 .reactMarkDown ol {
   font-size: 1rem;
-  font-weight: 400;
+  font-weight: 350;
   list-style: decimal;
   text-align: justify;
   margin-left: 22px;
@@ -139,11 +140,14 @@
 /* add standard styles for code block */
 
 .reactMarkDown code {
-  font-size: 0.8rem;
+  font-size: 1rem;
   font-weight: 400;
-  line-height: 1.5;
+  line-height: 1.3;
   margin-top: 0.5em;
   margin-bottom: 0.5em;
+  /* font-family: "Inconsolata", serif; */
+  /* font-family: "Source Code Pro", serif; */
+  font-family: "Fira Code", serif;
   color: var(--color-code-onSurface);
   border-radius: 0.5em;
   /* padding: 0.5em 0.5em; */
@@ -151,9 +155,9 @@
 
 /* Styles for inline code blocks */
 .reactMarkDown code:not(pre code) {
-  font-size: 0.8rem;
+  font-size: 0.9rem;
   font-weight: 400;
-  line-height: 1.5;
+  line-height: 1.2;
   background-color: var(--color-code-surface);
   color: var(--color-code-onSurface);
   border-radius: 0.3em;
@@ -180,6 +184,7 @@
 
 .reactMarkDown p {
   line-height: 120%;
+  font-weight: 350;
   text-align: justify;
 }
 
@@ -248,7 +253,7 @@
 /* standard css for bold */
 
 .reactMarkDown strong {
-  font-weight: 700;
+  font-weight: 550;
   color: var(--chat-bubble-onSurface);
 }
 

@@ -2,6 +2,8 @@ import { ResponseProvider } from './ResponseProvider';
 
 export class LocalLLMProvider implements ResponseProvider {
     private api = process.env.REACT_APP_BACKEND_URL
+    private abortController: AbortController | null = null;
+
     async generateResponse(message: string, dataSource: string): Promise<string> {
         try {
             const url = `${this.api}/api/v1/query`;
@@ -26,6 +28,7 @@ export class LocalLLMProvider implements ResponseProvider {
 
     async streamResponse(message: string, agent: string, onData: (chunk: any) => void): Promise<void> {
         const model_name = process.env.REACT_APP_MODEL_NAME || 'llama3.1';
+        this.abortController = new AbortController();
         try {
             const url = `${this.api}/api/v1/query/stream`;
             const response = await fetch(url, {
@@ -37,6 +40,7 @@ export class LocalLLMProvider implements ResponseProvider {
                     model_name: model_name,
                     query: message, index_name: agent
                 }),
+                signal: this.abortController.signal,
             });
 
             if (!response.ok || response.status !== 200) {
@@ -57,7 +61,21 @@ export class LocalLLMProvider implements ResponseProvider {
                 }
             }
         } catch (error) {
-            onData('Error occurred while streaming response.');
+            if ((error as Error).name === 'AbortError') {
+                console.log('Streaming aborted.');
+            } else {
+                throw new Error('Failed to fetch streaming response from backend.');
+            }
+        } finally {
+            this.abortController = null; // Reset controller after completion or cancellation
+        }
+    }
+
+    stopStreaming() {
+        if (this.abortController) {
+            console.log('Aborted...');
+            this.abortController.abort();
+            this.abortController = null;
         }
     }
 }

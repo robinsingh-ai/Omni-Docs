@@ -5,7 +5,7 @@ import { AppDispatch, RootState } from "../redux/store";
 import { toggleSidebar } from "../redux/reducers/sidebarSlice";
 import { SupabaseFactory } from "../services/db/SupabaseFactory";
 import { setAuth, setLoading } from "../redux/reducers/authSlice";
-import { LoaderCircle, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { useEffect } from "react";
 import { fetchChats } from "../redux/reducers/userChatsSlice";
 import SidebarItem from "./SidebarItem";
@@ -47,6 +47,7 @@ const Sidebar: React.FC<SidebarProps> = () => {
     };
 
     const handleChatClick = (chat: any) => {
+        if (app.chatId === chat.id) return;
         dispatch(setChatId(chat.id));
         dispatch(fetchChatById(chat.id));
         navigate(`/chat/${chat.id}`);
@@ -125,8 +126,8 @@ const Sidebar: React.FC<SidebarProps> = () => {
             <div className="">
                 {/* Profile in Sidebar with a logout button */}
                 <div className="flex items-center p-4 gap-1">
-                    <div className="w-10 h-10 bg-slate-400 rounded-full"></div>
-                    <div className="text-sm font-semibold text-black">{auth.user.email}</div>
+                    {/* <div className="w-10 h-10 bg-slate-400 rounded-full"></div> */}
+                    <div className="text-sm font-medium text-black">{auth.user.email}</div>
                     <div className="text-xs text-slate-500">
                         <LogOut
                             onClick={handleLogOut}

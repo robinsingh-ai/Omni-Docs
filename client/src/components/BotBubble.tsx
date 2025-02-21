@@ -20,6 +20,7 @@ const BotBubble: React.FC<BotBubbleProps> = ({ chat, index, length }) => {
     const messageIndex = Math.floor(Math.random() * 4);
     const emptyText = ['Hang on a sec...', 'Just a moment...', 'One sec...', 'Hold on...'];
     const isLastMessage: boolean = (index === length - 1);
+    const chatId = useSelector((state: RootState) => state.app.chatId);
     return (
         <div className={`my-2 pt-2}`}>
             <TypewriterText
@@ -30,7 +31,7 @@ const BotBubble: React.FC<BotBubbleProps> = ({ chat, index, length }) => {
                     size={6}
                     animation='typing' />
             </div>}
-            {!respLoading && !animating && <SourcesList sources={sources} />}
+            {chatId === chat.id && !respLoading && !animating && <SourcesList sources={sources} />}
             <div className='flex justify-between items-center px-2'>
                 <div className="text-xs text-gray-500 ">{new Date(timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
                 {!respLoading && <CopyIcon

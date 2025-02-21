@@ -10,6 +10,10 @@
 - cd backend-chatbot
 - source chain-env/bin/activate # use the correct virtual env name
 - python main.py
+
+or for multi-threaded server:
+
+- uvicorn app.api_router:app --host 127.0.0.1 --port 8000 --workers 4 --reload
 ```
 
 - Ensure Ollama is running in the background with the required models downloaded.

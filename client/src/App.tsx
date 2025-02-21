@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { ElementType, useEffect } from "react";
 import Sidebar from "./components/Sidebar";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "./redux/store";
@@ -25,6 +25,7 @@ export default function App() {
         return () => window.removeEventListener('resize', checkWindowSize);
     }, [sidebar.isOpen, dispatch]);
 
+    const AnimatePresenceType = AnimatePresence as ElementType;
     return (
         <div className="flex h-screen overflow-hidden">
             <Sidebar />
@@ -33,7 +34,7 @@ export default function App() {
                     md:translate-x-0
                     ${sidebar.isOpen ? 'translate-x-32' : 'translate-x-0'}
                 `}>
-                <AnimatePresence mode="wait">
+                <AnimatePresenceType mode="wait">
                     {isNewChat && location.pathname === '/' ? (
                         <motion.div
                             key="new-chat"
@@ -53,7 +54,7 @@ export default function App() {
                             <Outlet />
                         </motion.div>
                     )}
-                </AnimatePresence>
+                </AnimatePresenceType>
             </div>
         </div>
     );

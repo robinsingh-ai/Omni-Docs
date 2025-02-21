@@ -19,7 +19,8 @@ class SupabaseChatService implements ChatService {
         return await supabase
             .from('chats')
             .select('*')
-            .eq('user_id', userId);
+            .eq('user_id', userId)
+            .order('created_at', { ascending: false });
     }
 
     async createChat(userId: string, chat: Chat) {

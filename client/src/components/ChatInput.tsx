@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { motion } from 'framer-motion';
-import { addUserMessage, sendMessage, streamResponse } from '../redux/reducers/chatSlice';
-import { Send } from 'lucide-react';
+import { addUserMessage, sendMessage, stopStreaming, streamResponse } from '../redux/reducers/chatSlice';
+import { Send, Square } from 'lucide-react';
 import { AppDispatch, RootState } from '../redux/store';
 import { useSelector } from 'react-redux';
 import { LLM_Provider } from '../services/ResponseProvider';
@@ -34,36 +34,47 @@ const ChatInput: React.FC<ChatInputProps> = ({ className, value, onSend, onNewCh
         }
     }, [value]);
 
+    const handleInterrupt = () => {
+        dispatch(stopStreaming({ provider_name: LLM_Provider.local_llm, })); // or any other provider
+    };
+
     const sendQuery = async () => {
-        if (overrideSend) {
-            onSend?.(query, app.chatId!);
-            return;
-        }
-        if (app.chatId != null) {
-            await dispatch(addUserMessage({
-                chat_id: app.chatId,
-                message: query,
-                sender: "user"
-            }));
-            const q = query;
-            setQuery('');
-            setRows(1);
-            onSend?.(query, app.chatId);
-            await Promise.all([
-                dispatch(sendMessage({
+        try {
+            if (query.trim() === '' || respLoading) {
+                return;
+            }
+            if (overrideSend) {
+                onSend?.(query, app.chatId!);
+                return;
+            }
+            if (app.chatId != null) {
+                await dispatch(addUserMessage({
                     chat_id: app.chatId,
-                    message: q,
+                    message: query,
                     sender: "user"
-                })).unwrap(),
-                dispatch(streamResponse({
-                    provider_name: LLM_Provider.local_llm,
-                    message: q,
-                    agent: agent
-                })).unwrap()
-            ]);
-        } else {
-            console.error("Chat ID is null, creating new chat...");
-            await onNewChatCreate?.(query);
+                }));
+                const q = query;
+                setQuery('');
+                setRows(1);
+                onSend?.(query, app.chatId);
+                await Promise.all([
+                    dispatch(sendMessage({
+                        chat_id: app.chatId,
+                        message: q,
+                        sender: "user"
+                    })).unwrap(),
+                    dispatch(streamResponse({
+                        provider_name: LLM_Provider.local_llm,
+                        message: q,
+                        agent: agent
+                    })).unwrap()
+                ]);
+            } else {
+                console.error("Chat ID is null, creating new chat...");
+                await onNewChatCreate?.(query);
+            }
+        } catch (_) {
+            console.error("Error in sendQuery:", _);
         }
     }
 
@@ -101,7 +112,11 @@ const ChatInput: React.FC<ChatInputProps> = ({ className, value, onSend, onNewCh
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     onClick={sendQuery}>
-                    {<Send size={22} />}
+                    {!respLoading ? <Send size={22} /> :
+                        <Square size={22}
+                            onClick={handleInterrupt}
+                            className="bg-gray-800 rounded-sm cursor-pointer" />
+                    }
                 </motion.button>
             </div>
             {/* Media Options */}

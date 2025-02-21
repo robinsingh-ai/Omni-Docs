@@ -51,23 +51,34 @@ HOST=chat.localhost npm run start
 
 ### Folder Structure
 
-  src/
-    - components/
-    - assets /
-    - hooks/
-    - models/
-    - pages/
-    - redux/
-        - actions/
-        - reducers/
-        store.ts
-    - services/
-   - App.tsx
-   - index.tsx
-   - index.css
-   - markdown.css
-   - routes.tsx
-   - utils.ts
-   - .env
-   - tailwind.config.js
-   - Readme.md
+ client/
+├── public/
+│   ├── index.html
+│   └── favicon.ico
+├── src/
+│   ├── assets/
+│   │   ├── images/
+│   │   └── styles/
+│   ├── components/
+│   │   ├── Delete.tsx
+│   │   ├── Header.tsx
+│   │   └── Footer.tsx
+│   ├── hooks/
+│   │   └── useCustomHook.ts
+│   ├── pages/
+│   │   ├── Home.tsx
+│   │   └── About.tsx
+│   ├── redux/
+│   │   ├── store.ts
+│   │   └── slices/
+│   │       └── authSlice.ts
+│   ├── App.tsx
+│   ├── index.tsx
+│   ├── markdown.css
+│   ├── index.css
+│   ├── routes.tsx
+│   └── styles/
+│       └── main.css
+├── package.json
+├── tsconfig.json
+└── README.md
