@@ -21,6 +21,21 @@ class RedisClient:
         )
         self.ttl = settings.REDIS_TTL
 
+    async def ping(self) -> bool:
+        """Test Redis connection."""
+        try:
+            return self.client.ping()
+        except Exception as e:
+            logger.error(f"Redis ping error: {str(e)}")
+            return False
+
+    async def close(self) -> None:
+        """Close Redis connection."""
+        try:
+            self.client.close()
+        except Exception as e:
+            logger.error(f"Redis close error: {str(e)}")
+
     async def get(self, key: str) -> Optional[Any]:
         """Get value from Redis with error handling."""
         try:
