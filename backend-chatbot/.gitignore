@@ -1,6 +1,6 @@
 __pycache__/
 *.py[cod]
 .pyc
-chain-env/
+chatbot-env/
 logs/
 .env
