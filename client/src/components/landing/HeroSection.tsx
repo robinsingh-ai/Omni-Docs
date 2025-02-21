@@ -25,7 +25,7 @@ const HeroSection: React.FC = () => {
       <div className="flex justify-center space-x-4"> {/* Flex container for buttons */}
         <Button className="bg-blue-500 hover:bg-blue-600 px-8 py-3 rounded-full font-medium flex items-center space-x-2"
           onClick={() => {
-            window.location.href = process.env.REACT_APP_SUBDOMAIN || 'http://localhost:3000';
+            window.location.href = process.env.REACT_APP_SUBDOMAIN || 'http://chat.localhost:3000';
           }}
         >
           Start Now
