@@ -53,13 +53,32 @@ class QAAgent:
             self.logger.info(f"Processing streaming query: {query}")
             
             # Get relevant documents using pipeline
-            results = self.pipeline_manager.search_documents(
-                DocSource(self.index_name), 
-                query
-            )
+            try:
+                results = self.pipeline_manager.search_documents(
+                    DocSource(self.index_name), 
+                    query
+                )
+            except ValueError as e:
+                self.logger.warning(f"Invalid index name: {self.index_name}")
+                yield json.dumps({
+                    "type": "error",
+                    "content": f"Documentation for '{self.index_name}' is not available. Please try with a different documentation set."
+                }) + "\n"
+                return
+            except Exception as e:
+                self.logger.error(f"Search failed: {str(e)}")
+                yield json.dumps({
+                    "type": "error",
+                    "content": "Failed to search documentation. Please try again later."
+                }) + "\n"
+                return
             
-            if results['status'] != 'success':
-                raise Exception(f"Search failed with status: {results['status']}")
+            if results['status'] != 'success' or not results.get('results'):
+                yield json.dumps({
+                    "type": "error",
+                    "content": f"No relevant information found for your query in the {self.index_name} documentation. Please try rephrasing your question."
+                }) + "\n"
+                return
             
             # Format context from documents
             docs = results['results'][:4]  # Get top 4 results
@@ -120,9 +139,8 @@ class QAAgent:
             self.logger.error(f"Error in streaming answer: {e}")
             yield json.dumps({
                 "type": "error",
-                "content": str(e)
+                "content": "An unexpected error occurred. Please try again later."
             }) + "\n"
-            raise
 
     def answer_query(self, query: str) -> Dict[str, Any]:
         """Answer a user query using the retrieval pipeline."""

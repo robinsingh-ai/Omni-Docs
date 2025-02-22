@@ -10,7 +10,7 @@ from app.core.models import NoAvailableModelsError, ModelResponse
 from app.core.exceptions import ModelNotFoundError
 from app.utils.retrival_manager import PipelineManager
 from retrieval_service.app.core.enums import DocSource
-from app.middleware.auth import auth_middleware
+from app.middleware.authMiddleware import auth_middleware
 
 router = APIRouter()
 logger = setup_logger(__name__)
