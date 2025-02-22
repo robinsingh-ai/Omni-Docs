@@ -1,5 +1,12 @@
 # Start the server:
 
+Run redis server:
+```
+docker pull redis
+docker run -d --name redis-server -p 6379:6379 redis
+
+```
+Run the server:
 ```
 python main.py
 ```
@@ -34,37 +41,12 @@ curl -X POST "http://localhost:8000/api/v1/query" \
 ```
 
 
-# API Endpoints
-## POST /crawl
-- Crawls and indexes a documentation website.
-```
-Request body:
-{
-    "sitemap_url": "string",
-    "index_name": "string"
-}
-```
-## POST /query
-- Queries the indexed documentation.
-```
-Request body:
-{
-    "query": "string",
-    "index_name": "string",
-    "chat_history": [
-        {
-            "role": "string",
-            "content": "string"
-        }
-    ]
-}
-```
 ## Components
 
-- Crawler Agent: Responsible for crawling documentation websites and creating FAISS indices
+- Crawler Agent: User retrival service to load and crawl the sitemaps
 - QA Agent: Handles user queries using the indexed documentation
-- FAISS Manager: Manages vector store operations
-- Web Crawler: Handles sitemap parsing and content extraction
+- FAISS Manager: Manages vector store operations (Removed for now) since retrival service handles it
+- Web Crawler: Handles sitemap parsing and content extraction (Removed for now) since retrival service handles it
 - LLM Utils: Manages LLM and embedding model configurations
 
 ## Development

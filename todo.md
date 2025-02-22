@@ -28,5 +28,6 @@ This todo is a self-reminder for the tasks that need to be done to achieve the g
         |               |
 
 #### Notes for Robin
+[] For an edit query, the frontend should delete all messages from the current edit query to the last message. After that, it should send an API call with an 'edit query' flag. This flag will be used to first fetch all updates stored in Redis from Supabase.
 
 #### Notes for Darshan

@@ -3,9 +3,17 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import get_settings
+from app.core.logger import setup_logger
 from app.routes import crawl, query, status, models
+from app.services.redis import RedisClient
+from app.services.supabase import SupabaseClient
 
 settings = get_settings()
+logger = setup_logger(__name__)
+
+# Store service instances
+redis_client = None
+supabase_client = None
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
@@ -16,11 +24,57 @@ app = FastAPI(
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
+    allow_origins=settings.cors_origins_list,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.on_event("startup")
+async def startup_event():
+    """Initialize services during app startup"""
+    global redis_client, supabase_client
+    
+    try:
+        # Initialize Redis
+        logger.info("Initializing Redis connection...")
+        redis_client = RedisClient(settings)
+        await redis_client.ping()  # Test connection
+        logger.info("✅ Successfully connected to Redis")
+        
+    except Exception as e:
+        logger.error(f"❌ Failed to initialize Redis: {str(e)}")
+        raise
+        
+    try:
+        # Initialize Supabase
+        logger.info("Initializing Supabase connection...")
+        supabase_client = SupabaseClient(settings)
+        await supabase_client.health_check()  # Test connection
+        logger.info("✅ Successfully connected to Supabase")
+        
+    except Exception as e:
+        logger.error(f"❌ Failed to initialize Supabase: {str(e)}")
+        raise
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Cleanup services during app shutdown"""
+    global redis_client, supabase_client
+    
+    if redis_client:
+        try:
+            await redis_client.close()
+            logger.info("Redis connection closed")
+        except Exception as e:
+            logger.error(f"Error closing Redis connection: {str(e)}")
+    
+    if supabase_client:
+        try:
+            await supabase_client.close()
+            logger.info("Supabase connection closed")
+        except Exception as e:
+            logger.error(f"Error closing Supabase connection: {str(e)}")
 
 # Include routers with proper prefixes and tags
 app.include_router(
@@ -70,6 +124,10 @@ async def root():
         "name": settings.PROJECT_NAME,
         "version": "1.0.0",
         "status": "operational",
+        "services": {
+            "redis": bool(redis_client),
+            "supabase": bool(supabase_client)
+        },
         "endpoints": {
             "documentation": "/docs",
             "api_base": "/api/v1",
