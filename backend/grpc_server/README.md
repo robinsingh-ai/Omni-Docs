@@ -76,3 +76,18 @@ The server will start on port 50051 by default.
 - Test streaming responses with the test client
 - Check logs for detailed error information
 - Handle both string and enum values for document sources 
+
+
+
+Example of a query:
+curl -X POST \
+  "http://localhost:8000/api/v1/stream/test" \
+  -H "Authorization: Bearer Token" \
+  -H "Content-Type: application/json" \
+  -N \
+  -d '{
+    "model_name": "llama3.1",
+    "query": "SSR",
+    "index_name": "nextjs",
+    "chat_history": []
+}'
