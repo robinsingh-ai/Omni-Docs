@@ -7,6 +7,7 @@ from app.core.logger import setup_logger
 from app.routes import crawl, query, status, models
 from app.services.redis import RedisClient
 from app.services.supabase import SupabaseClient
+from app.routes.grpc_routes import router as grpc_router  # Import the router instance
 
 settings = get_settings()
 logger = setup_logger(__name__)
@@ -115,6 +116,8 @@ app.include_router(
         500: {"description": "Internal server error"}
     }
 )
+
+app.include_router(grpc_router)
 
 # Root endpoint for API information
 @app.get("/", tags=["root"])

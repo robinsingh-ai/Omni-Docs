@@ -1,0 +1,15 @@
+Metadata-Version: 2.2
+Name: retrieval_service
+Version: 0.1.0
+Summary: A microservice for document retrieval and LLM interaction
+Home-page: https://github.com/yourusername/retrieval_service
+Author: Your Name
+Author-email: your.email@example.com
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Dynamic: author
+Dynamic: author-email
+Dynamic: description-content-type
+Dynamic: home-page
+Dynamic: requires-python
+Dynamic: summary
