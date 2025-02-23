@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+package chat;
+
+service ChatService {
+    rpc StreamChat (ChatRequest) returns (stream ChatResponse) {}
+    rpc InitializeDocSource (InitSourceRequest) returns (InitSourceResponse) {}
+    rpc ProcessDocumentation (ProcessDocRequest) returns (ProcessDocResponse) {}
+}
+
+message Message {
+    string role = 1;
+    string content = 2;
+}
+
+message ChatRequest {
+    string model_name = 1;  // Name of the model to use (e.g., "llama2", "gpt4")
+    string query = 2;       // The user's query
+    string index_name = 3;  // Documentation source name (e.g., "nextjs", "react", "vue")
+    repeated Message chat_history = 4;
+}
+
+message ChatResponse {
+    string type = 1;    // Response type ("markdown", "error", "end", "sources")
+    string content = 2; // Response content
+}
+
+message InitSourceRequest {
+    string source_name = 1;  // Documentation source name (e.g., "nextjs", "react", "vue")
+}
+
+message InitSourceResponse {
+    bool success = 1;
+    string message = 2;
+}
+
+message ProcessDocRequest {
+    string source_name = 1;  // Documentation source name (e.g., "nextjs", "react", "vue")
+}
+
+message ProcessDocResponse {
+    bool success = 1;
+    string message = 2;
+} 

@@ -1,0 +1,22 @@
+2025-02-11 22:51:59 | ERROR    | retrieval_pipeline:setup:49 - Failed to initialize provider: Provider ollama failed health check
+2025-02-11 22:51:59 | ERROR    | retrieval_pipeline:health_check:206 - Health check failed: Provider ollama failed health check
+2025-02-11 22:51:59 | ERROR    | retrieval_pipeline:setup:49 - Failed to initialize provider: Provider ollama failed health check
+2025-02-11 22:51:59 | ERROR    | retrieval_pipeline:process_query:166 - Error in query processing: Provider ollama failed health check
+2025-02-11 22:54:47 | ERROR    | retrieval_pipeline:setup:49 - Failed to initialize provider: Provider ollama failed health check
+2025-02-11 22:54:47 | ERROR    | retrieval_pipeline:health_check:206 - Health check failed: Provider ollama failed health check
+2025-02-11 22:54:47 | ERROR    | retrieval_pipeline:setup:49 - Failed to initialize provider: Provider ollama failed health check
+2025-02-11 22:54:47 | ERROR    | retrieval_pipeline:process_query:166 - Error in query processing: Provider ollama failed health check
+2025-02-11 22:56:55 | ERROR    | retrieval_pipeline:setup:49 - Failed to initialize provider: Provider ollama failed health check
+2025-02-11 22:56:55 | ERROR    | retrieval_pipeline:health_check:206 - Health check failed: Provider ollama failed health check
+2025-02-11 22:56:55 | ERROR    | retrieval_pipeline:setup:49 - Failed to initialize provider: Provider ollama failed health check
+2025-02-11 22:56:55 | ERROR    | retrieval_pipeline:process_query:166 - Error in query processing: Provider ollama failed health check
+2025-02-11 23:03:20 | ERROR    | retrieval_pipeline:setup:49 - Failed to initialize provider: Provider ollama failed health check
+2025-02-11 23:03:20 | ERROR    | retrieval_pipeline:health_check:206 - Health check failed: Provider ollama failed health check
+2025-02-11 23:03:20 | ERROR    | retrieval_pipeline:setup:49 - Failed to initialize provider: Provider ollama failed health check
+2025-02-11 23:03:20 | ERROR    | retrieval_pipeline:process_query:166 - Error in query processing: Provider ollama failed health check
+2025-02-11 23:05:28 | ERROR    | retrieval_pipeline:setup:49 - Failed to initialize provider: Provider ollama failed health check
+2025-02-11 23:05:28 | ERROR    | retrieval_pipeline:process_query:166 - Error in query processing: Provider ollama failed health check
+2025-02-11 23:06:10 | ERROR    | retrieval_pipeline:setup:49 - Failed to initialize provider: Provider ollama failed health check
+2025-02-11 23:06:10 | ERROR    | retrieval_pipeline:health_check:206 - Health check failed: Provider ollama failed health check
+2025-02-11 23:12:10 | ERROR    | retrieval_pipeline:setup:49 - Failed to initialize provider: Provider ollama failed health check
+2025-02-11 23:12:10 | ERROR    | retrieval_pipeline:health_check:206 - Health check failed: Provider ollama failed health check
