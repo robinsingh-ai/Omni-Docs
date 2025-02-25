@@ -23,3 +23,10 @@ class StatusResponse(BaseModel):
     uptime: float
     server_stats: Dict[str, Any]
     components: Dict[str, str]
+
+class ChatQueryRequest(BaseModel):
+    """Request model for chat queries with history context."""
+    chat_id: str
+    query: str
+    model_name: str = "llama3.1"  # Default model
+    index_name: str
