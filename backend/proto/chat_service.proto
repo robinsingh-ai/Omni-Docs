@@ -6,6 +6,22 @@ service ChatService {
     rpc StreamChat (ChatRequest) returns (stream ChatResponse) {}
     rpc InitializeDocSource (InitSourceRequest) returns (InitSourceResponse) {}
     rpc ProcessDocumentation (ProcessDocRequest) returns (ProcessDocResponse) {}
+    rpc GetAvailableModels (EmptyRequest) returns (ModelsResponse) {}
+    rpc GetAvailableSources (EmptyRequest) returns (SourcesResponse) {}
+}
+
+message EmptyRequest {}
+
+message ModelsResponse {
+    repeated string model_names = 1;
+    bool success = 2;
+    string message = 3;
+}
+
+message SourcesResponse {
+    repeated string source_names = 1;
+    bool success = 2;
+    string message = 3;
 }
 
 message Message {

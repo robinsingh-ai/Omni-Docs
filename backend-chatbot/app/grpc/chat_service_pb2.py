@@ -24,27 +24,33 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12\x63hat_service.proto\x12\x04\x63hat\"(\n\x07Message\x12\x0c\n\x04role\x18\x01 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x02 \x01(\t\"i\n\x0b\x43hatRequest\x12\x12\n\nmodel_name\x18\x01 \x01(\t\x12\r\n\x05query\x18\x02 \x01(\t\x12\x12\n\nindex_name\x18\x03 \x01(\t\x12#\n\x0c\x63hat_history\x18\x04 \x03(\x0b\x32\r.chat.Message\"-\n\x0c\x43hatResponse\x12\x0c\n\x04type\x18\x01 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x02 \x01(\t\"(\n\x11InitSourceRequest\x12\x13\n\x0bsource_name\x18\x01 \x01(\t\"6\n\x12InitSourceResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\"(\n\x11ProcessDocRequest\x12\x13\n\x0bsource_name\x18\x01 \x01(\t\"6\n\x12ProcessDocResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t2\xdf\x01\n\x0b\x43hatService\x12\x37\n\nStreamChat\x12\x11.chat.ChatRequest\x1a\x12.chat.ChatResponse\"\x00\x30\x01\x12J\n\x13InitializeDocSource\x12\x17.chat.InitSourceRequest\x1a\x18.chat.InitSourceResponse\"\x00\x12K\n\x14ProcessDocumentation\x12\x17.chat.ProcessDocRequest\x1a\x18.chat.ProcessDocResponse\"\x00\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x12\x63hat_service.proto\x12\x04\x63hat\"\x0e\n\x0c\x45mptyRequest\"G\n\x0eModelsResponse\x12\x13\n\x0bmodel_names\x18\x01 \x03(\t\x12\x0f\n\x07success\x18\x02 \x01(\x08\x12\x0f\n\x07message\x18\x03 \x01(\t\"I\n\x0fSourcesResponse\x12\x14\n\x0csource_names\x18\x01 \x03(\t\x12\x0f\n\x07success\x18\x02 \x01(\x08\x12\x0f\n\x07message\x18\x03 \x01(\t\"(\n\x07Message\x12\x0c\n\x04role\x18\x01 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x02 \x01(\t\"i\n\x0b\x43hatRequest\x12\x12\n\nmodel_name\x18\x01 \x01(\t\x12\r\n\x05query\x18\x02 \x01(\t\x12\x12\n\nindex_name\x18\x03 \x01(\t\x12#\n\x0c\x63hat_history\x18\x04 \x03(\x0b\x32\r.chat.Message\"-\n\x0c\x43hatResponse\x12\x0c\n\x04type\x18\x01 \x01(\t\x12\x0f\n\x07\x63ontent\x18\x02 \x01(\t\"(\n\x11InitSourceRequest\x12\x13\n\x0bsource_name\x18\x01 \x01(\t\"6\n\x12InitSourceResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t\"(\n\x11ProcessDocRequest\x12\x13\n\x0bsource_name\x18\x01 \x01(\t\"6\n\x12ProcessDocResponse\x12\x0f\n\x07success\x18\x01 \x01(\x08\x12\x0f\n\x07message\x18\x02 \x01(\t2\xe5\x02\n\x0b\x43hatService\x12\x37\n\nStreamChat\x12\x11.chat.ChatRequest\x1a\x12.chat.ChatResponse\"\x00\x30\x01\x12J\n\x13InitializeDocSource\x12\x17.chat.InitSourceRequest\x1a\x18.chat.InitSourceResponse\"\x00\x12K\n\x14ProcessDocumentation\x12\x17.chat.ProcessDocRequest\x1a\x18.chat.ProcessDocResponse\"\x00\x12@\n\x12GetAvailableModels\x12\x12.chat.EmptyRequest\x1a\x14.chat.ModelsResponse\"\x00\x12\x42\n\x13GetAvailableSources\x12\x12.chat.EmptyRequest\x1a\x15.chat.SourcesResponse\"\x00\x62\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'chat_service_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_MESSAGE']._serialized_start=28
-  _globals['_MESSAGE']._serialized_end=68
-  _globals['_CHATREQUEST']._serialized_start=70
-  _globals['_CHATREQUEST']._serialized_end=175
-  _globals['_CHATRESPONSE']._serialized_start=177
-  _globals['_CHATRESPONSE']._serialized_end=222
-  _globals['_INITSOURCEREQUEST']._serialized_start=224
-  _globals['_INITSOURCEREQUEST']._serialized_end=264
-  _globals['_INITSOURCERESPONSE']._serialized_start=266
-  _globals['_INITSOURCERESPONSE']._serialized_end=320
-  _globals['_PROCESSDOCREQUEST']._serialized_start=322
-  _globals['_PROCESSDOCREQUEST']._serialized_end=362
-  _globals['_PROCESSDOCRESPONSE']._serialized_start=364
-  _globals['_PROCESSDOCRESPONSE']._serialized_end=418
-  _globals['_CHATSERVICE']._serialized_start=421
-  _globals['_CHATSERVICE']._serialized_end=644
+  _globals['_EMPTYREQUEST']._serialized_start=28
+  _globals['_EMPTYREQUEST']._serialized_end=42
+  _globals['_MODELSRESPONSE']._serialized_start=44
+  _globals['_MODELSRESPONSE']._serialized_end=115
+  _globals['_SOURCESRESPONSE']._serialized_start=117
+  _globals['_SOURCESRESPONSE']._serialized_end=190
+  _globals['_MESSAGE']._serialized_start=192
+  _globals['_MESSAGE']._serialized_end=232
+  _globals['_CHATREQUEST']._serialized_start=234
+  _globals['_CHATREQUEST']._serialized_end=339
+  _globals['_CHATRESPONSE']._serialized_start=341
+  _globals['_CHATRESPONSE']._serialized_end=386
+  _globals['_INITSOURCEREQUEST']._serialized_start=388
+  _globals['_INITSOURCEREQUEST']._serialized_end=428
+  _globals['_INITSOURCERESPONSE']._serialized_start=430
+  _globals['_INITSOURCERESPONSE']._serialized_end=484
+  _globals['_PROCESSDOCREQUEST']._serialized_start=486
+  _globals['_PROCESSDOCREQUEST']._serialized_end=526
+  _globals['_PROCESSDOCRESPONSE']._serialized_start=528
+  _globals['_PROCESSDOCRESPONSE']._serialized_end=582
+  _globals['_CHATSERVICE']._serialized_start=585
+  _globals['_CHATSERVICE']._serialized_end=942
 # @@protoc_insertion_point(module_scope)

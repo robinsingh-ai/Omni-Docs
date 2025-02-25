@@ -49,6 +49,16 @@ class ChatServiceStub(object):
                 request_serializer=chat__service__pb2.ProcessDocRequest.SerializeToString,
                 response_deserializer=chat__service__pb2.ProcessDocResponse.FromString,
                 _registered_method=True)
+        self.GetAvailableModels = channel.unary_unary(
+                '/chat.ChatService/GetAvailableModels',
+                request_serializer=chat__service__pb2.EmptyRequest.SerializeToString,
+                response_deserializer=chat__service__pb2.ModelsResponse.FromString,
+                _registered_method=True)
+        self.GetAvailableSources = channel.unary_unary(
+                '/chat.ChatService/GetAvailableSources',
+                request_serializer=chat__service__pb2.EmptyRequest.SerializeToString,
+                response_deserializer=chat__service__pb2.SourcesResponse.FromString,
+                _registered_method=True)
 
 
 class ChatServiceServicer(object):
@@ -72,6 +82,18 @@ class ChatServiceServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def GetAvailableModels(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def GetAvailableSources(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
 
 def add_ChatServiceServicer_to_server(servicer, server):
     rpc_method_handlers = {
@@ -89,6 +111,16 @@ def add_ChatServiceServicer_to_server(servicer, server):
                     servicer.ProcessDocumentation,
                     request_deserializer=chat__service__pb2.ProcessDocRequest.FromString,
                     response_serializer=chat__service__pb2.ProcessDocResponse.SerializeToString,
+            ),
+            'GetAvailableModels': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetAvailableModels,
+                    request_deserializer=chat__service__pb2.EmptyRequest.FromString,
+                    response_serializer=chat__service__pb2.ModelsResponse.SerializeToString,
+            ),
+            'GetAvailableSources': grpc.unary_unary_rpc_method_handler(
+                    servicer.GetAvailableSources,
+                    request_deserializer=chat__service__pb2.EmptyRequest.FromString,
+                    response_serializer=chat__service__pb2.SourcesResponse.SerializeToString,
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
@@ -172,6 +204,60 @@ class ChatService(object):
             '/chat.ChatService/ProcessDocumentation',
             chat__service__pb2.ProcessDocRequest.SerializeToString,
             chat__service__pb2.ProcessDocResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetAvailableModels(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/chat.ChatService/GetAvailableModels',
+            chat__service__pb2.EmptyRequest.SerializeToString,
+            chat__service__pb2.ModelsResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def GetAvailableSources(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/chat.ChatService/GetAvailableSources',
+            chat__service__pb2.EmptyRequest.SerializeToString,
+            chat__service__pb2.SourcesResponse.FromString,
             options,
             channel_credentials,
             insecure,
