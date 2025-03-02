@@ -5,7 +5,7 @@ import asyncio
 from typing import List, Dict
 import time
 
-from chat_service_pb2 import ChatRequest, ChatResponse, InitSourceRequest, InitSourceResponse, Message, ProcessDocRequest, ProcessDocResponse
+from chat_service_pb2 import ChatRequest, ChatResponse, InitSourceRequest, InitSourceResponse, Message, ProcessDocRequest, ProcessDocResponse, ModelsResponse, SourcesResponse
 from chat_service_pb2_grpc import ChatServiceServicer, add_ChatServiceServicer_to_server
 from core.models import ModelsManager
 from core.logger import setup_logger
@@ -148,6 +148,45 @@ class ChatServicer(ChatServiceServicer):
         except Exception as e:
             logger.error(f"Error processing documentation: {e}")
             return ProcessDocResponse(
+                success=False,
+                message=str(e)
+            )
+
+    async def GetAvailableModels(self, request, context) -> ModelsResponse:
+        """Return a list of all available models."""
+        try:
+            model_names = list(self.available_models.keys())
+            logger.info(f"Returning available models: {model_names}")
+            return ModelsResponse(
+                model_names=model_names,
+                success=True,
+                message=f"Found {len(model_names)} available models"
+            )
+        except Exception as e:
+            logger.error(f"Error getting available models: {e}")
+            return ModelsResponse(
+                model_names=[],
+                success=False,
+                message=str(e)
+            )
+
+    async def GetAvailableSources(self, request, context) -> SourcesResponse:
+        """Return a list of all available documentation sources."""
+        try:
+            logger.info("GetAvailableSources called")
+            source_names = list(self.initialized_sources)
+            logger.info(f"Returning available sources: {source_names}")
+            return SourcesResponse(
+                source_names=source_names,
+                success=True,
+                message=f"Found {len(source_names)} available documentation sources"
+            )
+        except Exception as e:
+            logger.error(f"Error getting available sources: {e}")
+            import traceback
+            logger.error(traceback.format_exc())
+            return SourcesResponse(
+                source_names=[],
                 success=False,
                 message=str(e)
             )
