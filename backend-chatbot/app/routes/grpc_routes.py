@@ -21,7 +21,9 @@ router = APIRouter(tags=["grpc"])
 logger = setup_logger(__name__)
 
 settings = get_settings()
-GRPC_SERVER_ADDRESS = "localhost:50051"
+# Make GRPC_SERVER_ADDRESS configurable via environment variables
+GRPC_SERVER_ADDRESS = settings.GRPC_SERVER_ADDRESS if hasattr(settings, 'GRPC_SERVER_ADDRESS') else "localhost:50051"
+logger.info(f"Using gRPC server address: {GRPC_SERVER_ADDRESS}")
 CHAT_HISTORY_CACHE_TTL = 3600  # 1 hour in seconds
 MAX_CHAT_HISTORY = 10  # Maximum number of messages to include in context
 
@@ -29,7 +31,8 @@ MAX_CHAT_HISTORY = 10  # Maximum number of messages to include in context
 async def chat_stream(
     chat_query: ChatQueryRequest,
     redis_client = Depends(get_redis_client),
-    supabase_client = Depends(get_supabase_client)
+    supabase_client = Depends(get_supabase_client),
+    user: dict = Depends(auth_middleware)  # Add authentication dependency
 ):
     """Stream chat responses with chat history context."""
     try:
@@ -39,7 +42,17 @@ async def chat_stream(
         chat_history = await get_chat_history(chat_query.chat_id, redis_client, supabase_client)
         
         # Create gRPC channel
-        channel = grpc.aio.insecure_channel(GRPC_SERVER_ADDRESS)
+        channel = grpc.aio.insecure_channel(
+            GRPC_SERVER_ADDRESS,
+            options=[
+                ('grpc.max_send_message_length', 50 * 1024 * 1024),  # 50 MB
+                ('grpc.max_receive_message_length', 50 * 1024 * 1024),  # 50 MB
+                ('grpc.keepalive_time_ms', 30000),  # 30 seconds
+                ('grpc.keepalive_timeout_ms', 10000),  # 10 seconds
+                ('grpc.http2.max_pings_without_data', 0),
+                ('grpc.keepalive_permit_without_calls', 1)
+            ]
+        )
         stub = chat_service_pb2_grpc.ChatServiceStub(channel)
         
         # Convert chat history to gRPC message format
@@ -60,23 +73,47 @@ async def chat_stream(
         
         # Variable to collect the full bot response
         full_bot_response = []
+        model_used = None
         
         async def response_stream():
+            nonlocal model_used
             try:
                 # Call gRPC streaming endpoint
                 async for response in stub.StreamChat(grpc_request):
-                    # Add content to full response if it's markdown
-                    if response.type == "markdown":
-                        full_bot_response.append(response.content)
+                    response_type = response.type
+                    response_content = response.content
                     
-                    # Yield the response chunk
-                    yield json.dumps({
-                        "type": response.type,
-                        "content": response.content
-                    }) + "\n"
+                    # Add content to full response if it's markdown
+                    if response_type == "markdown":
+                        full_bot_response.append(response_content)
+                    
+                    # Store model info for chat history
+                    elif response_type == "model_info":
+                        model_used = response_content
+                    
+                    # Parse sources JSON if response type is sources
+                    if response_type == "sources":
+                        try:
+                            sources_data = json.loads(response_content)
+                            yield json.dumps({
+                                "type": "sources",
+                                "content": sources_data
+                            }) + "\n"
+                        except json.JSONDecodeError as e:
+                            logger.error(f"Failed to parse sources JSON: {e}")
+                            yield json.dumps({
+                                "type": "error",
+                                "content": "Failed to parse sources information"
+                            }) + "\n"
+                    else:
+                        # For other types (markdown, model_info, error, end), pass through directly
+                        yield json.dumps({
+                            "type": response_type,
+                            "content": response_content
+                        }) + "\n"
                     
                     # If this is the end message, update chat history cache
-                    if response.type == "end":
+                    if response_type == "end":
                         # Join all markdown chunks to get the complete response
                         complete_response = "".join(full_bot_response)
                         
@@ -86,7 +123,8 @@ async def chat_stream(
                                 chat_query.chat_id,
                                 chat_query.query,
                                 complete_response,
-                                redis_client
+                                redis_client,
+                                model_used
                             )
                         )
                         
@@ -118,7 +156,17 @@ async def get_available_models():
         logger.info(f"Attempting to connect to gRPC server at {GRPC_SERVER_ADDRESS}")
         
         # Create gRPC channel
-        channel = grpc.aio.insecure_channel(GRPC_SERVER_ADDRESS)
+        channel = grpc.aio.insecure_channel(
+            GRPC_SERVER_ADDRESS,
+            options=[
+                ('grpc.max_send_message_length', 50 * 1024 * 1024),  # 50 MB
+                ('grpc.max_receive_message_length', 50 * 1024 * 1024),  # 50 MB
+                ('grpc.keepalive_time_ms', 30000),  # 30 seconds
+                ('grpc.keepalive_timeout_ms', 10000),  # 10 seconds
+                ('grpc.http2.max_pings_without_data', 0),
+                ('grpc.keepalive_permit_without_calls', 1)
+            ]
+        )
         stub = chat_service_pb2_grpc.ChatServiceStub(channel)
         
         # Create empty request
@@ -174,7 +222,17 @@ async def get_available_sources():
         logger.info(f"Attempting to connect to gRPC server at {GRPC_SERVER_ADDRESS}")
         
         # Create gRPC channel
-        channel = grpc.aio.insecure_channel(GRPC_SERVER_ADDRESS)
+        channel = grpc.aio.insecure_channel(
+            GRPC_SERVER_ADDRESS,
+            options=[
+                ('grpc.max_send_message_length', 50 * 1024 * 1024),  # 50 MB
+                ('grpc.max_receive_message_length', 50 * 1024 * 1024),  # 50 MB
+                ('grpc.keepalive_time_ms', 30000),  # 30 seconds
+                ('grpc.keepalive_timeout_ms', 10000),  # 10 seconds
+                ('grpc.http2.max_pings_without_data', 0),
+                ('grpc.keepalive_permit_without_calls', 1)
+            ]
+        )
         stub = chat_service_pb2_grpc.ChatServiceStub(channel)
         
         # Create empty request
@@ -321,7 +379,7 @@ async def get_chat_history(chat_id: str, redis_client, supabase_client) -> List[
             detail=f"Failed to retrieve chat history: {str(e)}"
         )
 
-async def update_chat_history_cache(chat_id: str, user_query: str, bot_response: str, redis_client):
+async def update_chat_history_cache(chat_id: str, user_query: str, bot_response: str, redis_client, model_used: str = None):
     """Update chat history in Redis cache with new messages."""
     try:
         # Get existing chat history
@@ -332,7 +390,13 @@ async def update_chat_history_cache(chat_id: str, user_query: str, bot_response:
         
         # Add new messages
         existing_history.append({"role": "user", "content": user_query})
-        existing_history.append({"role": "assistant", "content": bot_response})
+        
+        # Add model info to the assistant's response if available
+        assistant_message = {"role": "assistant", "content": bot_response}
+        if model_used:
+            assistant_message["model"] = model_used
+            
+        existing_history.append(assistant_message)
         
         # Keep only the last MAX_CHAT_HISTORY messages
         if len(existing_history) > MAX_CHAT_HISTORY:

@@ -37,7 +37,7 @@ message ChatRequest {
 }
 
 message ChatResponse {
-    string type = 1;    // Response type ("markdown", "error", "end", "sources")
+    string type = 1;    // Response type ("markdown", "sources", "model_info", "error", "end")
     string content = 2; // Response content
 }
 

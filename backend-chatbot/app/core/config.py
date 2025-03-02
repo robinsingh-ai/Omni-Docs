@@ -41,6 +41,9 @@ class Settings(BaseSettings):
     RAG_SERVICE_HOST: str
     RAG_SERVICE_PORT: int
 
+    # Add GRPC_SERVER_ADDRESS to settings
+    GRPC_SERVER_ADDRESS: str = "localhost:50051"
+
     model_config = SettingsConfigDict(
         env_file='.env',
         env_file_encoding='utf-8',

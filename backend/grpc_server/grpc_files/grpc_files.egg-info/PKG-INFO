@@ -1,0 +1,7 @@
+Metadata-Version: 2.2
+Name: grpc_files
+Version: 0.1.0
+Summary: gRPC generated files for chat service
+Requires-Python: >=3.9
+Dynamic: requires-python
+Dynamic: summary

@@ -136,3 +136,32 @@ The API exposes several gRPC routes for chat interactions. Below are the key rou
      - The API checks Redis for the cached chat history.
      - If found, it returns the cached history.
      - If not found, it queries Supabase and returns the chat history.
+
+## Troubleshooting
+
+### Protobuf Version Error
+
+If you encounter the following error:
+
+```
+google.protobuf.runtime_version.VersionError: Detected incompatible Protobuf Gencode/Runtime versions when loading chat_service.proto: gencode 5.29.0 runtime 5.28.3.
+```
+
+This means there's a mismatch between the Protobuf runtime and generated code versions. To fix this:
+
+1. Make the installation script executable:
+   ```bash
+   chmod +x install_protobuf.sh
+   ```
+
+2. Run the script:
+   ```bash
+   ./install_protobuf.sh
+   ```
+
+This will upgrade the protobuf package to the correct version.
+
+Alternatively, you can manually install the required version:
+```bash
+pip install "protobuf>=5.29.0"
+```

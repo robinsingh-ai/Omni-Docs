@@ -61,12 +61,26 @@ class ChatServicer(ChatServiceServicer):
             if request.index_name not in self.initialized_sources:
                 raise ValueError(f"Documentation source {request.index_name} not available")
             
+            # Get the LLM instance
             llm = self.available_models[request.model_name]
+            logger.debug(f"Using model: {request.model_name}")
+            
             qa_agent = QAAgent(llm, request.index_name)
             
-            history_context = self._format_chat_history(request.chat_history)
+            # Convert gRPC messages to dict format expected by QA agent
+            chat_history = []
+            try:
+                for msg in request.chat_history:
+                    chat_history.append({
+                        "role": msg.role.lower(),  # Ensure role is lowercase
+                        "content": msg.content
+                    })
+                logger.debug(f"Converted chat history: {chat_history}")
+            except Exception as e:
+                logger.error(f"Error converting chat history: {e}")
+                chat_history = []  # Reset on error
             
-            async for chunk in qa_agent.answer_query_stream(request.query, history_context):
+            async for chunk in qa_agent.answer_query_stream(request.query, chat_history):
                 try:
                     response_dict = json.loads(chunk.strip())
                     
@@ -82,6 +96,22 @@ class ChatServicer(ChatServiceServicer):
                             content=response_dict.get("content", "Unknown error")
                         )
                         break
+                    
+                    # Handle model info message type
+                    elif response_dict.get("type") == "model_info":
+                        yield ChatResponse(
+                            type="model_info",
+                            content=response_dict.get("content", "unknown_model")
+                        )
+                    
+                    # Handle sources message type
+                    elif response_dict.get("type") == "sources" and "content" in response_dict:
+                        # Convert the sources list to JSON string
+                        sources_json = json.dumps(response_dict["content"])
+                        yield ChatResponse(
+                            type="sources",
+                            content=sources_json
+                        )
                         
                     # Handle regular markdown content
                     elif response_dict.get("type") == "markdown" and "content" in response_dict:
@@ -194,7 +224,15 @@ class ChatServicer(ChatServiceServicer):
 async def serve():
     server = grpc.aio.server(
         futures.ThreadPoolExecutor(max_workers=10),
-        compression=grpc.Compression.Gzip
+        compression=grpc.Compression.Gzip,
+        options=[
+            ('grpc.max_send_message_length', 50 * 1024 * 1024),  # 50 MB
+            ('grpc.max_receive_message_length', 50 * 1024 * 1024),  # 50 MB
+            ('grpc.keepalive_time_ms', 30000),  # 30 seconds
+            ('grpc.keepalive_timeout_ms', 10000),  # 10 seconds
+            ('grpc.http2.max_pings_without_data', 0),
+            ('grpc.keepalive_permit_without_calls', 1)
+        ]
     )
     
     # Initialize service with all models and sources
@@ -202,10 +240,13 @@ async def serve():
     await servicer.initialize()  # This will now initialize everything
     
     add_ChatServiceServicer_to_server(servicer, server)
-    server.add_insecure_port('[::]:50051')
+    
+    # Use 0.0.0.0 to bind to all interfaces
+    server_address = '0.0.0.0:50051'
+    server.add_insecure_port(server_address)
     
     await server.start()
-    logger.info("gRPC server started on port 50051")
+    logger.info(f"gRPC server started on {server_address}")
     await server.wait_for_termination()
 
 if __name__ == '__main__':
